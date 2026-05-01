@@ -21,7 +21,6 @@ export default function HomeScreen() {
   const [searchText, setSearchText] = useState('');
 
   const healthModules = [
-    { id: 'female', name: '女性生理', icon: 'person-dress', iconColor: '#E91E63', bgColor: '#FCE4EC' },
     { id: 'dashboard', name: '数据看板', icon: 'chart-bar', iconColor: '#2196F3', bgColor: '#E3F2FD' },
     { id: 'food', name: '食物分析', icon: 'camera', iconColor: '#FF9800', bgColor: '#FFF3E0' },
     { id: 'exercise', name: '运动', icon: 'person-running', iconColor: '#FF6B6B', bgColor: '#FFEBEE' },
@@ -29,6 +28,7 @@ export default function HomeScreen() {
     { id: 'emotion', name: '情绪', icon: 'face-smile', iconColor: '#FF9800', bgColor: '#FFF3E0' },
     { id: 'habit', name: '生活习惯', icon: 'list-check', iconColor: '#26A69A', bgColor: '#E0F2F1' },
     { id: 'member', name: '会员', icon: 'crown', iconColor: '#FFD700', bgColor: '#FFF8E1' },
+    { id: 'female', name: '女性生理', icon: 'person-dress', iconColor: '#E91E63', bgColor: '#FCE4EC' },
   ];
 
   const handleModulePress = (moduleId: string) => {
