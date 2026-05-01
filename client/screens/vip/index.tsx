@@ -118,7 +118,7 @@ export default function VipScreen() {
       >
         {/* 会员状态卡片 */}
         <LinearGradient
-          colors={['#FFB347', '#FF8C00']}
+          colors={['#F5A623', '#E07B00']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.vipStatusCard}
