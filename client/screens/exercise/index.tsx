@@ -11,15 +11,84 @@ import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+const EXERCISE_OVERVIEW = {
+  steps: 8524,
+  calories: 342,
+  distance: 6.2,
+  minutes: 85,
+};
+
+const EXERCISE_RINGS = {
+  activity: { current: 85, target: 100, unit: '分钟', percent: 85 },
+  exercise: { current: 65, target: 100, unit: '分钟', percent: 65 },
+  stand: { current: 9, target: 12, unit: '小时', percent: 75 },
+};
+
 const SPORTS = [
-  { id: '1', name: '跑步', icon: 'person-running', color: '#FF6B6B', bgColor: '#FFEBEE', kcal: 500, duration: 30 },
-  { id: '2', name: '步行', icon: 'person-walking', color: '#26A69A', bgColor: '#E0F2F1', kcal: 200, duration: 45 },
-  { id: '3', name: '游泳', icon: 'water', color: '#2196F3', bgColor: '#E3F2FD', kcal: 600, duration: 40 },
-  { id: '4', name: '瑜伽', icon: 'person', color: '#9C27B0', bgColor: '#F3E5F5', kcal: 150, duration: 30 },
-  { id: '5', name: '健身操', icon: 'dumbbell', color: '#FF9800', bgColor: '#FFF3E0', kcal: 400, duration: 25 },
-  { id: '6', name: '骑行', icon: 'bicycle', color: '#4ECDC4', bgColor: '#E0F7F4', kcal: 350, duration: 40 },
-  { id: '7', name: '高尔夫', icon: 'flag', color: '#8BC34A', bgColor: '#F1F8E9', kcal: 250, duration: 60 },
-  { id: '8', name: '跳绳', icon: 'a', color: '#F44336', bgColor: '#FFEBEE', kcal: 450, duration: 20 },
+  { 
+    id: '1', 
+    name: '跑步', 
+    icon: 'person-running', 
+    color: '#FF6B6B', 
+    bgColor: '#FFEBEE',
+    description: '有氧运动，提高心肺功能'
+  },
+  { 
+    id: '2', 
+    name: '步行', 
+    icon: 'person-walking', 
+    color: '#26A69A', 
+    bgColor: '#E0F2F1',
+    description: '低强度，适合日常健身'
+  },
+  { 
+    id: '3', 
+    name: '游泳', 
+    icon: 'water', 
+    color: '#2196F3', 
+    bgColor: '#E3F2FD',
+    description: '全身运动，保护关节'
+  },
+  { 
+    id: '4', 
+    name: '瑜伽', 
+    icon: 'person', 
+    color: '#9C27B0', 
+    bgColor: '#F3E5F5',
+    description: '柔韧训练，身心放松'
+  },
+  { 
+    id: '5', 
+    name: '健身操', 
+    icon: 'dumbbell', 
+    color: '#FF9800', 
+    bgColor: '#FFF3E0',
+    description: '燃脂塑形，节奏感强'
+  },
+  { 
+    id: '6', 
+    name: '骑行', 
+    icon: 'bicycle', 
+    color: '#4ECDC4', 
+    bgColor: '#E0F7F4',
+    description: '户外骑行，增强体质'
+  },
+  { 
+    id: '7', 
+    name: '高尔夫', 
+    icon: 'flag', 
+    color: '#8BC34A', 
+    bgColor: '#F1F8E9',
+    description: '社交运动，修身养性'
+  },
+  { 
+    id: '8', 
+    name: '跳绳', 
+    icon: 'a', 
+    color: '#F44336', 
+    bgColor: '#FFEBEE',
+    description: '高效燃脂，简单有趣'
+  },
 ];
 
 const SPORT_TUTORIALS = [
@@ -29,9 +98,68 @@ const SPORT_TUTORIALS = [
   { id: '4', title: '游泳技巧教学', cover: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=200', duration: '12分钟', views: '1.8万' },
 ];
 
+const RING_IMAGES: Record<string, string> = {
+  '跑步': 'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=100',
+  '步行': 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=100',
+  '游泳': 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=100',
+  '瑜伽': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=100',
+  '健身操': 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=100',
+  '骑行': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=100',
+  '高尔夫': 'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=100',
+  '跳绳': 'https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=100',
+};
+
 export default function ExerciseScreen() {
   const insets = useSafeAreaInsets();
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
+
+  const totalPercent = Math.round(
+    (EXERCISE_RINGS.activity.percent + EXERCISE_RINGS.exercise.percent + EXERCISE_RINGS.stand.percent) / 3
+  );
+
+  const renderRingProgress = (percent: number, color: string, size: number) => {
+    const strokeWidth = 12;
+    const radius = (size - strokeWidth) / 2;
+    const circumference = 2 * Math.PI * radius;
+    const progress = (percent / 100) * circumference;
+    const remaining = circumference - progress;
+
+    return (
+      <View style={[styles.ringSvgContainer, { width: size, height: size }]}>
+        {/* Background circle */}
+        <View
+          style={[
+            styles.ringCircle,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              borderWidth: strokeWidth,
+              borderColor: `${color}20`,
+            },
+          ]}
+        />
+        {/* Progress arc - using multiple segments to simulate */}
+        <View
+          style={[
+            styles.ringProgress,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              borderWidth: strokeWidth,
+              borderColor: color,
+              borderTopColor: percent >= 25 ? color : 'transparent',
+              borderRightColor: percent >= 50 ? color : 'transparent',
+              borderBottomColor: percent >= 75 ? color : 'transparent',
+              borderLeftColor: percent >= 100 ? color : 'transparent',
+              transform: [{ rotate: '-45deg' }],
+            },
+          ]}
+        />
+      </View>
+    );
+  };
 
   return (
     <Screen>
@@ -40,39 +168,113 @@ export default function ExerciseScreen() {
         contentContainerStyle={[styles.contentContainer, { paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* 运动三环概览 */}
-        <View style={styles.ringsOverviewCard}>
-          <Text style={styles.cardTitle}>今日运动</Text>
-          <View style={styles.ringsContainer}>
-            <View style={styles.ringsWrapper}>
-              <View style={[styles.ringOuter, { width: 160, height: 160, borderRadius: 80, borderColor: '#4ECDC4' }]} />
-              <View style={[styles.ringMiddle, { width: 130, height: 130, borderRadius: 65, borderColor: '#26A69A' }]} />
-              <View style={[styles.ringInner, { width: 100, height: 100, borderRadius: 50, borderColor: '#FF6B6B' }]}>
-                <Text style={styles.ringCenterValue}>420</Text>
-                <Text style={styles.ringCenterUnit}>kcal</Text>
+        {/* 今日运动概览 */}
+        <View style={styles.overviewCard}>
+          <View style={styles.overviewHeader}>
+            <Text style={styles.overviewTitle}>今日运动概览</Text>
+            <Ionicons name="analytics-outline" size={18} color="#FFFFFF" />
+          </View>
+          <View style={styles.overviewGrid}>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>{EXERCISE_OVERVIEW.steps.toLocaleString()}</Text>
+              <Text style={styles.overviewLabel}>步数</Text>
+            </View>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>{EXERCISE_OVERVIEW.calories}</Text>
+              <Text style={styles.overviewLabel}>卡路里</Text>
+            </View>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>{EXERCISE_OVERVIEW.distance}</Text>
+              <Text style={styles.overviewLabel}>公里</Text>
+            </View>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>{EXERCISE_OVERVIEW.minutes}</Text>
+              <Text style={styles.overviewLabel}>活动分钟</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* 运动三环 */}
+        <View style={styles.ringsCard}>
+          <View style={styles.ringsCardHeader}>
+            <Text style={styles.ringsCardTitle}>运动三环</Text>
+            <TouchableOpacity style={styles.ringsCardAction}>
+              <FontAwesome6 name="chart-line" size={14} color="#26A69A" />
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.ringsMainContent}>
+            {/* 环形进度图 */}
+            <View style={styles.ringChartContainer}>
+              <View style={styles.ringChartBg}>
+                {/* Activity ring - Red */}
+                <View style={[styles.activityRing, { width: 120, height: 120, borderRadius: 60 }]} />
+                {/* Exercise ring - Teal */}
+                <View style={[styles.exerciseRing, { width: 100, height: 100, borderRadius: 50 }]} />
+                {/* Stand ring - Blue */}
+                <View style={[styles.standRing, { width: 80, height: 80, borderRadius: 40 }]} />
+                {/* Center */}
+                <View style={styles.ringChartCenter}>
+                  <Text style={styles.ringPercentValue}>{totalPercent}%</Text>
+                  <Text style={styles.ringPercentLabel}>今日完成</Text>
+                </View>
               </View>
             </View>
-            <View style={styles.ringsStats}>
-              <View style={styles.ringStat}>
+
+            {/* 三环详细数据 */}
+            <View style={styles.ringsDetailList}>
+              <View style={styles.ringDetailItem}>
                 <View style={[styles.ringDot, { backgroundColor: '#FF6B6B' }]} />
-                <Text style={styles.ringStatLabel}>卡路里</Text>
-                <Text style={styles.ringStatValue}>420/500</Text>
+                <View style={styles.ringDetailContent}>
+                  <View style={styles.ringDetailHeader}>
+                    <Text style={styles.ringDetailName}>活动</Text>
+                    <Text style={styles.ringDetailValue}>
+                      {EXERCISE_RINGS.activity.current}/{EXERCISE_RINGS.activity.target} {EXERCISE_RINGS.activity.unit}
+                    </Text>
+                  </View>
+                  <View style={styles.ringDetailProgress}>
+                    <View style={[styles.ringDetailBar, { width: `${EXERCISE_RINGS.activity.percent}%`, backgroundColor: '#FF6B6B' }]} />
+                  </View>
+                  <Text style={styles.ringDetailPercent}>{EXERCISE_RINGS.activity.percent}%</Text>
+                </View>
               </View>
-              <View style={styles.ringStat}>
-                <View style={[styles.ringDot, { backgroundColor: '#26A69A' }]} />
-                <Text style={styles.ringStatLabel}>时长</Text>
-                <Text style={styles.ringStatValue}>45/60min</Text>
-              </View>
-              <View style={styles.ringStat}>
+
+              <View style={styles.ringDetailItem}>
                 <View style={[styles.ringDot, { backgroundColor: '#4ECDC4' }]} />
-                <Text style={styles.ringStatLabel}>步数</Text>
-                <Text style={styles.ringStatValue}>8500/10000</Text>
+                <View style={styles.ringDetailContent}>
+                  <View style={styles.ringDetailHeader}>
+                    <Text style={styles.ringDetailName}>运动</Text>
+                    <Text style={styles.ringDetailValue}>
+                      {EXERCISE_RINGS.exercise.current}/{EXERCISE_RINGS.exercise.target} {EXERCISE_RINGS.exercise.unit}
+                    </Text>
+                  </View>
+                  <View style={styles.ringDetailProgress}>
+                    <View style={[styles.ringDetailBar, { width: `${EXERCISE_RINGS.exercise.percent}%`, backgroundColor: '#4ECDC4' }]} />
+                  </View>
+                  <Text style={styles.ringDetailPercent}>{EXERCISE_RINGS.exercise.percent}%</Text>
+                </View>
+              </View>
+
+              <View style={styles.ringDetailItem}>
+                <View style={[styles.ringDot, { backgroundColor: '#2196F3' }]} />
+                <View style={styles.ringDetailContent}>
+                  <View style={styles.ringDetailHeader}>
+                    <Text style={styles.ringDetailName}>站立</Text>
+                    <Text style={styles.ringDetailValue}>
+                      {EXERCISE_RINGS.stand.current}/{EXERCISE_RINGS.stand.target} {EXERCISE_RINGS.stand.unit}
+                    </Text>
+                  </View>
+                  <View style={styles.ringDetailProgress}>
+                    <View style={[styles.ringDetailBar, { width: `${EXERCISE_RINGS.stand.percent}%`, backgroundColor: '#2196F3' }]} />
+                  </View>
+                  <Text style={styles.ringDetailPercent}>{EXERCISE_RINGS.stand.percent}%</Text>
+                </View>
               </View>
             </View>
           </View>
         </View>
 
-        {/* 运动项目选择 */}
+        {/* 选择运动项目 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>选择运动项目</Text>
           <View style={styles.sportGrid}>
@@ -81,13 +283,14 @@ export default function ExerciseScreen() {
                 key={sport.id}
                 style={[styles.sportCard, selectedSport === sport.id && styles.sportCardSelected]}
                 onPress={() => setSelectedSport(sport.id)}
+                activeOpacity={0.7}
               >
-                <View style={[styles.sportIconWrap, { backgroundColor: sport.bgColor }]}>
-                  <FontAwesome6 name={sport.icon as any} size={24} color={sport.color} />
-                </View>
+                <Image
+                  source={{ uri: RING_IMAGES[sport.name] }}
+                  style={styles.sportImage}
+                />
                 <Text style={styles.sportName}>{sport.name}</Text>
-                <Text style={styles.sportInfo}>{sport.kcal}kcal</Text>
-                <Text style={styles.sportDuration}>{sport.duration}min</Text>
+                <Text style={styles.sportDescription}>{sport.description}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -95,7 +298,7 @@ export default function ExerciseScreen() {
 
         {/* 开始运动按钮 */}
         {selectedSport && (
-          <TouchableOpacity style={styles.startButton}>
+          <TouchableOpacity style={styles.startButton} activeOpacity={0.8}>
             <FontAwesome6 name="play" size={20} color="#FFFFFF" />
             <Text style={styles.startButtonText}>开始 {SPORTS.find(s => s.id === selectedSport)?.name}</Text>
           </TouchableOpacity>
@@ -172,88 +375,192 @@ export default function ExerciseScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F5F7FA',
   },
   contentContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingTop: 16,
   },
-  ringsOverviewCard: {
+  // 今日运动概览
+  overviewCard: {
+    backgroundColor: '#26A69A',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+  },
+  overviewHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  overviewTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  overviewGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  overviewItem: {
+    width: '50%',
+    paddingVertical: 8,
+  },
+  overviewValue: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  overviewLabel: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.85)',
+    marginTop: 4,
+  },
+  // 运动三环
+  ringsCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
   },
-  cardTitle: {
+  ringsCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  ringsCardTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a2e',
-    marginBottom: 20,
   },
-  ringsContainer: {
+  ringsCardAction: {
+    padding: 8,
+    backgroundColor: '#E0F2F1',
+    borderRadius: 8,
+  },
+  ringsMainContent: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  ringsWrapper: {
-    alignItems: 'center',
+  ringChartContainer: {
+    width: 140,
+    height: 140,
     justifyContent: 'center',
-    height: 180,
-    marginBottom: 20,
+    alignItems: 'center',
   },
-  ringOuter: {
-    position: 'absolute',
-    borderWidth: 8,
-    borderColor: '#4ECDC440',
+  ringChartBg: {
+    width: 140,
+    height: 140,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
   },
-  ringMiddle: {
-    position: 'absolute',
-    borderWidth: 8,
-    borderColor: '#26A69A40',
-  },
-  ringInner: {
+  activityRing: {
     position: 'absolute',
     borderWidth: 10,
-    borderColor: '#FF6B6B40',
+    borderColor: 'rgba(255, 107, 107, 0.3)',
+    backgroundColor: 'transparent',
+  },
+  exerciseRing: {
+    position: 'absolute',
+    borderWidth: 10,
+    borderColor: 'rgba(78, 205, 196, 0.3)',
+    backgroundColor: 'transparent',
+  },
+  standRing: {
+    position: 'absolute',
+    borderWidth: 10,
+    borderColor: 'rgba(33, 150, 243, 0.3)',
+    backgroundColor: 'transparent',
+  },
+  ringChartCenter: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  ringPercentValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#10B981',
+  },
+  ringPercentLabel: {
+    fontSize: 10,
+    color: '#6B7280',
+  },
+  ringSvgContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  ringCenterValue: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#FF6B6B',
+  ringCircle: {
+    position: 'absolute',
   },
-  ringCenterUnit: {
-    fontSize: 12,
-    color: '#9CA3AF',
+  ringProgress: {
+    position: 'absolute',
   },
-  ringsStats: {
+  ringsDetailList: {
+    flex: 1,
+    marginLeft: 20,
+  },
+  ringDetailItem: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  ringStat: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: 14,
   },
   ringDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
+    marginTop: 4,
+    marginRight: 10,
+  },
+  ringDetailContent: {
+    flex: 1,
+  },
+  ringDetailHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 6,
   },
-  ringStatLabel: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginBottom: 2,
-  },
-  ringStatValue: {
+  ringDetailName: {
     fontSize: 14,
     fontWeight: '600',
     color: '#1a1a2e',
   },
+  ringDetailValue: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  ringDetailProgress: {
+    height: 6,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 3,
+    marginBottom: 4,
+  },
+  ringDetailBar: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  ringDetailPercent: {
+    fontSize: 11,
+    color: '#9CA3AF',
+  },
+  // 选择运动项目
   section: {
     marginBottom: 20,
   },
@@ -261,114 +568,117 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a2e',
-    marginBottom: 12,
-  },
-  moreBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  moreBtnText: {
-    fontSize: 13,
-    color: '#26A69A',
+    marginBottom: 16,
   },
   sportGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 12,
+    marginHorizontal: -6,
   },
   sportCard: {
-    width: '23%',
+    width: '47%',
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 12,
+    padding: 16,
+    marginHorizontal: '1.5%',
+    marginBottom: 12,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
-    borderWidth: 2,
-    borderColor: 'transparent',
   },
   sportCardSelected: {
+    borderWidth: 2,
     borderColor: '#26A69A',
     backgroundColor: '#E0F2F1',
   },
-  sportIconWrap: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
+  sportImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginBottom: 12,
+    backgroundColor: '#F3F4F6',
   },
   sportName: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '600',
     color: '#1a1a2e',
     marginBottom: 4,
   },
-  sportInfo: {
+  sportDescription: {
     fontSize: 11,
-    color: '#FF6B6B',
-    fontWeight: '500',
+    color: '#6B7280',
+    textAlign: 'center',
   },
-  sportDuration: {
-    fontSize: 10,
-    color: '#9CA3AF',
-  },
+  // 开始运动按钮
   startButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
     backgroundColor: '#26A69A',
-    borderRadius: 25,
-    paddingVertical: 14,
-    marginBottom: 20,
+    borderRadius: 30,
+    paddingVertical: 16,
+    marginHorizontal: 20,
+    marginBottom: 24,
+    gap: 8,
   },
   startButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
   },
+  // 示范动作学习
+  moreBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  moreBtnText: {
+    fontSize: 14,
+    color: '#26A69A',
+  },
   tutorialScroll: {
-    paddingRight: 20,
-    gap: 12,
+    paddingRight: 16,
   },
   tutorialCard: {
-    width: 180,
-    backgroundColor: '#FFFFFF',
+    width: 160,
+    marginRight: 12,
     borderRadius: 16,
     overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.06,
     shadowRadius: 8,
-    elevation: 3,
+    elevation: 2,
   },
   tutorialImage: {
     width: '100%',
-    height: 120,
+    height: 100,
+    backgroundColor: '#F3F4F6',
   },
   tutorialOverlay: {
     position: 'absolute',
-    top: 40,
-    left: 70,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   playIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(38, 166, 154, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -383,16 +693,17 @@ const styles = StyleSheet.create({
   },
   tutorialMeta: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 12,
   },
   tutorialDuration: {
     fontSize: 12,
     color: '#26A69A',
   },
   tutorialViews: {
-    fontSize: 11,
+    fontSize: 12,
     color: '#9CA3AF',
   },
+  // 运动记录
   recordCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -407,9 +718,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'flex-end',
-    height: 100,
+    height: 120,
     marginBottom: 20,
-    paddingBottom: 10,
+    paddingTop: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
@@ -419,12 +730,12 @@ const styles = StyleSheet.create({
   recordBar: {
     width: 24,
     backgroundColor: '#26A69A',
-    borderRadius: 6,
-    marginBottom: 6,
+    borderRadius: 4,
+    marginBottom: 8,
   },
   recordDay: {
-    fontSize: 11,
-    color: '#9CA3AF',
+    fontSize: 12,
+    color: '#6B7280',
   },
   recordSummary: {
     flexDirection: 'row',
@@ -436,11 +747,11 @@ const styles = StyleSheet.create({
   recordSummaryValue: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#26A69A',
+    color: '#1a1a2e',
+    marginBottom: 4,
   },
   recordSummaryLabel: {
     fontSize: 12,
-    color: '#9CA3AF',
-    marginTop: 4,
+    color: '#6B7280',
   },
 });
