@@ -268,34 +268,45 @@ export default function MemberScreen() {
           </View>
         </View>
 
-        {/* 用户成长 */}
+        {/* 健康积分 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>用户成长</Text>
+          <Text style={styles.sectionTitle}>健康积分</Text>
           <View style={styles.levelCard}>
             <View style={styles.levelHeader}>
-              <View style={styles.levelBadge}>
-                <Text style={styles.levelBadgeText}>LV.{user.userLevel}</Text>
+              <View style={[styles.levelBadge, { backgroundColor: '#26A69A' }]}>
+                <FontAwesome6 name="seedling" size={16} color="#FFFFFF" />
+                <Text style={styles.levelBadgeText}>进阶</Text>
               </View>
               <View style={styles.levelInfo}>
-                <Text style={styles.levelTitle}>{user.userTitle}</Text>
+                <Text style={styles.levelTitle}>当前积分：1280 分</Text>
                 <View style={styles.levelProgressWrap}>
                   <View style={styles.levelProgress}>
-                    <View style={[styles.levelProgressFill, { width: `${user.expProgress}%` }]} />
+                    <View style={[styles.levelProgressFill, { width: '80%', backgroundColor: '#26A69A' }]} />
                   </View>
-                  <Text style={styles.levelProgressText}>{user.expProgress}%</Text>
+                  <Text style={styles.levelProgressText}>还需 120 分升至顶尖</Text>
                 </View>
               </View>
             </View>
-            <Text style={styles.levelDesc}>再获得 350 经验值即可升至 LV.13</Text>
-            <View style={styles.levelBenefits}>
-              <View style={styles.levelBenefit}>
-                <FontAwesome6 name="star" size={12} color="#FFD700" />
-                <Text style={styles.levelBenefitText}>专属头像框</Text>
-              </View>
-              <View style={styles.levelBenefit}>
-                <FontAwesome6 name="gem" size={12} color="#9C27B0" />
-                <Text style={styles.levelBenefitText}>VIP标识</Text>
-              </View>
+            {/* 积分等级进度 */}
+            <View style={styles.pointsLevelRow}>
+              {[
+                { name: '启程', range: '0-350', active: true, completed: true },
+                { name: '进阶', range: '351-500', active: true, completed: true },
+                { name: '优秀', range: '501-700', active: true, completed: true },
+                { name: '卓越', range: '701-800', active: false, completed: false },
+                { name: '顶尖', range: '800+', active: false, completed: false },
+              ].map((level, index) => (
+                <View key={level.name} style={styles.pointsLevelItem}>
+                  <View style={[styles.pointsLevelDot, {
+                    backgroundColor: level.completed ? '#26A69A' : level.active ? '#FFD700' : '#E5E7EB',
+                    borderColor: level.completed ? '#26A69A' : level.active ? '#FFD700' : '#D1D5DB',
+                  }]}>
+                    {level.completed && <Ionicons name="checkmark" size={10} color="#FFFFFF" />}
+                  </View>
+                  <Text style={[styles.pointsLevelName, level.active && !level.completed && { color: '#26A69A' }]}>{level.name}</Text>
+                  <Text style={styles.pointsLevelRange}>{level.range}</Text>
+                </View>
+              ))}
             </View>
           </View>
         </View>
@@ -790,6 +801,37 @@ const styles = StyleSheet.create({
   levelBenefitText: {
     fontSize: 12,
     color: '#6B7280',
+  },
+  pointsLevelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
+  pointsLevelItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  pointsLevelDot: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pointsLevelName: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  pointsLevelRange: {
+    fontSize: 9,
+    color: '#9CA3AF',
+    marginTop: 2,
   },
   badgesCard: {
     backgroundColor: '#FFFFFF',
