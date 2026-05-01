@@ -170,27 +170,6 @@ export default function KnowledgeScreen() {
           </View>
         </View>
 
-        {/* 科学瘦身计算器入口 */}
-        <TouchableOpacity style={styles.calculatorBanner} onPress={() => router.push('/diet-calculator')}>
-          <LinearGradient
-            colors={['#FF9800', '#FFB74D']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.calculatorGradient}
-          >
-            <View style={styles.calculatorContent}>
-              <View style={styles.calculatorIcon}>
-                <FontAwesome6 name="calculator" size={24} color="#FFFFFF" />
-              </View>
-              <View style={styles.calculatorText}>
-                <Text style={styles.calculatorTitle}>科学瘦身计算器</Text>
-                <Text style={styles.calculatorSubtitle}>输入数据，获取个性化减脂方案</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-
         {/* 分类导航 */}
         <View style={styles.categorySection}>
           <ScrollView

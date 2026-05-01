@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeRouter } from '@/hooks/useSafeRouter';
 
 // 获取屏幕宽度用于适配
@@ -310,6 +311,27 @@ export default function MemberScreen() {
             </View>
           </View>
         </View>
+
+        {/* 科学瘦身计算器入口 */}
+        <TouchableOpacity style={styles.calculatorBanner} onPress={() => router.push('/diet-calculator')}>
+          <LinearGradient
+            colors={['#FF9800', '#FFB74D']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.calculatorGradient}
+          >
+            <View style={styles.calculatorContent}>
+              <View style={styles.calculatorIcon}>
+                <FontAwesome6 name="calculator" size={24} color="#FFFFFF" />
+              </View>
+              <View style={styles.calculatorText}>
+                <Text style={styles.calculatorTitle}>科学瘦身计算器</Text>
+                <Text style={styles.calculatorSubtitle}>输入数据，获取个性化减脂方案</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
 
         {/* 徽章墙 */}
         <View style={styles.section}>
@@ -832,6 +854,46 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: '#9CA3AF',
     marginTop: 2,
+  },
+  calculatorBanner: {
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#FF9800',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  calculatorGradient: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  calculatorContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  calculatorIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  calculatorText: {
+    flex: 1,
+  },
+  calculatorTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  calculatorSubtitle: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.9)',
   },
   badgesCard: {
     backgroundColor: '#FFFFFF',
