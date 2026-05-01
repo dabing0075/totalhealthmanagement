@@ -69,6 +69,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* 欢迎横幅 */}
+        <LinearGradient colors={['#26A69A', '#00897B']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.welcomeBanner}>
+          <Text style={styles.welcomeTitle}>欢迎回来，健康生活每一天</Text>
+          <Text style={styles.welcomeSubtitle}>探索您的健康数据、获取个性化推荐，开始美好的一天。</Text>
+        </LinearGradient>
+
         {/* 功能导航 */}
         <View style={styles.navGrid}>
           {healthModules.map((module) => (
@@ -84,12 +90,6 @@ export default function HomeScreen() {
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* 欢迎横幅 */}
-        <LinearGradient colors={['#26A69A', '#00897B']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.welcomeBanner}>
-          <Text style={styles.welcomeTitle}>欢迎回来，健康生活每一天</Text>
-          <Text style={styles.welcomeSubtitle}>探索您的健康数据、获取个性化推荐，开始美好的一天。</Text>
-        </LinearGradient>
 
         {/* 今日热量缺口 */}
         <View style={styles.calorieCard}>
