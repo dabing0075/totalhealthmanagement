@@ -243,7 +243,7 @@ export default function DietCalculatorScreen() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
             <Ionicons name="chevron-back" size={24} color="#1a1a2e" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>科学瘦身计算器</Text>
+          <Text style={styles.headerTitle}>科学体重管理方案</Text>
           <View style={styles.placeholder} />
         </View>
 

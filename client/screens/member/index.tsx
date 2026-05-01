@@ -325,7 +325,7 @@ export default function MemberScreen() {
                 <FontAwesome6 name="calculator" size={24} color="#FFFFFF" />
               </View>
               <View style={styles.calculatorText}>
-                <Text style={styles.calculatorTitle}>科学瘦身计算器</Text>
+                <Text style={styles.calculatorTitle}>科学体重管理方案</Text>
                 <Text style={styles.calculatorSubtitle}>输入数据，获取个性化减脂方案</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
