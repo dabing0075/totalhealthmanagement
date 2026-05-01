@@ -5,50 +5,173 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Switch,
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const DEFAULT_HABITS = [
-  { id: '1', name: '早起', icon: 'sunrise', color: '#FF9800', bgColor: '#FFF3E0', completed: true },
-  { id: '2', name: '喝水8杯', icon: 'glass-water', color: '#2196F3', bgColor: '#E3F2FD', completed: true },
-  { id: '3', name: '午休20分钟', icon: 'coffee', color: '#795548', bgColor: '#EFEBE9', completed: false },
-  { id: '4', name: '晚餐清淡', icon: 'utensils', color: '#26A69A', bgColor: '#E0F2F1', completed: false },
-  { id: '5', name: '睡前阅读', icon: 'book', color: '#9C27B0', bgColor: '#F3E5F5', completed: false },
-  { id: '6', name: '不熬夜', icon: 'moon', color: '#9C27B0', bgColor: '#F3E5F5', completed: false },
-  { id: '7', name: '运动30分钟', icon: 'person-running', color: '#FF6B6B', bgColor: '#FFEBEE', completed: false },
-  { id: '8', name: '冥想10分钟', icon: 'brain', color: '#2196F3', bgColor: '#E3F2FD', completed: false },
+const TODAY_HABITS = [
+  {
+    id: '1',
+    name: '晨起喝水',
+    desc: '每天早上起床后喝一杯水',
+    icon: 'droplet',
+    iconColor: '#2196F3',
+    reminder: '07:00',
+    frequency: 80,
+    days: 5,
+    completed: true,
+    bgColor: '#E0F2F1',
+  },
+  {
+    id: '2',
+    name: '12点前睡觉',
+    desc: '每天晚上12点前入睡',
+    icon: 'moon',
+    iconColor: '#9C27B0',
+    reminder: '23:30',
+    frequency: 90,
+    days: 12,
+    completed: true,
+    bgColor: '#F3E5F5',
+  },
+  {
+    id: '3',
+    name: '健康饮食',
+    desc: '保持营养均衡的饮食',
+    icon: 'utensils',
+    iconColor: '#26A69A',
+    reminder: '12:00',
+    frequency: 75,
+    days: 20,
+    completed: false,
+    bgColor: '#FFFFFF',
+  },
+  {
+    id: '4',
+    name: '运动锻炼',
+    desc: '每天进行至少30分钟运动',
+    icon: 'person-running',
+    iconColor: '#FF6B6B',
+    reminder: '17:00',
+    frequency: 85,
+    days: 0,
+    completed: false,
+    bgColor: '#FFFFFF',
+  },
+];
+
+const HABIT_MANAGEMENT = [
+  {
+    id: '1',
+    name: '晨起喝水',
+    category: '健康',
+    desc: '每天早上起床后喝一杯水',
+    icon: 'droplet',
+    iconColor: '#2196F3',
+    bgColor: '#E3F2FD',
+    enabled: true,
+  },
+  {
+    id: '2',
+    name: '12点前睡觉',
+    category: '睡眠',
+    desc: '每天晚上12点前入睡',
+    icon: 'moon',
+    iconColor: '#9C27B0',
+    bgColor: '#F3E5F5',
+    enabled: true,
+  },
+  {
+    id: '3',
+    name: '健康饮食',
+    category: '饮食',
+    desc: '保持营养均衡的饮食',
+    icon: 'utensils',
+    iconColor: '#26A69A',
+    bgColor: '#E0F2F1',
+    enabled: true,
+  },
+  {
+    id: '4',
+    name: '运动锻炼',
+    category: '运动',
+    desc: '每天进行至少30分钟运动',
+    icon: 'person-running',
+    iconColor: '#FF6B6B',
+    bgColor: '#FFEBEE',
+    enabled: true,
+  },
+  {
+    id: '5',
+    name: '阅读学习',
+    category: '成长',
+    desc: '每天阅读30分钟',
+    icon: 'book',
+    iconColor: '#FF9800',
+    bgColor: '#FFF3E0',
+    enabled: false,
+  },
+  {
+    id: '6',
+    name: '冥想放松',
+    category: '心理',
+    desc: '每天进行10分钟冥想',
+    icon: 'brain',
+    iconColor: '#4ECDC4',
+    bgColor: '#E0F7F4',
+    enabled: false,
+  },
+];
+
+const WEEK_STATS = [
+  { day: '一', completed: 4, total: 4 },
+  { day: '二', completed: 4, total: 4 },
+  { day: '三', completed: 2, total: 4 },
+  { day: '四', completed: 3, total: 4 },
+  { day: '五', completed: 4, total: 4 },
+  { day: '六', completed: 4, total: 4 },
+  { day: '日', completed: 1, total: 4 },
 ];
 
 const REMINDERS = [
-  { id: '1', time: '08:00', habit: '早起', enabled: true },
-  { id: '2', time: '09:00', habit: '喝水', enabled: true },
-  { id: '3', time: '12:00', habit: '午休', enabled: false },
-  { id: '4', time: '18:00', habit: '运动', enabled: true },
-  { id: '5', time: '21:00', habit: '睡前阅读', enabled: true },
+  { id: '1', name: '晨起喝水', time: '07:00', icon: 'droplet', iconColor: '#2196F3', enabled: true },
+  { id: '2', name: '12点前睡觉', time: '23:30', icon: 'moon', iconColor: '#9C27B0', enabled: true },
+  { id: '3', name: '健康饮食', time: '12:00', icon: 'utensils', iconColor: '#26A69A', enabled: true },
+  { id: '4', name: '运动锻炼', time: '17:00', icon: 'person-running', iconColor: '#FF6B6B', enabled: true },
 ];
 
-const HABIT_STATS = [
-  { id: '1', label: '连续打卡', value: '28', unit: '天', color: '#FF9800' },
-  { id: '2', label: '本周完成', value: '15', unit: '次', color: '#26A69A' },
-  { id: '3', label: '完成率', value: '85', unit: '%', color: '#2196F3' },
+const ACHIEVEMENTS = [
+  { id: '1', title: '坚持达人', desc: '连续打卡7天', icon: 'fire', color: '#FF6B6B' },
+  { id: '2', title: '完美主义', desc: '完成率100%', icon: 'star', color: '#FFD700' },
+  { id: '3', title: '习惯大师', desc: '管理5个习惯', icon: 'crown', color: '#FF9800' },
 ];
 
 export default function HabitScreen() {
-  const [habits, setHabits] = useState(DEFAULT_HABITS);
+  const [habits, setHabits] = useState(TODAY_HABITS);
+  const [management, setManagement] = useState(HABIT_MANAGEMENT);
   const [reminders, setReminders] = useState(REMINDERS);
-  const completedCount = habits.filter(h => h.completed).length;
+
+  const completedCount = habits.filter((h) => h.completed).length;
+  const completionRate = Math.round((completedCount / habits.length) * 100);
 
   const toggleHabit = (id: string) => {
-    setHabits(habits.map(h => 
-      h.id === id ? { ...h, completed: !h.completed } : h
-    ));
+    setHabits(
+      habits.map((h) => (h.id === id ? { ...h, completed: !h.completed } : h))
+    );
   };
 
   const toggleReminder = (id: string) => {
-    setReminders(reminders.map(r => 
-      r.id === id ? { ...r, enabled: !r.enabled } : r
-    ));
+    setReminders(
+      reminders.map((r) => (r.id === id ? { ...r, enabled: !r.enabled } : r))
+    );
+  };
+
+  const toggleManagement = (id: string) => {
+    setManagement(
+      management.map((m) => (m.id === id ? { ...m, enabled: !m.enabled } : m))
+    );
   };
 
   return (
@@ -58,139 +181,247 @@ export default function HabitScreen() {
         contentContainerStyle={[styles.contentContainer, { paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* 打卡进度卡片 */}
-        <View style={styles.progressCard}>
-          <View style={styles.progressHeader}>
-            <Text style={styles.progressTitle}>今日打卡</Text>
-            <Text style={styles.progressDate}>2025年1月15日 周三</Text>
-          </View>
-          <View style={styles.progressContent}>
-            <View style={styles.progressLeft}>
-              <View style={styles.progressCircle}>
-                <Text style={styles.progressPercent}>{Math.round(completedCount / habits.length * 100)}%</Text>
-              </View>
-              <View style={styles.progressInfo}>
-                <Text style={styles.progressCount}>{completedCount}<Text style={styles.progressTotal}>/{habits.length}</Text></Text>
-                <Text style={styles.progressLabel}>已完成</Text>
-              </View>
+        {/* 今日习惯概览 */}
+        <LinearGradient
+          colors={['#26A69A', '#00897B']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.overviewCard}
+        >
+          <TouchableOpacity style={styles.overviewBadge}>
+            <Ionicons name="checkmark" size={16} color="#26A69A" />
+          </TouchableOpacity>
+          <View style={styles.overviewGrid}>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>{completedCount}/{habits.length}</Text>
+              <Text style={styles.overviewLabel}>已完成</Text>
             </View>
-            <View style={styles.progressStats}>
-              {HABIT_STATS.map((stat) => (
-                <View key={stat.id} style={styles.statItem}>
-                  <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
-                  <Text style={styles.statUnit}>{stat.unit}</Text>
-                  <Text style={styles.statLabel}>{stat.label}</Text>
-                </View>
-              ))}
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>{completionRate}%</Text>
+              <Text style={styles.overviewLabel}>完成率</Text>
+            </View>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>7天</Text>
+              <Text style={styles.overviewLabel}>连续打卡</Text>
+            </View>
+            <View style={styles.overviewItem}>
+              <Text style={styles.overviewValue}>23天</Text>
+              <Text style={styles.overviewLabel}>最长记录</Text>
             </View>
           </View>
-        </View>
+        </LinearGradient>
 
-        {/* 习惯列表 */}
+        {/* 今日打卡 */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>今日习惯</Text>
-            <TouchableOpacity style={styles.addBtn}>
-              <Ionicons name="add" size={18} color="#26A69A" />
-              <Text style={styles.addBtnText}>添加</Text>
-            </TouchableOpacity>
+            <Text style={styles.sectionTitle}>今日打卡</Text>
+            <View style={styles.dateTag}>
+              <Text style={styles.dateTagText}>2026年5月1日</Text>
+            </View>
           </View>
-          <View style={styles.habitList}>
+          <View style={styles.todayList}>
             {habits.map((habit) => (
               <TouchableOpacity
                 key={habit.id}
-                style={[styles.habitItem, habit.completed && styles.habitItemCompleted]}
+                style={[styles.todayCard, habit.completed && styles.todayCardCompleted]}
                 onPress={() => toggleHabit(habit.id)}
+                activeOpacity={0.8}
               >
-                <View style={[styles.habitIcon, { backgroundColor: habit.bgColor }]}>
-                  <FontAwesome6 name={habit.icon as any} size={20} color={habit.color} />
+                <View
+                  style={[
+                    styles.todayIcon,
+                    { backgroundColor: habit.completed ? '#26A69A' : '#F3F4F6' },
+                  ]}
+                >
+                  {habit.completed ? (
+                    <Ionicons name="checkmark" size={20} color="#FFFFFF" />
+                  ) : (
+                    <View style={styles.todayCircle} />
+                  )}
                 </View>
-                <View style={styles.habitInfo}>
-                  <Text style={[styles.habitName, habit.completed && styles.habitNameCompleted]}>
-                    {habit.name}
-                  </Text>
-                  {habit.completed && <Text style={styles.habitCompleteTime}>已完成</Text>}
-                </View>
-                {habit.completed ? (
-                  <View style={styles.habitCheckDone}>
-                    <FontAwesome6 name="circle-check" size={24} color="#26A69A" />
+                <View style={styles.todayContent}>
+                  <View style={styles.todayMain}>
+                    <View style={[styles.todayHabitIcon, { backgroundColor: habit.bgColor }]}>
+                      <FontAwesome6 name={habit.icon as any} size={18} color={habit.iconColor} />
+                    </View>
+                    <View style={styles.todayInfo}>
+                      <Text style={styles.todayName}>{habit.name}</Text>
+                      <Text style={styles.todayDesc}>{habit.desc}</Text>
+                      <Text style={styles.todayReminder}>提醒:{habit.reminder}</Text>
+                    </View>
                   </View>
-                ) : (
-                  <TouchableOpacity style={styles.habitCheckBtn} onPress={() => toggleHabit(habit.id)}>
-                    <Ionicons name="add-circle-outline" size={26} color="#9CA3AF" />
-                  </TouchableOpacity>
-                )}
+                  <View style={styles.todayStats}>
+                    <Text
+                      style={[
+                        styles.todayFrequency,
+                        { color: habit.completed ? '#26A69A' : '#9CA3AF' },
+                      ]}
+                    >
+                      {habit.frequency}% 月频率
+                    </Text>
+                    <Text style={styles.todayDays}>已坚持{habit.days}天</Text>
+                  </View>
+                </View>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
-        {/* 提醒设置 */}
+        {/* 习惯管理 */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>提醒设置</Text>
+            <Text style={styles.sectionTitle}>习惯管理</Text>
             <TouchableOpacity style={styles.addBtn}>
-              <Ionicons name="add" size={18} color="#26A69A" />
-              <Text style={styles.addBtnText}>添加</Text>
+              <Ionicons name="add" size={16} color="#26A69A" />
+              <Text style={styles.addBtnText}>添加新习惯</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.reminderList}>
-            {reminders.map((reminder) => (
-              <View key={reminder.id} style={styles.reminderItem}>
-                <Ionicons name="notifications" size={20} color="#9CA3AF" />
-                <View style={styles.reminderInfo}>
-                  <Text style={styles.reminderTime}>{reminder.time}</Text>
-                  <Text style={styles.reminderHabit}>{reminder.habit}</Text>
+          <View style={styles.managementGrid}>
+            {management.map((item) => (
+              <View
+                key={item.id}
+                style={[styles.managementCard, item.enabled && styles.managementCardActive]}
+              >
+                <View style={[styles.managementIcon, { backgroundColor: item.bgColor }]}>
+                  <FontAwesome6 name={item.icon as any} size={20} color={item.iconColor} />
+                </View>
+                <View style={styles.managementContent}>
+                  <Text style={styles.managementName}>{item.name}</Text>
+                  <View style={styles.managementCategory}>
+                    <Text style={styles.managementCategoryText}>{item.category}</Text>
+                  </View>
+                  <Text style={styles.managementDesc}>{item.desc}</Text>
                 </View>
                 <TouchableOpacity
-                  style={[styles.reminderToggle, reminder.enabled && styles.reminderToggleActive]}
-                  onPress={() => toggleReminder(reminder.id)}
+                  style={styles.managementToggle}
+                  onPress={() => toggleManagement(item.id)}
                 >
-                  <View style={[styles.reminderToggleDot, reminder.enabled && styles.reminderToggleDotActive]} />
+                  <View
+                    style={[
+                      styles.managementToggleTrack,
+                      item.enabled && styles.managementToggleTrackActive,
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.managementToggleThumb,
+                        item.enabled && styles.managementToggleThumbActive,
+                      ]}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
             ))}
           </View>
         </View>
 
-        {/* 周习惯概览 */}
+        {/* 本周习惯统计 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>本周习惯概览</Text>
-          <View style={styles.weekCard}>
-            <View style={styles.weekHeader}>
-              {['一', '二', '三', '四', '五', '六', '日'].map((day, index) => (
-                <Text key={day} style={[styles.weekDay, index === 2 && styles.weekDayActive]}>{day}</Text>
-              ))}
+          <Text style={styles.sectionTitle}>本周习惯统计</Text>
+          <View style={styles.statsCard}>
+            <View style={styles.statsLegend}>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: '#26A69A' }]} />
+                <Text style={styles.legendText}>已完成</Text>
+              </View>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: '#E5E7EB' }]} />
+                <Text style={styles.legendText}>总目标</Text>
+              </View>
             </View>
-            <View style={styles.weekBars}>
-              {[
-                { completed: 5, total: 6 },
-                { completed: 6, total: 6 },
-                { completed: 3, total: 6 },
-                { completed: 4, total: 6 },
-                { completed: 5, total: 6 },
-                { completed: 6, total: 6 },
-                { completed: 2, total: 6 },
-              ].map((item, index) => (
-                <View key={index} style={styles.weekBarWrap}>
-                  <View style={styles.weekBarBg}>
-                    <View style={[styles.weekBarFill, { height: `${(item.completed / item.total) * 100}%` }]} />
+            <View style={styles.statsChart}>
+              {WEEK_STATS.map((item, index) => (
+                <View key={item.day} style={styles.statsBarWrap}>
+                  <View style={styles.statsBarContainer}>
+                    <View
+                      style={[
+                        styles.statsBarCompleted,
+                        { height: `${(item.completed / item.total) * 100}%` },
+                      ]}
+                    />
+                    <View
+                      style={[
+                        styles.statsBarTotal,
+                        { height: `${((item.total - item.completed) / item.total) * 100}%` },
+                      ]}
+                    />
                   </View>
-                  <Text style={styles.weekBarText}>{item.completed}/{item.total}</Text>
+                  <Text style={styles.statsDay}>{item.day}</Text>
+                  <Text style={styles.statsCount}>
+                    {item.completed}/{item.total}
+                  </Text>
                 </View>
               ))}
             </View>
           </View>
         </View>
 
-        {/* 习惯建议 */}
+        {/* 提醒设置 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>提醒设置</Text>
+          <View style={styles.reminderCard}>
+            {reminders.map((reminder, index) => (
+              <View
+                key={reminder.id}
+                style={[
+                  styles.reminderItem,
+                  index !== reminders.length - 1 && styles.reminderItemBorder,
+                ]}
+              >
+                <View style={styles.reminderLeft}>
+                  <View
+                    style={[
+                      styles.reminderIcon,
+                      { backgroundColor: `${reminder.iconColor}20` },
+                    ]}
+                  >
+                    <FontAwesome6 name={reminder.icon as any} size={16} color={reminder.iconColor} />
+                  </View>
+                  <View style={styles.reminderInfo}>
+                    <Text style={styles.reminderName}>{reminder.name}</Text>
+                    <Text style={styles.reminderTime}>{reminder.time}</Text>
+                  </View>
+                </View>
+                <Switch
+                  value={reminder.enabled}
+                  onValueChange={() => toggleReminder(reminder.id)}
+                  trackColor={{ false: '#E5E7EB', true: '#26A69A' }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 习惯成就殿堂 */}
+        <LinearGradient
+          colors={['#FF9800', '#FF5722', '#F44336']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.achievementCard}
+        >
+          <Text style={styles.achievementTitle}>习惯成就殿堂</Text>
+          <View style={styles.achievementList}>
+            {ACHIEVEMENTS.map((achievement) => (
+              <View key={achievement.id} style={styles.achievementItem}>
+                <View style={[styles.achievementIcon, { backgroundColor: achievement.color }]}>
+                  <FontAwesome6 name={achievement.icon as any} size={20} color="#FFFFFF" />
+                </View>
+                <Text style={styles.achievementName}>{achievement.title}</Text>
+                <Text style={styles.achievementDesc}>{achievement.desc}</Text>
+              </View>
+            ))}
+          </View>
+        </LinearGradient>
+
+        {/* 睡眠养成建议 */}
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
-            <Ionicons name="bulb" size={20} color="#26A69A" />
-            <Text style={styles.tipsTitle}>习惯养成建议</Text>
+            <Ionicons name="moon" size={20} color="#9C27B0" />
+            <Text style={styles.tipsTitle}>睡眠养成建议</Text>
           </View>
           <Text style={styles.tipsContent}>
-            坚持21天可以养成一个新习惯！您已经连续打卡28天，继续保持。建议每天在同一时间完成相同的习惯，更容易坚持。
+            建议您在晚上11点前入睡，保证7-8小时的充足睡眠。睡前避免使用电子设备，可以听一些舒缓的音乐帮助入睡。
           </Text>
         </View>
       </ScrollView>
@@ -201,98 +432,11 @@ export default function HabitScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F5F7FA',
   },
   contentContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingTop: 16,
-  },
-  progressCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  progressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  progressTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1a1a2e',
-  },
-  progressDate: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  progressContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  progressLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    marginRight: 20,
-  },
-  progressCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#E0F2F1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  progressPercent: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#26A69A',
-  },
-  progressInfo: {
-    alignItems: 'flex-start',
-  },
-  progressCount: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#26A69A',
-  },
-  progressTotal: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#9CA3AF',
-  },
-  progressLabel: {
-    fontSize: 13,
-    color: '#9CA3AF',
-  },
-  progressStats: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  statUnit: {
-    fontSize: 11,
-    color: '#9CA3AF',
-  },
-  statLabel: {
-    fontSize: 11,
-    color: '#9CA3AF',
-    marginTop: 2,
   },
   section: {
     marginBottom: 20,
@@ -308,74 +452,297 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1a1a2e',
   },
+  dateTag: {
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  dateTagText: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
   addBtn: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#E0F2F1',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
     gap: 4,
   },
   addBtnText: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#26A69A',
+    fontWeight: '500',
   },
-  habitList: {
-    backgroundColor: '#FFFFFF',
+  // 今日习惯概览
+  overviewCard: {
     borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    position: 'relative',
+  },
+  overviewBadge: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overviewGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  overviewItem: {
+    width: '50%',
+    paddingVertical: 10,
+  },
+  overviewValue: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  overviewLabel: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.85)',
+    marginTop: 4,
+  },
+  // 今日打卡
+  todayList: {
+    gap: 12,
+  },
+  todayCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
   },
-  habitItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F9FAFB',
-  },
-  habitItemCompleted: {
+  todayCardCompleted: {
     backgroundColor: '#E0F2F1',
-    marginHorizontal: -16,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-    borderBottomWidth: 0,
   },
-  habitIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  todayIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
   },
-  habitInfo: {
+  todayCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#D1D5DB',
+  },
+  todayContent: {
     flex: 1,
   },
-  habitName: {
+  todayMain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  todayHabitIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  todayInfo: {
+    flex: 1,
+  },
+  todayName: {
     fontSize: 15,
     fontWeight: '600',
     color: '#1a1a2e',
+    marginBottom: 2,
   },
-  habitNameCompleted: {
-    textDecorationLine: 'line-through',
+  todayDesc: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  todayReminder: {
+    fontSize: 11,
     color: '#9CA3AF',
   },
-  habitCompleteTime: {
-    fontSize: 11,
-    color: '#26A69A',
-    marginTop: 2,
+  todayStats: {
+    marginTop: 10,
+    paddingLeft: 52,
   },
-  habitCheckDone: {
-    marginLeft: 8,
+  todayFrequency: {
+    fontSize: 13,
+    fontWeight: '600',
+    marginBottom: 2,
   },
-  habitCheckBtn: {
-    padding: 4,
+  todayDays: {
+    fontSize: 12,
+    color: '#9CA3AF',
   },
-  reminderList: {
+  // 习惯管理
+  managementGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -6,
+  },
+  managementCard: {
+    width: '47%',
+    marginHorizontal: '1.5%',
+    marginBottom: 12,
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 16,
+    padding: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  managementCardActive: {
+    backgroundColor: '#E0F2F1',
+  },
+  managementIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  managementContent: {
+    marginBottom: 10,
+  },
+  managementName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    marginBottom: 4,
+  },
+  managementCategory: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+  managementCategoryText: {
+    fontSize: 10,
+    color: '#6B7280',
+  },
+  managementDesc: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    lineHeight: 16,
+  },
+  managementToggle: {
+    alignSelf: 'flex-end',
+  },
+  managementToggleTrack: {
+    width: 44,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#E5E7EB',
+    padding: 2,
+  },
+  managementToggleTrackActive: {
+    backgroundColor: '#26A69A',
+  },
+  managementToggleThumb: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+  },
+  managementToggleThumbActive: {
+    transform: [{ translateX: 20 }],
+  },
+  // 本周习惯统计
+  statsCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  statsLegend: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 24,
+    marginBottom: 20,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  statsChart: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    height: 120,
+  },
+  statsBarWrap: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statsBarContainer: {
+    width: 24,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: '#E5E7EB',
+    justifyContent: 'flex-end',
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  statsBarCompleted: {
+    width: '100%',
+    backgroundColor: '#26A69A',
+    borderRadius: 12,
+    minHeight: 4,
+  },
+  statsBarTotal: {
+    width: '100%',
+    backgroundColor: '#E5E7EB',
+  },
+  statsDay: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  statsCount: {
+    fontSize: 10,
+    color: '#9CA3AF',
+  },
+  // 提醒设置
+  reminderCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -385,48 +752,81 @@ const styles = StyleSheet.create({
   },
   reminderItem: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F9FAFB',
   },
-  reminderInfo: {
-    flex: 1,
-    marginLeft: 12,
+  reminderItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  reminderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reminderIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  reminderInfo: {},
+  reminderName: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1a1a2e',
+    marginBottom: 2,
   },
   reminderTime: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1a1a2e',
-  },
-  reminderHabit: {
     fontSize: 12,
     color: '#9CA3AF',
-    marginTop: 2,
   },
-  reminderToggle: {
-    width: 50,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#E5E7EB',
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-  },
-  reminderToggleActive: {
-    backgroundColor: '#26A69A',
-  },
-  reminderToggleDot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-  },
-  reminderToggleDotActive: {
-    alignSelf: 'flex-end',
-  },
-  weekCard: {
-    backgroundColor: '#FFFFFF',
+  // 习惯成就殿堂
+  achievementCard: {
     borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+  },
+  achievementTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  achievementList: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  achievementItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  achievementIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  achievementName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  achievementDesc: {
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.85)',
+    textAlign: 'center',
+  },
+  // 睡眠养成建议
+  tipsCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -434,65 +834,20 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  weekHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 16,
-  },
-  weekDay: {
-    fontSize: 13,
-    color: '#9CA3AF',
-  },
-  weekDayActive: {
-    color: '#26A69A',
-    fontWeight: '600',
-  },
-  weekBars: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    height: 80,
-  },
-  weekBarWrap: {
-    alignItems: 'center',
-  },
-  weekBarBg: {
-    width: 24,
-    height: 60,
-    backgroundColor: '#E0F2F1',
-    borderRadius: 12,
-    justifyContent: 'flex-end',
-    overflow: 'hidden',
-  },
-  weekBarFill: {
-    backgroundColor: '#26A69A',
-    borderRadius: 12,
-  },
-  weekBarText: {
-    fontSize: 10,
-    color: '#9CA3AF',
-    marginTop: 6,
-  },
-  tipsCard: {
-    backgroundColor: '#E0F2F1',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 20,
-  },
   tipsHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   tipsTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#26A69A',
+    color: '#1a1a2e',
   },
   tipsContent: {
     fontSize: 14,
-    color: '#1a1a2e',
+    color: '#6B7280',
     lineHeight: 22,
   },
 });
