@@ -9,168 +9,124 @@ import {
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 
-const MEMBERSHIP_TIERS = [
+// VIP基础会员套餐
+const VIP_BASIC_PLANS = [
   {
-    id: '1',
-    name: '免费会员',
-    price: '¥0',
-    period: '永久',
-    features: [
-      '基础体重记录',
-      '每日打卡功能',
-      '健康数据跟踪',
-      '3篇笔记发布',
-      '基础知识库浏览',
-    ],
-    unavailable: [
-      'AI饮食分析',
-      '专家咨询',
-      '专属教练',
-      '高级徽章',
-      '数据分析报告',
-    ],
-    color: '#9CA3AF',
-    bgColor: '#F3F4F6',
-    icon: 'user',
+    id: 'year',
+    name: '年卡',
+    subtitle: '买一送一',
+    price: '128',
+    period: '24个月',
+    originalPrice: '216元/年',
+    features: ['加赠主题皮肤', '0.1元加购体重秤'],
+    badge: '最划算',
+    badgeColor: '#FF9800',
   },
   {
-    id: '2',
-    name: '月度会员',
-    price: '¥29',
-    period: '/月',
-    originalPrice: '¥39',
-    features: [
-      '全部基础功能',
-      'AI饮食拍照分析',
-      '专业营养师咨询（每月3次）',
-      '详细数据分析报告',
-      '无限笔记发布',
-      '专属头像框',
-      '月度徽章',
-      '优先客服支持',
-    ],
-    unavailable: [
-      '专属教练服务',
-      '年度专属活动',
-    ],
-    color: '#26A69A',
-    bgColor: '#E0F2F1',
-    icon: 'crown',
-    recommended: true,
-    savings: '省¥120/年',
+    id: 'quarter',
+    name: '季卡',
+    price: '45',
+    period: '3个月',
+    features: [],
+    badge: '',
+    badgeColor: '',
   },
   {
-    id: '3',
-    name: '年度会员',
-    price: '¥199',
-    period: '/年',
-    originalPrice: '¥349',
-    features: [
-      '全部月度功能',
-      '专属健身教练（1对1）',
-      '全年无限咨询',
-      '年度健康总结报告',
-      '专属年度徽章',
-      'VIP身份标识',
-      '优先预约专家',
-      '会员专属活动',
-      '生日特权礼包',
-    ],
-    unavailable: [],
-    color: '#FF9800',
-    bgColor: '#FFF3E0',
-    icon: 'gem',
-    discount: '5.7折',
-  },
-  {
-    id: '4',
-    name: '终身会员',
-    price: '¥599',
-    period: '一次性',
-    features: [
-      '全部年度功能',
-      '终身专属服务',
-      '无限次专家咨询',
-      '永久VIP身份',
-      '专属定制服务',
-      '新品优先体验',
-      '线下活动邀请',
-      '健康管家服务',
-    ],
-    unavailable: [],
-    color: '#9C27B0',
-    bgColor: '#F3E5F5',
-    icon: 'infinity',
-    tag: '最划算',
+    id: 'month',
+    name: '月卡',
+    subtitle: '首购买一送一',
+    price: '18',
+    period: '月',
+    originalPrice: '',
+    features: [],
+    badge: '',
+    badgeColor: '',
   },
 ];
 
-const MEMBERSHIP_BENEFITS = {
-  vip: [
-    { icon: 'wand-magic-sparkles', text: 'AI智能分析' },
-    { icon: 'user-tie', text: '专属教练' },
-    { icon: 'chart-line', text: '数据报告' },
-    { icon: 'headset', text: '优先客服' },
-  ],
-  privilege: [
-    { icon: 'medal', text: '专属徽章' },
-    { icon: 'frame', text: '头像框' },
-    { icon: 'bell', text: '活动邀请' },
-    { icon: 'gift', text: '生日礼包' },
-  ],
+// VIP进阶会员套餐
+const VIP_ADVANCED_PLANS = [
+  {
+    id: 'advanced-year',
+    name: '首年卡',
+    price: '398',
+    period: '年',
+    originalPrice: '598元/年',
+    gift: '赠送监测指环',
+    features: ['血压监测', '睡眠监测', '血糖监测', '步数监测', '趋势图分析', '量身定制食谱'],
+  },
+  {
+    id: 'advanced-quarter',
+    name: '首季卡',
+    price: '198',
+    period: '3个月',
+    originalPrice: '368元/季',
+    gift: '赠送监测指环',
+    features: ['血压监测', '睡眠监测', '血糖监测', '步数监测'],
+  },
+];
+
+// 打卡挑战
+const CHECKIN_CHALLENGE = {
+  fee: '45元',
+  period: '93天',
+  goal: '连续30天打卡',
+  refund: '全额返还',
+  extra: '6份随单控卡小食权益',
 };
 
+// 基础权益列表
+const BASIC_RIGHTS = [
+  { icon: 'utensils', text: '定制减重方案', color: '#26A69A' },
+  { icon: 'wand-magic-sparkles', text: 'AI算热量', color: '#9C27B0' },
+  { icon: 'chart-line', text: '每周减重小结', color: '#2196F3' },
+  { icon: 'user-doctor', text: '1V1人工减重服务', color: '#FF9800' },
+  { icon: 'gift', text: '0元领零食(每月2份)', color: '#E91E63' },
+  { icon: 'tag', text: '全场88折', color: '#4CAF50' },
+];
+
+// 进阶权益列表
+const ADVANCED_RIGHTS = [
+  { icon: 'heart-pulse', text: '血压/睡眠/血糖监测', color: '#9C27B0' },
+  { icon: 'chart-simple', text: '多维度记录分析', color: '#2196F3' },
+  { icon: 'bowl-food', text: '控糖限油食谱', color: '#4CAF50' },
+  { icon: 'users', text: '进阶社群', color: '#FF9800' },
+  { icon: 'calendar-check', text: '21天养成营', color: '#E91E63' },
+  { icon: 'ring', text: '价值700元监测指环', color: '#26A69A' },
+];
+
+// 健康学分等级
+const LEVELS = [
+  { name: '启程', min: 0, max: 350, color: '#9CA3AF' },
+  { name: '进阶', min: 351, max: 500, color: '#4CAF50' },
+  { name: '优秀', min: 501, max: 700, color: '#2196F3' },
+  { name: '卓越', min: 701, max: 800, color: '#FF9800' },
+  { name: '顶尖', min: 801, max: Infinity, color: '#9C27B0' },
+];
+
+// 成就徽章
+const BADGES = [
+  { id: '1', name: '连续打卡7天', icon: 'fire', color: '#FF6B6B', unlocked: true },
+  { id: '2', name: '减重5公斤', icon: 'weight', color: '#2196F3', unlocked: true },
+  { id: '3', name: '社区达人', icon: 'comments', color: '#4CAF50', unlocked: false },
+  { id: '4', name: '坚持30天', icon: 'medal', color: '#FFD700', unlocked: false },
+];
+
 export default function VipScreen() {
-  const [selectedTier, setSelectedTier] = useState<string>('2');
+  const [selectedBasicPlan, setSelectedBasicPlan] = useState<string>('year');
+  const [selectedAdvancedPlan, setSelectedAdvancedPlan] = useState<string>('advanced-year');
+  const [autoRenew, setAutoRenew] = useState(true);
 
-  // 续费信息
-  const renewalInfo = {
-    currentPlan: '月度会员',
-    expireDate: '2025年2月15日',
-    autoRenew: true,
-    nextPayment: '¥29.00',
-  };
-
-  // 打卡积分任务
-  const pointTasks = [
-    { id: '1', name: '每日首次打卡', points: 10, icon: 'flag', completed: true },
-    { id: '2', name: '完成运动记录', points: 15, icon: 'person-running', completed: true },
-    { id: '3', name: '记录饮食', points: 10, icon: 'utensils', completed: false },
-    { id: '4', name: '阅读知识文章', points: 5, icon: 'book', completed: false },
-    { id: '5', name: '分享健康动态', points: 8, icon: 'share', completed: false },
-    { id: '6', name: '睡眠记录', points: 10, icon: 'moon', completed: true },
-  ];
-
-  // 用户成长数据
-  const userGrowth = {
-    level: 12,
-    title: '健康达人',
-    currentExp: 1350,
-    nextLevelExp: 1700,
-    expProgress: 79,
-    benefits: [
-      { level: 5, name: '新手标识', unlocked: true },
-      { level: 10, name: '专属头像框', unlocked: true },
-      { level: 15, name: 'VIP标识', unlocked: false },
-      { level: 20, name: '定制徽章', unlocked: false },
-    ],
-  };
-
-  // 游戏化成就
-  const achievements = {
-    ranks: [
-      { id: '1', name: '连续打卡', value: '28天', icon: 'fire', color: '#FF6B6B' },
-      { id: '2', name: '累计徽章', value: '12个', icon: 'medal', color: '#FFD700' },
-      { id: '3', name: '累计积分', value: '2680', icon: 'coins', color: '#26A69A' },
-    ],
-    badges: [
-      { id: '1', name: '早起鸟', icon: 'sunrise', color: '#FF9800', unlocked: true },
-      { id: '2', name: '运动达人', icon: 'dumbbell', color: '#26A69A', unlocked: true },
-      { id: '3', name: '减脂先锋', icon: 'weight', color: '#2196F3', unlocked: true },
-      { id: '4', name: '知识王', icon: 'book', color: '#9C27B0', unlocked: true },
-      { id: '5', name: '睡眠专家', icon: 'moon', color: '#E91E63', unlocked: false },
-      { id: '6', name: '健康大师', icon: 'heart', color: '#FF6B6B', unlocked: false },
-    ],
+  // 用户数据
+  const userData = {
+    isVip: true,
+    vipType: 'VIP基础会员',
+    expireDate: '2026年5月1日',
+    healthScore: 580,
+    currentLevel: '优秀',
+    levelColor: '#2196F3',
+    points: 2680,
+    checkinDays: 28,
   };
 
   return (
@@ -180,292 +136,286 @@ export default function VipScreen() {
         contentContainerStyle={[styles.contentContainer, { paddingBottom: 120 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* 会员特权概览 */}
-        <View style={styles.benefitsOverview}>
-          <Text style={styles.overviewTitle}>会员专属特权</Text>
-          <View style={styles.benefitsGrid}>
-            <View style={styles.benefitCategory}>
-              <Text style={styles.benefitCategoryTitle}>VIP权益</Text>
-              <View style={styles.benefitList}>
-                {MEMBERSHIP_BENEFITS.vip.map((item) => (
-                  <View key={item.text} style={styles.benefitItem}>
-                    <View style={[styles.benefitIcon, { backgroundColor: '#E0F2F1' }]}>
-                      <FontAwesome6 name={item.icon as any} size={14} color="#26A69A" />
-                    </View>
-                    <Text style={styles.benefitText}>{item.text}</Text>
-                  </View>
-                ))}
-              </View>
+        {/* 会员状态卡片 */}
+        <View style={styles.vipStatusCard}>
+          <View style={styles.vipHeader}>
+            <View style={styles.vipBadge}>
+              <FontAwesome6 name="crown" size={20} color="#FFD700" />
+              <Text style={styles.vipBadgeText}>VIP会员</Text>
             </View>
-            <View style={styles.benefitCategory}>
-              <Text style={styles.benefitCategoryTitle}>身份特权</Text>
-              <View style={styles.benefitList}>
-                {MEMBERSHIP_BENEFITS.privilege.map((item) => (
-                  <View key={item.text} style={styles.benefitItem}>
-                    <View style={[styles.benefitIcon, { backgroundColor: '#FFF3E0' }]}>
-                      <FontAwesome6 name={item.icon as any} size={14} color="#FF9800" />
-                    </View>
-                    <Text style={styles.benefitText}>{item.text}</Text>
-                  </View>
-                ))}
+            <Text style={styles.vipExpireText}>有效期至 {userData.expireDate}</Text>
+          </View>
+          
+          <View style={styles.vipStats}>
+            <View style={styles.vipStatItem}>
+              <Text style={styles.vipStatValue}>{userData.healthScore}</Text>
+              <Text style={styles.vipStatLabel}>健康学分</Text>
+            </View>
+            <View style={styles.vipStatDivider} />
+            <View style={styles.vipStatItem}>
+              <Text style={styles.vipStatValue}>{userData.checkinDays}</Text>
+              <Text style={styles.vipStatLabel}>连续打卡</Text>
+            </View>
+            <View style={styles.vipStatDivider} />
+            <View style={styles.vipStatItem}>
+              <Text style={styles.vipStatValue}>{userData.points}</Text>
+              <Text style={styles.vipStatLabel}>累计积分</Text>
+            </View>
+          </View>
+
+          <View style={styles.levelProgress}>
+            <View style={styles.levelInfo}>
+              <View style={[styles.levelBadge, { backgroundColor: userData.levelColor }]}>
+                <Text style={styles.levelBadgeText}>{userData.currentLevel}</Text>
               </View>
+              <Text style={styles.levelHint}>还需200分到达下一个等级</Text>
+            </View>
+            <View style={styles.levelBar}>
+              <View style={[styles.levelBarFill, { width: '70%', backgroundColor: userData.levelColor }]} />
             </View>
           </View>
         </View>
 
-        {/* 会员等级选择 */}
+        {/* VIP基础会员 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>选择会员方案</Text>
-          <View style={styles.tiersContainer}>
-            {MEMBERSHIP_TIERS.map((tier) => (
+          <Text style={styles.sectionTitle}>VIP基础会员</Text>
+          <Text style={styles.sectionSubtitle}>减重 / 日常健康管理</Text>
+          
+          <View style={styles.plansGrid}>
+            {VIP_BASIC_PLANS.map((plan) => (
               <TouchableOpacity
-                key={tier.id}
+                key={plan.id}
                 style={[
-                  styles.tierCard,
-                  selectedTier === tier.id && styles.tierCardSelected,
-                  selectedTier === tier.id && { borderColor: tier.color },
+                  styles.planCard,
+                  selectedBasicPlan === plan.id && styles.planCardSelected,
                 ]}
-                onPress={() => setSelectedTier(tier.id)}
+                onPress={() => setSelectedBasicPlan(plan.id)}
               >
-                {tier.tag && (
-                  <View style={[styles.tierTag, { backgroundColor: tier.color }]}>
-                    <Text style={styles.tierTagText}>{tier.tag}</Text>
+                {plan.badge && (
+                  <View style={[styles.planBadge, { backgroundColor: plan.badgeColor }]}>
+                    <Text style={styles.planBadgeText}>{plan.badge}</Text>
                   </View>
                 )}
-                {tier.discount && (
-                  <View style={[styles.tierTag, { backgroundColor: tier.color }]}>
-                    <Text style={styles.tierTagText}>{tier.discount}</Text>
-                  </View>
+                <Text style={styles.planName}>{plan.name}</Text>
+                {plan.subtitle && (
+                  <Text style={styles.planSubtitle}>{plan.subtitle}</Text>
                 )}
-                {tier.recommended && (
-                  <View style={[styles.tierTag, { backgroundColor: tier.color }]}>
-                    <Text style={styles.tierTagText}>推荐</Text>
-                  </View>
-                )}
-                
-                <View style={[styles.tierHeader, { backgroundColor: tier.bgColor }]}>
-                  <View style={[styles.tierIconWrap, { backgroundColor: tier.color + '20' }]}>
-                    <FontAwesome6 name={tier.icon as any} size={24} color={tier.color} />
-                  </View>
-                  <Text style={[styles.tierName, { color: tier.color }]}>{tier.name}</Text>
+                <View style={styles.planPriceRow}>
+                  <Text style={styles.planPrice}>¥{plan.price}</Text>
+                  <Text style={styles.planPeriod}>/{plan.period}</Text>
                 </View>
-                
-                <View style={styles.tierPrice}>
-                  <Text style={[styles.tierPriceValue, { color: tier.color }]}>{tier.price}</Text>
-                  <Text style={styles.tierPricePeriod}>{tier.period}</Text>
-                </View>
-                
-                {tier.originalPrice && (
-                  <Text style={styles.tierOriginalPrice}>{tier.originalPrice}</Text>
+                {plan.originalPrice && (
+                  <Text style={styles.planOriginalPrice}>{plan.originalPrice}</Text>
                 )}
-                
-                {tier.savings && (
-                  <View style={[styles.tierSavings, { backgroundColor: tier.color + '15' }]}>
-                    <Text style={[styles.tierSavingsText, { color: tier.color }]}>{tier.savings}</Text>
+                {plan.features.length > 0 && (
+                  <View style={styles.planFeatures}>
+                    {plan.features.map((feature, idx) => (
+                      <Text key={idx} style={styles.planFeatureText}>• {feature}</Text>
+                    ))}
                   </View>
                 )}
-                
-                <View style={styles.tierFeatures}>
-                  {tier.features.map((feature, index) => (
-                    <View key={index} style={styles.featureItem}>
-                      <Ionicons name="checkmark-circle" size={14} color="#26A69A" />
-                      <Text style={styles.featureText}>{feature}</Text>
-                    </View>
-                  ))}
-                  {tier.unavailable.length > 0 && tier.unavailable.map((feature, index) => (
-                    <View key={`un-${index}`} style={styles.featureItemUnavailable}>
-                      <Ionicons name="close-circle-outline" size={14} color="#D1D5DB" />
-                      <Text style={styles.featureTextUnavailable}>{feature}</Text>
-                    </View>
-                  ))}
-                </View>
-                
-                <TouchableOpacity 
-                  style={[styles.tierButton, { backgroundColor: selectedTier === tier.id ? tier.color : '#F3F4F6' }]}
-                >
-                  <Text style={[styles.tierButtonText, { color: selectedTier === tier.id ? '#FFFFFF' : '#9CA3AF' }]}>
-                    {selectedTier === tier.id ? '立即开通' : '选择'}
-                  </Text>
-                </TouchableOpacity>
+                {selectedBasicPlan === plan.id && (
+                  <View style={styles.planSelected}>
+                    <Ionicons name="checkmark-circle" size={24} color="#26A69A" />
+                  </View>
+                )}
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
-        {/* 续费管理 */}
+        {/* VIP基础会员核心权益 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>续费管理</Text>
-          <View style={styles.renewalCard}>
-            <View style={styles.renewalHeader}>
-              <View style={styles.renewalInfo}>
-                <View style={[styles.renewalBadge, { backgroundColor: '#E0F2F1' }]}>
-                  <FontAwesome6 name="crown" size={16} color="#26A69A" />
-                  <Text style={styles.renewalPlanName}>{renewalInfo.currentPlan}</Text>
+          <Text style={styles.sectionTitle}>核心权益</Text>
+          <View style={styles.rightsGrid}>
+            {BASIC_RIGHTS.map((right) => (
+              <View key={right.text} style={styles.rightItem}>
+                <View style={[styles.rightIconWrap, { backgroundColor: right.color + '15' }]}>
+                  <FontAwesome6 name={right.icon as any} size={16} color={right.color} />
                 </View>
-                <Text style={styles.renewalExpire}>有效期至 {renewalInfo.expireDate}</Text>
+                <Text style={styles.rightText}>{right.text}</Text>
               </View>
-              <TouchableOpacity style={styles.renewalSettings}>
-                <Ionicons name="settings-outline" size={20} color="#9CA3AF" />
-              </TouchableOpacity>
-            </View>
-            
-            <View style={styles.renewalDetails}>
-              <View style={styles.renewalItem}>
-                <Text style={styles.renewalLabel}>自动续费</Text>
-                <View style={styles.renewalToggle}>
-                  <View style={[styles.toggle, renewalInfo.autoRenew && styles.toggleActive]}>
-                    <View style={[styles.toggleDot, renewalInfo.autoRenew && styles.toggleDotActive]} />
-                  </View>
-                  <Text style={styles.renewalValue}>{renewalInfo.autoRenew ? '已开启' : '已关闭'}</Text>
-                </View>
-              </View>
-              <View style={styles.renewalItem}>
-                <Text style={styles.renewalLabel}>下次扣费</Text>
-                <Text style={styles.renewalValue}>{renewalInfo.nextPayment}</Text>
-              </View>
-            </View>
-            
-            <TouchableOpacity style={styles.renewalButton}>
-              <Text style={styles.renewalButtonText}>立即续费</Text>
-            </TouchableOpacity>
+            ))}
           </View>
         </View>
 
-        {/* 打卡积分制 */}
+        {/* VIP进阶会员 */}
         <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>打卡积分</Text>
-            <View style={styles.pointsDisplay}>
-              <FontAwesome6 name="coins" size={16} color="#FFD700" />
-              <Text style={styles.pointsValue}>1280</Text>
-              <TouchableOpacity>
-                <Text style={styles.pointsRule}>规则</Text>
-              </TouchableOpacity>
+          <View style={styles.advancedHeader}>
+            <View>
+              <Text style={styles.sectionTitle}>VIP进阶会员</Text>
+              <Text style={styles.sectionSubtitle}>监测指环版</Text>
+            </View>
+            <View style={styles.advancedTag}>
+              <FontAwesome6 name="ring" size={14} color="#FFFFFF" />
+              <Text style={styles.advancedTagText}>含价值700元指环</Text>
             </View>
           </View>
-          <View style={styles.tasksCard}>
-            <View style={styles.tasksHeader}>
-              <Text style={styles.tasksTitle}>今日任务</Text>
-              <Text style={styles.tasksProgress}>4/6</Text>
-            </View>
-            <View style={styles.tasksGrid}>
-              {pointTasks.map((task) => (
-                <View 
-                  key={task.id} 
-                  style={[styles.taskItem, task.completed && styles.taskItemCompleted]}
-                >
-                  <View style={[styles.taskIcon, task.completed && styles.taskIconCompleted]}>
-                    <FontAwesome6 
-                      name={task.icon as any} 
-                      size={16} 
-                      color={task.completed ? '#FFFFFF' : '#26A69A'} 
-                    />
+          
+          <View style={styles.advancedPlans}>
+            {VIP_ADVANCED_PLANS.map((plan) => (
+              <TouchableOpacity
+                key={plan.id}
+                style={[
+                  styles.advancedPlanCard,
+                  selectedAdvancedPlan === plan.id && styles.advancedPlanCardSelected,
+                ]}
+                onPress={() => setSelectedAdvancedPlan(plan.id)}
+              >
+                <View style={styles.advancedPlanHeader}>
+                  <Text style={styles.advancedPlanName}>{plan.name}</Text>
+                  <View style={styles.advancedPlanGift}>
+                    <FontAwesome6 name="gift" size={12} color="#E91E63" />
+                    <Text style={styles.advancedPlanGiftText}>{plan.gift}</Text>
                   </View>
-                  <Text style={[styles.taskName, task.completed && styles.taskNameCompleted]}>
-                    {task.name}
+                </View>
+                
+                <View style={styles.advancedPlanPriceRow}>
+                  <Text style={styles.advancedPlanPrice}>¥{plan.price}</Text>
+                  <Text style={styles.advancedPlanPeriod}>/{plan.period}</Text>
+                  <Text style={styles.advancedPlanOriginal}>原价{plan.originalPrice}</Text>
+                </View>
+                
+                <View style={styles.advancedPlanFeatures}>
+                  {plan.features.slice(0, 4).map((feature, idx) => (
+                    <View key={idx} style={styles.advancedFeatureItem}>
+                      <View style={styles.advancedFeatureDot} />
+                      <Text style={styles.advancedFeatureText}>{feature}</Text>
+                    </View>
+                  ))}
+                </View>
+                
+                {selectedAdvancedPlan === plan.id && (
+                  <View style={styles.advancedPlanSelected}>
+                    <Ionicons name="checkmark-circle" size={24} color="#9C27B0" />
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* VIP进阶专属权益 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>进阶会员专属权益</Text>
+          <View style={styles.advancedRightsList}>
+            {ADVANCED_RIGHTS.map((right) => (
+              <View key={right.text} style={styles.advancedRightItem}>
+                <View style={[styles.advancedRightIcon, { backgroundColor: right.color + '15' }]}>
+                  <FontAwesome6 name={right.icon as any} size={16} color={right.color} />
+                </View>
+                <Text style={styles.advancedRightText}>{right.text}</Text>
+                <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 打卡挑战 */}
+        <View style={styles.challengeSection}>
+          <View style={styles.challengeHeader}>
+            <Text style={styles.challengeTitle}>打卡挑战免费得会员</Text>
+            <View style={styles.challengeBadge}>
+              <FontAwesome6 name="fire" size={14} color="#FF6B6B" />
+              <Text style={styles.challengeBadgeText}>限时活动</Text>
+            </View>
+          </View>
+          
+          <View style={styles.challengeCard}>
+            <View style={styles.challengeMain}>
+              <View style={styles.challengeItem}>
+                <Text style={styles.challengeValue}>¥{CHECKIN_CHALLENGE.fee.replace('元', '')}</Text>
+                <Text style={styles.challengeLabel}>报名费</Text>
+              </View>
+              <View style={styles.challengeArrow}>
+                <FontAwesome6 name="arrow-right" size={20} color="#26A69A" />
+              </View>
+              <View style={styles.challengeItem}>
+                <Text style={styles.challengeValue}>{CHECKIN_CHALLENGE.period}</Text>
+                <Text style={styles.challengeLabel}>VIP会员</Text>
+              </View>
+              <View style={styles.challengeArrow}>
+                <FontAwesome6 name="arrow-right" size={20} color="#26A69A" />
+              </View>
+              <View style={styles.challengeItem}>
+                <Text style={[styles.challengeValue, { color: '#4CAF50' }]}>{CHECKIN_CHALLENGE.refund}</Text>
+                <Text style={styles.challengeLabel}>返还</Text>
+              </View>
+            </View>
+            
+            <View style={styles.challengeRule}>
+              <View style={styles.challengeRuleItem}>
+                <FontAwesome6 name="bullseye" size={14} color="#FF9800" />
+                <Text style={styles.challengeRuleText}>目标：{CHECKIN_CHALLENGE.goal}</Text>
+              </View>
+              <View style={styles.challengeRuleItem}>
+                <FontAwesome6 name="gift" size={14} color="#E91E63" />
+                <Text style={styles.challengeRuleText}>额外：{CHECKIN_CHALLENGE.extra}</Text>
+              </View>
+            </View>
+            
+            <View style={styles.challengeWarning}>
+              <Ionicons name="information-circle" size={14} color="#9CA3AF" />
+              <Text style={styles.challengeWarningText}>不支持补卡，当日未打卡则挑战失败</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* 成长与积分 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>成长与积分</Text>
+          
+          <View style={styles.levelSection}>
+            <Text style={styles.levelSectionTitle}>健康学分等级</Text>
+            <View style={styles.levelsRow}>
+              {LEVELS.map((level, idx) => (
+                <View key={level.name} style={styles.levelItem}>
+                  <View style={[styles.levelDot, { backgroundColor: level.color }]} />
+                  <Text style={[styles.levelName, level.name === userData.currentLevel && { color: level.color, fontWeight: '700' }]}>
+                    {level.name}
                   </Text>
-                  <Text style={styles.taskPoints}>+{task.points}</Text>
+                  <Text style={styles.levelRange}>{level.min}+</Text>
                 </View>
               ))}
             </View>
           </View>
-        </View>
-
-        {/* 用户成长体系 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>用户成长</Text>
-          <View style={styles.growthCard}>
-            <View style={styles.growthHeader}>
-              <View style={[styles.levelBadge, { backgroundColor: '#E0F2F1' }]}>
-                <Text style={styles.levelText}>LV.{userGrowth.level}</Text>
-              </View>
-              <View style={styles.growthInfo}>
-                <Text style={styles.growthTitle}>{userGrowth.title}</Text>
-                <View style={styles.expProgressBar}>
-                  <View style={[styles.expProgressFill, { width: `${userGrowth.expProgress}%` }]} />
-                </View>
-                <Text style={styles.expText}>
-                  {userGrowth.currentExp} / {userGrowth.nextLevelExp} 经验值
-                </Text>
-              </View>
-            </View>
-            
-            <View style={styles.levelRewards}>
-              <Text style={styles.levelRewardsTitle}>等级权益</Text>
-              <View style={styles.levelRewardsList}>
-                {userGrowth.benefits.map((benefit) => (
-                  <View 
-                    key={benefit.level} 
-                    style={[styles.levelRewardItem, !benefit.unlocked && styles.levelRewardLocked]}
-                  >
-                    <View style={[styles.levelRewardBadge, { 
-                      backgroundColor: benefit.unlocked ? '#26A69A20' : '#F3F4F6' 
-                    }]}>
-                      <FontAwesome6 
-                        name={benefit.unlocked ? 'check' : 'lock'} 
-                        size={12} 
-                        color={benefit.unlocked ? '#26A69A' : '#D1D5DB'} 
-                      />
-                    </View>
-                    <Text style={[styles.levelRewardText, !benefit.unlocked && styles.levelRewardTextLocked]}>
-                      LV{benefit.level} {benefit.name}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* 游戏化运营系统 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>成就系统</Text>
-          <View style={styles.achievementOverview}>
-            {achievements.ranks.map((rank) => (
-              <View key={rank.id} style={styles.rankItem}>
-                <View style={[styles.rankIcon, { backgroundColor: rank.color + '20' }]}>
-                  <FontAwesome6 name={rank.icon as any} size={18} color={rank.color} />
-                </View>
-                <Text style={styles.rankValue}>{rank.value}</Text>
-                <Text style={styles.rankName}>{rank.name}</Text>
-              </View>
-            ))}
-          </View>
           
-          <View style={styles.badgeSection}>
-            <Text style={styles.badgeSectionTitle}>我的徽章</Text>
-            <View style={styles.badgeGrid}>
-              {achievements.badges.map((badge) => (
-                <View 
-                  key={badge.id} 
-                  style={[styles.badgeItem, !badge.unlocked && styles.badgeLocked]}
-                >
-                  <View style={[styles.badgeIcon, { 
-                    backgroundColor: badge.unlocked ? badge.color + '20' : '#F3F4F6' 
-                  }]}>
+          <View style={styles.achievementsSection}>
+            <Text style={styles.levelSectionTitle}>成就徽章</Text>
+            <View style={styles.badgesGrid}>
+              {BADGES.map((badge) => (
+                <View key={badge.id} style={[styles.badgeCard, !badge.unlocked && styles.badgeLocked]}>
+                  <View style={[styles.badgeIcon, { backgroundColor: badge.unlocked ? badge.color + '20' : '#E5E7EB' }]}>
                     <FontAwesome6 
                       name={badge.icon as any} 
                       size={20} 
-                      color={badge.unlocked ? badge.color : '#D1D5DB'} 
+                      color={badge.unlocked ? badge.color : '#9CA3AF'} 
                     />
                   </View>
-                  <Text style={[styles.badgeName, !badge.unlocked && styles.badgeNameLocked]}>
-                    {badge.name}
-                  </Text>
-                  {!badge.unlocked && (
-                    <View style={styles.badgeLockOverlay}>
-                      <Ionicons name="lock-closed" size={12} color="#9CA3AF" />
+                  <Text style={[styles.badgeName, !badge.unlocked && styles.badgeNameLocked]}>{badge.name}</Text>
+                  {badge.unlocked && (
+                    <View style={styles.badgeCheck}>
+                      <Ionicons name="checkmark-circle" size={14} color="#4CAF50" />
                     </View>
                   )}
                 </View>
               ))}
             </View>
           </View>
-          
-          <TouchableOpacity style={styles.moreAchievements}>
-            <Text style={styles.moreAchievementsText}>查看更多成就</Text>
-            <Ionicons name="chevron-forward" size={16} color="#26A69A" />
-          </TouchableOpacity>
+        </View>
+
+        {/* 续费设置 */}
+        <View style={styles.renewalSection}>
+          <View style={styles.renewalHeader}>
+            <Text style={styles.renewalTitle}>自动续费</Text>
+            <TouchableOpacity 
+              style={[styles.renewalSwitch, autoRenew && styles.renewalSwitchOn]}
+              onPress={() => setAutoRenew(!autoRenew)}
+            >
+              <View style={[styles.renewalSwitchThumb, autoRenew && styles.renewalSwitchThumbOn]} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.renewalDesc}>开启后，会员到期将自动续费，避免中断服务</Text>
         </View>
       </ScrollView>
     </Screen>
@@ -475,541 +425,502 @@ export default function VipScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F8FAFC',
   },
   contentContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    padding: 16,
   },
-  benefitsOverview: {
+  // 会员状态卡片
+  vipStatusCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 20,
-    marginBottom: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
   },
-  overviewTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1a1a2e',
-    marginBottom: 16,
-  },
-  benefitsGrid: {
-    gap: 16,
-  },
-  benefitCategory: {
-    marginBottom: 8,
-  },
-  benefitCategoryTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
-    marginBottom: 10,
-  },
-  benefitList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  benefitItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '45%',
-    gap: 8,
-  },
-  benefitIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  benefitText: {
-    fontSize: 13,
-    color: '#1a1a2e',
-  },
-  section: {
-    marginBottom: 20,
-  },
-  sectionHeader: {
+  vipHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
+  },
+  vipBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#FFF8E1',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  vipBadgeText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FF9800',
+  },
+  vipExpireText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  vipStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16,
+  },
+  vipStatItem: {
+    alignItems: 'center',
+  },
+  vipStatValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1a1a2e',
+  },
+  vipStatLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  vipStatDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E5E7EB',
+  },
+  levelProgress: {
+    marginTop: 8,
+  },
+  levelInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  levelBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  levelBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  levelHint: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  levelBar: {
+    height: 8,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 4,
+  },
+  levelBarFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  // 通用section
+  section: {
+    marginTop: 24,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a2e',
+    marginBottom: 4,
+  },
+  sectionSubtitle: {
+    fontSize: 13,
+    color: '#9CA3AF',
     marginBottom: 12,
   },
-  tiersContainer: {
-    gap: 16,
+  // VIP基础会员套餐
+  plansGrid: {
+    flexDirection: 'row',
+    gap: 10,
   },
-  tierCard: {
+  planCard: {
+    flex: 1,
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 16,
+    padding: 14,
     borderWidth: 2,
-    borderColor: 'transparent',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    borderColor: '#E5E7EB',
     position: 'relative',
   },
-  tierCardSelected: {
-    shadowColor: '#26A69A',
-    shadowOpacity: 0.15,
+  planCardSelected: {
+    borderColor: '#26A69A',
+    backgroundColor: '#E8F5E9',
   },
-  tierTag: {
+  planBadge: {
     position: 'absolute',
     top: -8,
-    right: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    right: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     borderRadius: 10,
   },
-  tierTagText: {
-    fontSize: 11,
+  planBadgeText: {
+    fontSize: 10,
     fontWeight: '700',
     color: '#FFFFFF',
   },
-  tierHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
-  },
-  tierIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  tierName: {
-    fontSize: 16,
+  planName: {
+    fontSize: 14,
     fontWeight: '700',
+    color: '#1a1a2e',
+    marginBottom: 2,
   },
-  tierPrice: {
+  planSubtitle: {
+    fontSize: 10,
+    color: '#FF9800',
+    marginBottom: 8,
+  },
+  planPriceRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     marginBottom: 4,
   },
-  tierPriceValue: {
-    fontSize: 28,
-    fontWeight: '800',
-  },
-  tierPricePeriod: {
-    fontSize: 14,
-    color: '#9CA3AF',
-    marginLeft: 4,
-  },
-  tierOriginalPrice: {
-    fontSize: 13,
-    color: '#D1D5DB',
-    textDecorationLine: 'line-through',
-    marginBottom: 4,
-  },
-  tierSavings: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  tierSavingsText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  tierFeatures: {
-    marginTop: 12,
-    marginBottom: 16,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
-  },
-  featureText: {
-    fontSize: 13,
-    color: '#1a1a2e',
-  },
-  featureItemUnavailable: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
-  },
-  featureTextUnavailable: {
-    fontSize: 13,
-    color: '#D1D5DB',
-  },
-  tierButton: {
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  tierButtonText: {
-    fontSize: 15,
+  planPrice: {
+    fontSize: 20,
     fontWeight: '700',
+    color: '#26A69A',
   },
-  renewalCard: {
+  planPeriod: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  planOriginalPrice: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    textDecorationLine: 'line-through',
+  },
+  planFeatures: {
+    marginTop: 8,
+  },
+  planFeatureText: {
+    fontSize: 10,
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  planSelected: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  // 基础权益
+  rightsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  rightItem: {
+    width: '48%',
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 12,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
   },
-  renewalHeader: {
+  rightIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rightText: {
+    flex: 1,
+    fontSize: 12,
+    color: '#1a1a2e',
+  },
+  // VIP进阶会员
+  advancedHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 16,
+    marginBottom: 12,
   },
-  renewalInfo: {
-    flex: 1,
-  },
-  renewalBadge: {
+  advancedTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
+    gap: 4,
+    backgroundColor: '#9C27B0',
+    paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 16,
-    alignSelf: 'flex-start',
-    marginBottom: 8,
-  },
-  renewalPlanName: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#26A69A',
-    marginLeft: 6,
-  },
-  renewalExpire: {
-    fontSize: 13,
-    color: '#9CA3AF',
-  },
-  renewalSettings: {
-    padding: 4,
-  },
-  renewalDetails: {
-    backgroundColor: '#F9FAFB',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
   },
-  renewalItem: {
+  advancedTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  advancedPlans: {
+    gap: 12,
+  },
+  advancedPlanCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    position: 'relative',
+  },
+  advancedPlanCardSelected: {
+    borderColor: '#9C27B0',
+    backgroundColor: '#F3E5F5',
+  },
+  advancedPlanHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 8,
+  },
+  advancedPlanName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1a1a2e',
+  },
+  advancedPlanGift: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FCE4EC',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  advancedPlanGiftText: {
+    fontSize: 11,
+    color: '#E91E63',
+    fontWeight: '600',
+  },
+  advancedPlanPriceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
     marginBottom: 12,
   },
-  renewalLabel: {
+  advancedPlanPrice: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#9C27B0',
+  },
+  advancedPlanPeriod: {
     fontSize: 14,
     color: '#6B7280',
   },
-  renewalValue: {
-    fontSize: 14,
-    color: '#1a1a2e',
-    fontWeight: '600',
+  advancedPlanOriginal: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginLeft: 8,
+    textDecorationLine: 'line-through',
   },
-  renewalToggle: {
+  advancedPlanFeatures: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
     gap: 8,
   },
-  toggle: {
-    width: 44,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#E5E7EB',
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-  },
-  toggleActive: {
-    backgroundColor: '#26A69A',
-  },
-  toggleDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-  },
-  toggleDotActive: {
-    alignSelf: 'flex-end',
-  },
-  renewalButton: {
-    backgroundColor: '#26A69A',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  renewalButtonText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  pointsDisplay: {
+  advancedFeatureItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  pointsValue: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1a1a2e',
+  advancedFeatureDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#9C27B0',
   },
-  pointsRule: {
-    fontSize: 13,
-    color: '#26A69A',
-    marginLeft: 8,
-  },
-  tasksCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  tasksHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  tasksTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a2e',
-  },
-  tasksProgress: {
-    fontSize: 14,
-    color: '#26A69A',
-    fontWeight: '600',
-  },
-  tasksGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  taskItem: {
-    width: '48%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 10,
-  },
-  taskItemCompleted: {
-    backgroundColor: '#E8F5F3',
-  },
-  taskIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#E0F2F1',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  taskIconCompleted: {
-    backgroundColor: '#26A69A',
-  },
-  taskName: {
-    flex: 1,
-    fontSize: 13,
-    color: '#1a1a2e',
-  },
-  taskNameCompleted: {
-    color: '#26A69A',
-  },
-  taskPoints: {
+  advancedFeatureText: {
     fontSize: 12,
-    color: '#FF9800',
-    fontWeight: '600',
-  },
-  growthCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  growthHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  levelBadge: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  levelText: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#26A69A',
-  },
-  growthInfo: {
-    flex: 1,
-  },
-  growthTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1a1a2e',
-    marginBottom: 10,
-  },
-  expProgressBar: {
-    height: 8,
-    backgroundColor: '#E0F2F1',
-    borderRadius: 4,
-    marginBottom: 6,
-  },
-  expProgressFill: {
-    height: '100%',
-    backgroundColor: '#26A69A',
-    borderRadius: 4,
-  },
-  expText: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  levelRewards: {
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    paddingTop: 16,
-  },
-  levelRewardsTitle: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#6B7280',
-    marginBottom: 12,
   },
-  levelRewardsList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
+  advancedPlanSelected: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
   },
-  levelRewardItem: {
+  // 进阶权益
+  advancedRightsList: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    gap: 12,
+  },
+  advancedRightItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E0F2F1',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 16,
+    gap: 12,
   },
-  levelRewardLocked: {
-    backgroundColor: '#F3F4F6',
-  },
-  levelRewardBadge: {
-    width: 20,
-    height: 20,
+  advancedRightIcon: {
+    width: 36,
+    height: 36,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 6,
   },
-  levelRewardText: {
-    fontSize: 12,
-    color: '#26A69A',
-    fontWeight: '600',
+  advancedRightText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#1a1a2e',
   },
-  levelRewardTextLocked: {
-    color: '#D1D5DB',
+  // 打卡挑战
+  challengeSection: {
+    marginTop: 24,
   },
-  achievementOverview: {
+  challengeHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  challengeTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1a1a2e',
+  },
+  challengeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FFEBEE',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  challengeBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FF6B6B',
+  },
+  challengeCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 16,
+    borderRadius: 16,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
   },
-  rankItem: {
-    flex: 1,
+  challengeMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  challengeItem: {
     alignItems: 'center',
   },
-  rankIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  rankValue: {
+  challengeValue: {
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#1a1a2e',
-    marginBottom: 4,
   },
-  rankName: {
+  challengeLabel: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    marginTop: 4,
+  },
+  challengeArrow: {
+    paddingHorizontal: 8,
+  },
+  challengeRule: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    gap: 8,
+  },
+  challengeRuleItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  challengeRuleText: {
+    fontSize: 13,
+    color: '#1a1a2e',
+  },
+  challengeWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  challengeWarningText: {
     fontSize: 12,
     color: '#9CA3AF',
   },
-  badgeSection: {
+  // 成长与积分
+  levelSection: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
     marginBottom: 12,
   },
-  badgeSectionTitle: {
+  levelSectionTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#6B7280',
+    color: '#1a1a2e',
     marginBottom: 12,
   },
-  badgeGrid: {
+  levelsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  levelItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  levelDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginBottom: 6,
+  },
+  levelName: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  levelRange: {
+    fontSize: 10,
+    color: '#9CA3AF',
+  },
+  achievementsSection: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+  },
+  badgesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    gap: 12,
   },
-  badgeItem: {
-    width: '30%',
+  badgeCard: {
+    width: '47%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 12,
     alignItems: 'center',
-    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     position: 'relative',
   },
   badgeLocked: {
-    opacity: 0.6,
+    backgroundColor: '#F9FAFB',
+    opacity: 0.7,
   },
   badgeIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
@@ -1020,30 +931,53 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   badgeNameLocked: {
-    color: '#D1D5DB',
+    color: '#9CA3AF',
   },
-  badgeLockOverlay: {
+  badgeCheck: {
     position: 'absolute',
     top: 8,
-    right: '20%',
+    right: 8,
   },
-  moreAchievements: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  // 续费设置
+  renewalSection: {
+    marginTop: 24,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    paddingVertical: 14,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    padding: 16,
   },
-  moreAchievementsText: {
-    fontSize: 14,
-    color: '#26A69A',
+  renewalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  renewalTitle: {
+    fontSize: 16,
     fontWeight: '600',
-    marginRight: 4,
+    color: '#1a1a2e',
+  },
+  renewalSwitch: {
+    width: 48,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#E5E7EB',
+    padding: 2,
+    justifyContent: 'center',
+  },
+  renewalSwitchOn: {
+    backgroundColor: '#26A69A',
+  },
+  renewalSwitchThumb: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+  },
+  renewalSwitchThumbOn: {
+    alignSelf: 'flex-end',
+  },
+  renewalDesc: {
+    fontSize: 12,
+    color: '#9CA3AF',
   },
 });
