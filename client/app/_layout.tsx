@@ -116,7 +116,18 @@ export default function RootLayout() {
           <Stack.Screen 
             name="diet-calculator" 
             options={{ 
-              title: "科学瘦身计算器",
+              title: "科学体重管理方案",
+              headerShown: true,
+              headerTitle: '',
+              headerTransparent: true,
+              headerBackTitle: '返回',
+              headerTintColor: '#1a1a2e',
+            }} 
+          />
+          <Stack.Screen 
+            name="female" 
+            options={{ 
+              title: "女性生理",
               headerShown: true,
               headerTitle: '',
               headerTransparent: true,

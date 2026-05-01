@@ -21,7 +21,7 @@ export default function HomeScreen() {
   const [searchText, setSearchText] = useState('');
 
   const healthModules = [
-    { id: 'home', name: '推荐', icon: 'house', iconColor: '#26A69A', bgColor: '#E0F2F1' },
+    { id: 'female', name: '女性生理', icon: 'person-dress', iconColor: '#E91E63', bgColor: '#FCE4EC' },
     { id: 'dashboard', name: '数据看板', icon: 'chart-bar', iconColor: '#2196F3', bgColor: '#E3F2FD' },
     { id: 'food', name: '食物分析', icon: 'camera', iconColor: '#FF9800', bgColor: '#FFF3E0' },
     { id: 'exercise', name: '运动', icon: 'person-running', iconColor: '#FF6B6B', bgColor: '#FFEBEE' },
@@ -33,7 +33,7 @@ export default function HomeScreen() {
 
   const handleModulePress = (moduleId: string) => {
     const routes: Record<string, string> = {
-      home: '/',
+      female: '/female',
       dashboard: '/dashboard',
       food: '/food-analysis',
       exercise: '/exercise',
@@ -43,8 +43,8 @@ export default function HomeScreen() {
       member: '/vip',
     };
     if (routes[moduleId]) {
-      if (moduleId === 'home') {
-        router.replace(routes[moduleId]);
+      if (moduleId === 'female') {
+        router.push(routes[moduleId]);
       } else {
         router.push(routes[moduleId]);
       }
