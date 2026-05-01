@@ -26,7 +26,7 @@ export default function RootLayout() {
           <Stack.Screen name="exercise" options={{ headerShown: false }} />
           <Stack.Screen name="sleep" options={{ headerShown: false }} />
           <Stack.Screen name="emotion" options={{ headerShown: false }} />
-          <Stack.Screen name="member" options={{ title: "会员" }} />
+          <Stack.Screen name="member" options={{ headerShown: false }} />
           <Stack.Screen name="vip" options={{ headerShown: false }} />
           <Stack.Screen name="habit" options={{ headerShown: false }} />
           <Stack.Screen name="profile" options={{ headerShown: false }} />
