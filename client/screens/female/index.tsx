@@ -301,14 +301,6 @@ export default function FemaleScreen() {
         <View style={styles.bottomPadding} />
       </ScrollView>
 
-      {/* 固定顶部导航栏 */}
-      <View style={styles.fixedHeader}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <FontAwesome6 name="chevron-left" size={20} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>女性生理</Text>
-        <View style={styles.headerRight} />
-      </View>
     </Screen>
   );
 }

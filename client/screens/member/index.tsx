@@ -442,14 +442,6 @@ export default function MemberScreen() {
         </View>
       </ScrollView>
 
-      {/* 固定顶部导航栏 */}
-      <View style={styles.fixedHeader}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <FontAwesome6 name="chevron-left" size={20} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>会员</Text>
-        <View style={styles.headerRight} />
-      </View>
     </Screen>
   );
 }
