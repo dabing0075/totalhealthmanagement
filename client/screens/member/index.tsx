@@ -275,15 +275,15 @@ export default function MemberScreen() {
             <View style={styles.levelHeader}>
               <View style={[styles.levelBadge, { backgroundColor: '#26A69A' }]}>
                 <FontAwesome6 name="seedling" size={16} color="#FFFFFF" />
-                <Text style={styles.levelBadgeText}>进阶</Text>
+                <Text style={styles.levelBadgeText}>优秀</Text>
               </View>
               <View style={styles.levelInfo}>
-                <Text style={styles.levelTitle}>1280 分 · 进阶</Text>
+                <Text style={styles.levelTitle}>530 分 · 优秀</Text>
                 <View style={styles.levelProgressWrap}>
                   <View style={styles.levelProgress}>
-                    <View style={[styles.levelProgressFill, { width: '80%', backgroundColor: '#26A69A' }]} />
+                    <View style={[styles.levelProgressFill, { width: '30%', backgroundColor: '#26A69A' }]} />
                   </View>
-                  <Text style={styles.levelProgressText}>还需 120 分升至顶尖</Text>
+                  <Text style={styles.levelProgressText}>还需 270 分升至卓越</Text>
                 </View>
               </View>
             </View>
@@ -292,7 +292,7 @@ export default function MemberScreen() {
               {[
                 { name: '启程', range: '0-350', active: true, completed: true },
                 { name: '进阶', range: '351-500', active: true, completed: true },
-                { name: '优秀', range: '501-700', active: true, completed: true },
+                { name: '优秀', range: '501-700', active: true, completed: false },
                 { name: '卓越', range: '701-800', active: false, completed: false },
                 { name: '顶尖', range: '800+', active: false, completed: false },
               ].map((level, index) => (
