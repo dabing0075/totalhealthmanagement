@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
@@ -97,6 +98,7 @@ const ADVANCED_RIGHTS = [
 ];
 
 export default function VipScreen() {
+  const router = useRouter();
   const [selectedBasicPlan, setSelectedBasicPlan] = useState<string>('year');
   const [selectedAdvancedPlan, setSelectedAdvancedPlan] = useState<string>('advanced-year');
 
@@ -111,9 +113,17 @@ export default function VipScreen() {
 
   return (
     <Screen>
+      {/* 固定顶部导航栏 */}
+      <View style={styles.fixedHeader}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>会员</Text>
+        <View style={styles.headerRight} />
+      </View>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={[styles.contentContainer, { paddingBottom: 120 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: 50, paddingBottom: 120 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* 会员状态卡片 */}
@@ -336,6 +346,31 @@ export default function VipScreen() {
 }
 
 const styles = StyleSheet.create({
+  fixedHeader: {
+    position: 'absolute',
+    top: 50,
+    left: 0,
+    right: 0,
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    zIndex: 100,
+  },
+  backBtn: {
+    padding: 8,
+  },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#333',
+  },
+  headerRight: {
+    width: 40,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F8FAFC',
