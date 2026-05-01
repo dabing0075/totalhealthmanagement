@@ -268,9 +268,9 @@ export default function MemberScreen() {
           </View>
         </View>
 
-        {/* 健康积分 */}
+        {/* 健康习惯得分 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>健康积分</Text>
+          <Text style={styles.sectionTitle}>健康习惯得分</Text>
           <View style={styles.levelCard}>
             <View style={styles.levelHeader}>
               <View style={[styles.levelBadge, { backgroundColor: '#26A69A' }]}>
@@ -278,7 +278,7 @@ export default function MemberScreen() {
                 <Text style={styles.levelBadgeText}>进阶</Text>
               </View>
               <View style={styles.levelInfo}>
-                <Text style={styles.levelTitle}>当前积分：1280 分</Text>
+                <Text style={styles.levelTitle}>1280 分 · 进阶</Text>
                 <View style={styles.levelProgressWrap}>
                   <View style={styles.levelProgress}>
                     <View style={[styles.levelProgressFill, { width: '80%', backgroundColor: '#26A69A' }]} />
