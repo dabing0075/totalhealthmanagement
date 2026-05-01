@@ -332,12 +332,6 @@ export default function EmotionScreen() {
           <Text style={styles.tipsDesc}>
             根据您今日的情绪数据分析，建议您进行15-20分钟的正念冥想练习，有助于稳定情绪、提升专注力。
           </Text>
-          <View style={styles.tipsActions}>
-            <TouchableOpacity style={styles.tipsActionBtn} activeOpacity={0.8}>
-              <FontAwesome6 name="play" size={14} color="#E91E63" />
-              <Text style={styles.tipsActionText}>开始练习</Text>
-            </TouchableOpacity>
-          </View>
         </LinearGradient>
       </ScrollView>
     </Screen>
@@ -726,23 +720,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 22,
-    marginBottom: 16,
-  },
-  tipsActions: {
-    flexDirection: 'row',
-  },
-  tipsActionBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    gap: 6,
-  },
-  tipsActionText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#E91E63',
   },
 });
