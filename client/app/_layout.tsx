@@ -23,118 +23,17 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="(tabs)" options={{ title: "" }} />
-          <Stack.Screen 
-            name="exercise" 
-            options={{ 
-              title: "运动",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-              headerTitleAlign: 'center',
-            }} 
-          />
-          <Stack.Screen 
-            name="sleep" 
-            options={{ 
-              title: "睡眠",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="emotion" 
-            options={{ 
-              title: "情绪",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
+          <Stack.Screen name="exercise" options={{ headerShown: false }} />
+          <Stack.Screen name="sleep" options={{ headerShown: false }} />
+          <Stack.Screen name="emotion" options={{ headerShown: false }} />
           <Stack.Screen name="member" options={{ title: "会员" }} />
-          <Stack.Screen 
-            name="vip" 
-            options={{ 
-              title: "会员服务",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="habit" 
-            options={{ 
-              title: "习惯",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="profile" 
-            options={{ 
-              title: "个人资料",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="edit-profile" 
-            options={{ 
-              title: "编辑资料",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="body-data" 
-            options={{ 
-              title: "身体数据",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="diet-calculator" 
-            options={{ 
-              title: "科学体重管理方案",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="female" 
-            options={{ 
-              title: "女性生理",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
+          <Stack.Screen name="vip" options={{ headerShown: false }} />
+          <Stack.Screen name="habit" options={{ headerShown: false }} />
+          <Stack.Screen name="profile" options={{ headerShown: false }} />
+          <Stack.Screen name="edit-profile" options={{ headerShown: false }} />
+          <Stack.Screen name="body-data" options={{ headerShown: false }} />
+          <Stack.Screen name="diet-calculator" options={{ headerShown: false }} />
+          <Stack.Screen name="female" options={{ headerShown: false }} />
           <Stack.Screen 
             name="login" 
             options={{ 
@@ -142,28 +41,8 @@ export default function RootLayout() {
               headerShown: false,
             }} 
           />
-          <Stack.Screen 
-            name="dashboard" 
-            options={{ 
-              title: "数据看板",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
-          <Stack.Screen 
-            name="food-analysis" 
-            options={{ 
-              title: "食物分析",
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitle: '返回',
-              headerTintColor: '#1a1a2e',
-            }} 
-          />
+          <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+          <Stack.Screen name="food-analysis" options={{ headerShown: false }} />
         </Stack>
         <Toast />
       </Provider>
