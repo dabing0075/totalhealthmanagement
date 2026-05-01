@@ -123,7 +123,7 @@ export default function VipScreen() {
       </View>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={[styles.contentContainer, { paddingTop: 50, paddingBottom: 120 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: 55, paddingBottom: 120 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* 会员状态卡片 */}
@@ -348,14 +348,14 @@ export default function VipScreen() {
 const styles = StyleSheet.create({
   fixedHeader: {
     position: 'absolute',
-    top: 50,
+    top: 0,
     left: 0,
     right: 0,
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F9FAFB',
     zIndex: 100,
   },
   backBtn: {
