@@ -131,9 +131,17 @@ export default function MemberScreen() {
 
   return (
     <Screen>
+      {/* 固定顶部导航栏 */}
+      <View style={styles.fixedHeader}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="#374151" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>会员</Text>
+        <View style={styles.headerRight} />
+      </View>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={[styles.contentContainer, styles.contentPadding, { paddingBottom: 100 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: 50, paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* 个人信息卡片 */}
@@ -461,7 +469,7 @@ const styles = StyleSheet.create({
   },
   fixedHeader: {
     position: 'absolute',
-    top: 0,
+    top: 50,
     left: 0,
     right: 0,
     flexDirection: 'row',
