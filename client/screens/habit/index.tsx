@@ -414,14 +414,14 @@ export default function HabitScreen() {
           </View>
         </LinearGradient>
 
-        {/* 睡眠养成建议 */}
+        {/* 习惯养成建议 */}
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
-            <Ionicons name="moon" size={20} color="#9C27B0" />
-            <Text style={styles.tipsTitle}>睡眠养成建议</Text>
+            <Ionicons name="leaf" size={20} color="#26A69A" />
+            <Text style={styles.tipsTitle}>习惯养成建议</Text>
           </View>
           <Text style={styles.tipsContent}>
-            建议您在晚上11点前入睡，保证7-8小时的充足睡眠。睡前避免使用电子设备，可以听一些舒缓的音乐帮助入睡。
+            坚持21天以上的重复行为会形成习惯。建议从最简单的习惯开始，如每天喝一杯水，逐渐增加难度，保持连贯性，不要轻易中断。
           </Text>
         </View>
       </ScrollView>
@@ -823,7 +823,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.85)',
     textAlign: 'center',
   },
-  // 睡眠养成建议
+  // 习惯养成建议
   tipsCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
