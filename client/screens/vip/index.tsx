@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 
@@ -116,7 +117,12 @@ export default function VipScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* 会员状态卡片 */}
-        <View style={styles.vipStatusCard}>
+        <LinearGradient
+          colors={['#FF6B35', '#FF4500']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.vipStatusCard}
+        >
           <View style={styles.memberStatusHeader}>
             <View style={styles.memberStatusLeft}>
               <FontAwesome6 name="crown" size={28} color="#FFD700" />
@@ -136,7 +142,7 @@ export default function VipScreen() {
               <Text style={styles.memberRenewBtnText}>立即续费</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </LinearGradient>
 
         {/* VIP基础会员 */}
         <View style={styles.section}>
@@ -339,7 +345,6 @@ const styles = StyleSheet.create({
   },
   // 会员状态卡片
   vipStatusCard: {
-    backgroundColor: '#1a1a2e',
     borderRadius: 20,
     padding: 20,
   },
