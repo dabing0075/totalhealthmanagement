@@ -415,15 +415,20 @@ export default function HabitScreen() {
         </LinearGradient>
 
         {/* 习惯养成建议 */}
-        <View style={styles.tipsCard}>
+        <LinearGradient
+          colors={['#26A69A', '#00897B']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.tipsCard}
+        >
           <View style={styles.tipsHeader}>
-            <Ionicons name="leaf" size={20} color="#26A69A" />
+            <Ionicons name="leaf" size={20} color="#FFFFFF" />
             <Text style={styles.tipsTitle}>习惯养成建议</Text>
           </View>
           <Text style={styles.tipsContent}>
             坚持21天以上的重复行为会形成习惯。建议从最简单的习惯开始，如每天喝一杯水，逐渐增加难度，保持连贯性，不要轻易中断。
           </Text>
-        </View>
+        </LinearGradient>
       </ScrollView>
     </Screen>
   );
@@ -825,14 +830,8 @@ const styles = StyleSheet.create({
   },
   // 习惯养成建议
   tipsCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
   },
   tipsHeader: {
     flexDirection: 'row',
@@ -843,11 +842,11 @@ const styles = StyleSheet.create({
   tipsTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#1a1a2e',
+    color: '#FFFFFF',
   },
   tipsContent: {
     fontSize: 14,
-    color: '#6B7280',
+    color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 22,
   },
 });
