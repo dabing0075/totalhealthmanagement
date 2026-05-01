@@ -298,11 +298,6 @@ export default function SleepScreen() {
           </View>
         </View>
 
-        {/* 记录睡眠 */}
-        <TouchableOpacity style={styles.recordButton}>
-          <FontAwesome6 name="plus" size={20} color="#FFFFFF" />
-          <Text style={styles.recordButtonText}>记录睡眠</Text>
-        </TouchableOpacity>
       </ScrollView>
     </Screen>
   );
@@ -677,23 +672,6 @@ const styles = StyleSheet.create({
   musicDurationText: {
     fontSize: 11,
     color: '#9CA3AF',
-  },
-  // 记录睡眠按钮
-  recordButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#9C27B0',
-    borderRadius: 30,
-    paddingVertical: 16,
-    marginHorizontal: 20,
-    marginBottom: 24,
-    gap: 8,
-  },
-  recordButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
   },
   // 饼图辅助样式
   pieChartContainer: {
