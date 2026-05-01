@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -56,6 +57,7 @@ const SLEEP_MUSIC = [
 ];
 
 export default function SleepScreen() {
+  const router = useRouter();
   const renderPieChart = () => {
     let startAngle = 0;
     return (
@@ -299,6 +301,15 @@ export default function SleepScreen() {
         </View>
 
       </ScrollView>
+
+      {/* 固定顶部导航栏 */}
+      <View style={styles.fixedHeader}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <FontAwesome6 name="chevron-left" size={20} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>睡眠</Text>
+        <View style={styles.headerRight} />
+      </View>
     </Screen>
   );
 }
@@ -307,6 +318,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F7FA',
+  },
+  fixedHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingTop: 50,
+    paddingBottom: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+    zIndex: 100,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  headerRight: {
+    width: 40,
   },
   contentContainer: {
     paddingHorizontal: 16,

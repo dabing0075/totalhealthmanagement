@@ -7,9 +7,12 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeRouter } from '@/hooks/useSafeRouter';
 import { Screen } from '@/components/Screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome6, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -130,6 +133,7 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
 };
 
 export default function DashboardScreen() {
+  const router = useRouter();
   const [selectedPeriod, setSelectedPeriod] = useState('week');
 
   const overallScore = 87;
@@ -453,6 +457,15 @@ export default function DashboardScreen() {
           <Text style={styles.exportBtnText}>导出健康报告</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* 固定顶部导航栏 */}
+      <View style={styles.fixedHeader}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <FontAwesome6 name="chevron-left" size={20} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>数据看板</Text>
+        <View style={styles.headerRight} />
+      </View>
     </Screen>
   );
 }
@@ -461,6 +474,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  fixedHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingTop: 50,
+    paddingBottom: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+    zIndex: 100,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  headerRight: {
+    width: 40,
   },
   contentContainer: {
     paddingHorizontal: 20,

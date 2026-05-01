@@ -8,10 +8,10 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useSafeRouter } from '@/hooks/useSafeRouter';
 
 // 获取屏幕宽度用于适配
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -78,7 +78,7 @@ const BADGES = [
 ];
 
 export default function MemberScreen() {
-  const router = useSafeRouter();
+  const router = useRouter();
 
   // 用户数据
   const user = {
@@ -441,6 +441,15 @@ export default function MemberScreen() {
           <Text style={styles.footerText}>靓健生活 v1.0.0</Text>
         </View>
       </ScrollView>
+
+      {/* 固定顶部导航栏 */}
+      <View style={styles.fixedHeader}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <FontAwesome6 name="chevron-left" size={20} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>会员</Text>
+        <View style={styles.headerRight} />
+      </View>
     </Screen>
   );
 }
@@ -449,6 +458,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  fixedHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingTop: 50,
+    paddingBottom: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+    zIndex: 100,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  headerRight: {
+    width: 40,
   },
   contentContainer: {
     paddingHorizontal: 16,
