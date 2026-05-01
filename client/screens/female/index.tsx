@@ -94,7 +94,7 @@ export default function FemaleScreen() {
 
   return (
     <Screen>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentPadding} showsVerticalScrollIndicator={false}>
         {/* 经期记录卡片 */}
         <View style={styles.periodCard}>
           <LinearGradient
@@ -327,12 +327,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
-    paddingTop: 50,
-    paddingBottom: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
     zIndex: 100,
+  },
+  contentPadding: {
+    paddingTop: 55,
   },
   backBtn: {
     width: 40,

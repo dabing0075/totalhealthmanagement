@@ -115,7 +115,7 @@ export default function SleepScreen() {
     <Screen>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={[styles.contentContainer, { paddingBottom: 100 }]}
+        contentContainerStyle={[styles.contentContainer, styles.contentPadding, { paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* 昨夜睡眠概览 */}
@@ -328,12 +328,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
-    paddingTop: 50,
-    paddingBottom: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
     zIndex: 100,
+  },
+  contentPadding: {
+    paddingTop: 55,
   },
   backBtn: {
     width: 40,
