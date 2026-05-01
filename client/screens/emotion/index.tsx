@@ -5,35 +5,141 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const EMOTION_ITEMS = [
-  { id: '1', name: '开心', icon: 'face-smile', color: '#FFD700', bgColor: '#FFFDE7', score: 85 },
-  { id: '2', name: '平静', icon: 'face-meh', color: '#26A69A', bgColor: '#E0F2F1', score: 72 },
-  { id: '3', name: '焦虑', icon: 'face-frown', color: '#FF9800', bgColor: '#FFF3E0', score: 35 },
-  { id: '4', name: '压力', icon: 'brain', color: '#F44336', bgColor: '#FFEBEE', score: 45 },
+const EMOTION_OVERVIEW = {
+  score: 75,
+  weekAvg: 72,
+  currentState: '平静',
+  stability: 78,
+};
+
+const EMOTION_LIST = [
+  { id: '1', icon: 'face-grin-stars', color: '#FFD700', label: '很开心' },
+  { id: '2', icon: 'face-smile', color: '#4CAF50', label: '开心' },
+  { id: '3', icon: 'face-meh', color: '#26A69A', label: '平静' },
+  { id: '4', icon: 'face-meh-blank', color: '#9E9E9E', label: '一般' },
+  { id: '5', icon: 'face-frown', color: '#FF9800', label: '焦虑' },
+  { id: '6', icon: 'face-sad-tear', color: '#F44336', label: '难过' },
 ];
 
-const MINDFULNESS_ITEMS = [
-  { id: '1', title: '正念冥想入门', cover: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200', duration: '10分钟', category: '冥想' },
-  { id: '2', title: '呼吸训练法', cover: 'https://images.unsplash.com/photo-1545389336-cf090694435e?w=200', duration: '5分钟', category: '呼吸' },
-  { id: '3', title: '瑜伽放松术', cover: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200', duration: '15分钟', category: '瑜伽' },
-  { id: '4', title: '情绪日记', cover: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=200', duration: '自由', category: '记录' },
+const WEEK_TREND = [
+  { day: '周一', score: 68 },
+  { day: '周二', score: 75, energy: 75 },
+  { day: '周五', score: 72 },
+  { day: '周日', score: 80 },
 ];
 
-const MOOD_HISTORY = [
-  { date: '今天', score: 72, trend: 'up' },
-  { date: '昨天', score: 65, trend: 'up' },
-  { date: '前天', score: 58, trend: 'down' },
-  { date: '周二', score: 70, trend: 'up' },
-  { date: '周一', score: 62, trend: 'down' },
+const BREATH_STEPS = [
+  { step: 1, text: '吸气4秒', color: '#81D4FA' },
+  { step: 2, text: '屏息7秒', color: '#CE93D8' },
+  { step: 3, text: '呼气8秒', color: '#F8BBD9' },
+];
+
+const MENTAL_ACTIVITIES = [
+  {
+    id: '1',
+    title: '正念冥想',
+    desc: '通过专注当下，减少焦虑和压力',
+    duration: '预计时长:10-20分钟',
+    items: [
+      { name: '初级冥想 10分钟', tag: '入门', tagColor: '#C8E6C9' },
+      { name: '深度冥想 20分钟', tag: '进阶', tagColor: '#F8BBD9' },
+      { name: '行走冥想 15分钟', tag: '中级', tagColor: '#FFF9C4' },
+    ],
+    bgColor: '#F3E5F5',
+    iconColor: '#9C27B0',
+    icon: 'brain',
+  },
+  {
+    id: '2',
+    title: '呼吸训练',
+    desc: '通过控制呼吸节奏，调节情绪状态',
+    duration: '预计时长:5-15分钟',
+    items: [
+      { name: '4-7-8呼吸法 5分钟', tag: '入门', tagColor: '#C8E6C9' },
+      { name: '箱式呼吸 10分钟', tag: '中级', tagColor: '#FFF9C4' },
+      { name: '腹式呼吸 15分钟', tag: '进阶', tagColor: '#F8BBD9' },
+    ],
+    bgColor: '#E3F2FD',
+    iconColor: '#2196F3',
+    icon: 'wind',
+  },
+  {
+    id: '3',
+    title: '瑜伽',
+    desc: '结合身体和心念的练习，提升整体福祉',
+    duration: '预计时长:15-45分钟',
+    items: [
+      { name: '晨间瑜伽 15分钟', tag: '入门', tagColor: '#C8E6C9' },
+      { name: '减压瑜伽 30分钟', tag: '中级', tagColor: '#FFF9C4' },
+      { name: '力量瑜伽 45分钟', tag: '进阶', tagColor: '#F8BBD9' },
+    ],
+    bgColor: '#E8F5E9',
+    iconColor: '#4CAF50',
+    icon: 'person',
+  },
+];
+
+const TIPS = [
+  '减轻焦虑和压力',
+  '改善睡眠质量',
+  '提高专注力',
+  '调节情绪状态',
 ];
 
 export default function EmotionScreen() {
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [isBreathing, setIsBreathing] = useState(false);
+  const [breathCount, setBreathCount] = useState(4);
+  const [breathPhase, setBreathPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
+
+  const handleStartBreathing = () => {
+    setIsBreathing(true);
+    let count = 4;
+    let phase: 'inhale' | 'hold' | 'exhale' = 'inhale';
+    
+    const interval = setInterval(() => {
+      count--;
+      if (count <= 0) {
+        if (phase === 'inhale') {
+          phase = 'hold';
+          count = 7;
+          setBreathPhase('hold');
+        } else if (phase === 'hold') {
+          phase = 'exhale';
+          count = 8;
+          setBreathPhase('exhale');
+        } else {
+          phase = 'inhale';
+          count = 4;
+          setBreathPhase('inhale');
+        }
+      }
+      setBreathCount(count);
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsBreathing(false);
+      setBreathCount(4);
+      setBreathPhase('inhale');
+    }, 20000);
+  };
+
+  const getBreathText = () => {
+    switch (breathPhase) {
+      case 'inhale':
+        return '吸气';
+      case 'hold':
+        return '屏息';
+      case 'exhale':
+        return '呼气';
+    }
+  };
 
   return (
     <Screen>
@@ -42,143 +148,197 @@ export default function EmotionScreen() {
         contentContainerStyle={[styles.contentContainer, { paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* 情绪概览 */}
-        <View style={styles.overviewCard}>
-          <View style={styles.overviewHeader}>
-            <Text style={styles.overviewTitle}>今日情绪状态</Text>
-            <View style={styles.emotionScoreBadge}>
-              <Text style={styles.emotionScoreValue}>72</Text>
-              <Text style={styles.emotionScoreLabel}>分</Text>
+        {/* 当前情绪状态卡片 */}
+        <LinearGradient
+          colors={['#E91E63', '#F06292']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.overviewCard}
+        >
+          <TouchableOpacity style={styles.favoriteBtn}>
+            <Ionicons name="heart-outline" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <View style={styles.overviewContent}>
+            <View style={styles.overviewLeft}>
+              <Text style={styles.overviewValue}>{EMOTION_OVERVIEW.score}</Text>
+              <Text style={styles.overviewLabel}>情绪评分</Text>
+              <View style={styles.overviewDivider} />
+              <Text style={styles.overviewValue2}>{EMOTION_OVERVIEW.weekAvg}</Text>
+              <Text style={styles.overviewLabel}>周平均</Text>
+            </View>
+            <View style={styles.overviewRight}>
+              <Text style={styles.overviewState}>{EMOTION_OVERVIEW.currentState}</Text>
+              <Text style={styles.overviewLabel}>当前状态</Text>
+              <View style={styles.overviewDivider} />
+              <Text style={styles.overviewValue2}>{EMOTION_OVERVIEW.stability}%</Text>
+              <Text style={styles.overviewLabel}>情绪稳定性</Text>
             </View>
           </View>
-          <View style={styles.emotionGauge}>
-            <View style={[styles.emotionGaugeFill, { width: '72%' }]} />
-          </View>
-          <Text style={styles.emotionDesc}>整体状态良好，继续保持积极心态</Text>
-        </View>
+        </LinearGradient>
 
-        {/* 情绪选择 */}
+        {/* 记录当前情绪 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>记录当前情绪</Text>
           <View style={styles.emotionGrid}>
-            {EMOTION_ITEMS.map((item) => (
+            {EMOTION_LIST.map((item) => (
               <TouchableOpacity
                 key={item.id}
-                style={[styles.emotionCard, selectedEmotion === item.id && styles.emotionCardSelected]}
+                style={[
+                  styles.emotionCard,
+                  selectedEmotion === item.id && styles.emotionCardSelected,
+                ]}
                 onPress={() => setSelectedEmotion(item.id)}
+                activeOpacity={0.7}
               >
-                <View style={[styles.emotionIconWrap, { backgroundColor: item.bgColor }]}>
-                  <FontAwesome6 name={item.icon as any} size={28} color={item.color} />
+                <View style={[styles.emotionIconWrap, { backgroundColor: `${item.color}20` }]}>
+                  <FontAwesome6 name={item.icon as any} size={32} color={item.color} />
                 </View>
-                <Text style={styles.emotionName}>{item.name}</Text>
-                <Text style={[styles.emotionScore, { color: item.color }]}>{item.score}</Text>
+                <Text
+                  style={[
+                    styles.emotionLabel,
+                    selectedEmotion === item.id && styles.emotionLabelSelected,
+                  ]}
+                >
+                  {item.label}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
-        {/* 情绪趋势 */}
+        {/* 情绪趋势分析 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>本周情绪趋势</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>情绪趋势分析</Text>
+            <TouchableOpacity style={styles.moreBtn}>
+              <Ionicons name="arrow-up" size={14} color="#26A69A" />
+            </TouchableOpacity>
+          </View>
           <View style={styles.trendCard}>
             <View style={styles.trendChart}>
-              {MOOD_HISTORY.map((item, index) => (
-                <View key={item.date} style={styles.trendItem}>
-                  <View style={[styles.trendDot, { backgroundColor: item.score >= 60 ? '#26A69A' : '#FF9800' }]} />
+              {WEEK_TREND.map((item, index) => (
+                <View key={item.day} style={styles.trendItem}>
+                  <View style={styles.trendBarContainer}>
+                    <View
+                      style={[
+                        styles.trendBar,
+                        { height: `${item.score}%` },
+                        index === 1 && styles.trendBarHighlight,
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.trendDay}>{item.day}</Text>
                   <Text style={styles.trendScore}>{item.score}</Text>
-                  <Text style={styles.trendDate}>{item.date}</Text>
-                  {item.trend === 'up' ? (
-                    <Ionicons name="arrow-up" size={10} color="#26A69A" />
-                  ) : (
-                    <Ionicons name="arrow-down" size={10} color="#FF9800" />
-                  )}
                 </View>
+              ))}
+            </View>
+            <View style={styles.trendTooltip}>
+              <Text style={styles.trendTooltipTitle}>周三</Text>
+              <View style={styles.trendTooltipRow}>
+                <Text style={styles.trendTooltipLabel}>情绪评分:</Text>
+                <Text style={styles.trendTooltipValue}>75</Text>
+              </View>
+              <View style={styles.trendTooltipRow}>
+                <Text style={styles.trendTooltipLabel}>能量水平:</Text>
+                <Text style={[styles.trendTooltipValue, { color: '#FF9800' }]}>75</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* 呼吸训练 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>呼吸训练</Text>
+          <View style={styles.breathCard}>
+            <View style={styles.breathCircleContainer}>
+              <LinearGradient
+                colors={isBreathing ? ['#81D4FA', '#4FC3F7'] : ['#E3F2FD', '#BBDEFB']}
+                style={styles.breathCircle}
+              >
+                <Text style={styles.breathCount}>{breathCount}</Text>
+                <Text style={styles.breathText}>{getBreathText()}</Text>
+              </LinearGradient>
+            </View>
+            <TouchableOpacity
+              style={[styles.breathStartBtn, isBreathing && styles.breathStartBtnActive]}
+              onPress={handleStartBreathing}
+              disabled={isBreathing}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.breathStartText}>
+                {isBreathing ? '训练中...' : '开始呼吸训练'}
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.breathMethod}>
+              <Text style={styles.breathMethodTitle}>4-7-8呼吸法</Text>
+              <View style={styles.breathSteps}>
+                {BREATH_STEPS.map((step) => (
+                  <View key={step.step} style={styles.breathStep}>
+                    <View style={[styles.breathStepDot, { backgroundColor: step.color }]}>
+                      <Text style={styles.breathStepNum}>{step.step}</Text>
+                    </View>
+                    <Text style={styles.breathStepText}>{step.text}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.breathTips}>
+              {TIPS.map((tip, index) => (
+                <Text key={index} style={styles.breathTip}>
+                  · {tip}
+                </Text>
               ))}
             </View>
           </View>
         </View>
 
-        {/* 正念放松 */}
+        {/* 心理健康活动 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>正念放松</Text>
-          <View style={styles.mindfulnessGrid}>
-            <TouchableOpacity style={styles.mindfulnessCard}>
-              <View style={[styles.mindfulnessIcon, { backgroundColor: '#9C27B0' }]}>
-                <FontAwesome6 name="brain" size={28} color="#FFFFFF" />
+          <Text style={styles.sectionTitle}>心理健康活动</Text>
+          {MENTAL_ACTIVITIES.map((activity) => (
+            <View key={activity.id} style={styles.activityCard}>
+              <View style={[styles.activityIconWrap, { backgroundColor: activity.bgColor }]}>
+                <FontAwesome6 name={activity.icon as any} size={24} color={activity.iconColor} />
               </View>
-              <Text style={styles.mindfulnessTitle}>正念冥想</Text>
-              <Text style={styles.mindfulnessDesc}>引导式冥想练习，平静内心</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mindfulnessCard}>
-              <View style={[styles.mindfulnessIcon, { backgroundColor: '#2196F3' }]}>
-                <FontAwesome6 name="wind" size={28} color="#FFFFFF" />
+              <View style={styles.activityContent}>
+                <Text style={styles.activityTitle}>{activity.title}</Text>
+                <Text style={styles.activityDesc}>{activity.desc}</Text>
+                <Text style={styles.activityDuration}>{activity.duration}</Text>
+                <View style={styles.activityTags}>
+                  {activity.items.map((item, index) => (
+                    <View key={index} style={styles.activityTag}>
+                      <Text style={styles.activityTagText}>{item.name}</Text>
+                      <View style={[styles.activityTagBadge, { backgroundColor: item.tagColor }]}>
+                        <Text style={styles.activityTagBadgeText}>{item.tag}</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
               </View>
-              <Text style={styles.mindfulnessTitle}>呼吸训练</Text>
-              <Text style={styles.mindfulnessDesc}>科学呼吸方法，缓解焦虑</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mindfulnessCard}>
-              <View style={[styles.mindfulnessIcon, { backgroundColor: '#26A69A' }]}>
-                <FontAwesome6 name="person" size={28} color="#FFFFFF" />
-              </View>
-              <Text style={styles.mindfulnessTitle}>瑜伽</Text>
-              <Text style={styles.mindfulnessDesc}>身心放松练习，舒缓压力</Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          ))}
         </View>
 
-        {/* 推荐练习 */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>推荐练习</Text>
-            <TouchableOpacity style={styles.moreBtn}>
-              <Text style={styles.moreBtnText}>全部</Text>
-              <Ionicons name="chevron-forward" size={12} color="#26A69A" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tutorialScroll}>
-              {MINDFULNESS_ITEMS.map((item) => (
-                <TouchableOpacity key={item.id} style={styles.tutorialCard}>
-                  <Image source={{ uri: item.cover }} style={styles.tutorialImage} />
-                  <View style={styles.tutorialOverlay}>
-                    <View style={styles.playIcon}>
-                      <Ionicons name="play" size={20} color="#FFFFFF" />
-                    </View>
-                    <View style={styles.categoryBadge}>
-                      <Text style={styles.categoryText}>{item.category}</Text>
-                    </View>
-                  </View>
-                  <View style={styles.tutorialInfo}>
-                    <Text style={styles.tutorialTitle}>{item.title}</Text>
-                    <View style={styles.tutorialMeta}>
-                      <FontAwesome6 name="clock" size={10} color="#9CA3AF" />
-                      <Text style={styles.tutorialDuration}>{item.duration}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-
-        {/* 情绪小贴士 */}
-        <View style={styles.tipsCard}>
-          <View style={styles.tipsHeader}>
-            <Ionicons name="bulb" size={20} color="#FF9800" />
-            <Text style={styles.tipsTitle}>情绪调节建议</Text>
-          </View>
-          <Text style={styles.tipsContent}>
-            当感到焦虑时，可以尝试深呼吸4-7-8法则：吸气4秒，屏气7秒，呼气8秒，重复3-4次可有效缓解焦虑情绪。
+        {/* 今日情绪提升建议 */}
+        <LinearGradient
+          colors={['#E91E63', '#9C27B0']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.tipsCard}
+        >
+          <Text style={styles.tipsTitle}>今日情绪提升建议</Text>
+          <Text style={styles.tipsDesc}>
+            根据您今日的情绪数据分析，建议您进行15-20分钟的正念冥想练习，有助于稳定情绪、提升专注力。
           </Text>
-        </View>
-
-        {/* 记录情绪按钮 */}
-        {selectedEmotion && (
-          <TouchableOpacity style={styles.recordButton}>
-            <FontAwesome6 name="check" size={20} color="#FFFFFF" />
-            <Text style={styles.recordButtonText}>记录情绪</Text>
-          </TouchableOpacity>
-        )}
+          <View style={styles.tipsActions}>
+            <TouchableOpacity style={styles.tipsActionBtn} activeOpacity={0.8}>
+              <FontAwesome6 name="play" size={14} color="#E91E63" />
+              <Text style={styles.tipsActionText}>开始练习</Text>
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
       </ScrollView>
     </Screen>
   );
@@ -187,66 +347,11 @@ export default function EmotionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F5F7FA',
   },
   contentContainer: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-  },
-  overviewCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  overviewHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  overviewTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1a1a2e',
-  },
-  emotionScoreBadge: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    backgroundColor: '#FFF3E0',
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  emotionScoreValue: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#FF9800',
-  },
-  emotionScoreLabel: {
-    fontSize: 14,
-    color: '#FF9800',
-    marginLeft: 2,
-  },
-  emotionGauge: {
-    height: 12,
-    backgroundColor: '#FFF3E0',
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  emotionGaugeFill: {
-    height: '100%',
-    backgroundColor: '#FF9800',
-    borderRadius: 6,
-  },
-  emotionDesc: {
-    fontSize: 14,
-    color: '#666666',
+    paddingTop: 16,
   },
   section: {
     marginBottom: 20,
@@ -264,27 +369,78 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   moreBtn: {
-    flexDirection: 'row',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#E0F2F1',
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 2,
+    marginBottom: 12,
   },
-  moreBtnText: {
-    fontSize: 13,
-    color: '#26A69A',
+  // 当前情绪状态卡片
+  overviewCard: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    position: 'relative',
   },
-  emotionGrid: {
+  favoriteBtn: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
+  overviewContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 10,
+  },
+  overviewLeft: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  overviewRight: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  overviewValue: {
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  overviewValue2: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  overviewLabel: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.85)',
+    marginTop: 4,
+  },
+  overviewState: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  overviewDivider: {
+    width: 60,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    marginVertical: 12,
+  },
+  // 记录当前情绪
+  emotionGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -6,
   },
   emotionCard: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 20,
+    width: '30%',
+    marginHorizontal: '1.5%',
+    marginBottom: 12,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    paddingVertical: 20,
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
@@ -292,30 +448,31 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   emotionCardSelected: {
-    borderColor: '#FF9800',
-    backgroundColor: '#FFF3E0',
+    backgroundColor: '#FCE4EC',
+    borderWidth: 2,
+    borderColor: '#E91E63',
   },
   emotionIconWrap: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
-  emotionName: {
+  emotionLabel: {
     fontSize: 14,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  emotionLabelSelected: {
+    color: '#E91E63',
     fontWeight: '600',
-    color: '#1a1a2e',
-    marginBottom: 4,
   },
-  emotionScore: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
+  // 情绪趋势分析
   trendCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 16,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -326,163 +483,266 @@ const styles = StyleSheet.create({
   trendChart: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    height: 120,
+    marginBottom: 20,
   },
   trendItem: {
     alignItems: 'center',
-    gap: 4,
+    flex: 1,
   },
-  trendDot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginBottom: 6,
+  trendBarContainer: {
+    width: 30,
+    height: 100,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 15,
+    justifyContent: 'flex-end',
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  trendBar: {
+    width: '100%',
+    backgroundColor: '#FF9800',
+    borderRadius: 15,
+    minHeight: 10,
+  },
+  trendBarHighlight: {
+    backgroundColor: '#9C27B0',
+    borderWidth: 2,
+    borderColor: '#E91E63',
+    borderRadius: 15,
+  },
+  trendDay: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 4,
   },
   trendScore: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1a1a2e',
-  },
-  trendDate: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#9CA3AF',
   },
-  mindfulnessGrid: {
+  trendTooltip: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  trendTooltipTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    marginBottom: 8,
+  },
+  trendTooltipRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
+    marginBottom: 4,
   },
-  mindfulnessCard: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 20,
+  trendTooltipLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  trendTooltipValue: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#E91E63',
+  },
+  // 呼吸训练
+  breathCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 20,
+    padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
   },
-  mindfulnessIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  breathCircleContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  breathCircle: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
   },
-  mindfulnessTitle: {
-    fontSize: 14,
+  breathCount: {
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  breathText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    marginTop: 4,
+  },
+  breathStartBtn: {
+    backgroundColor: '#26A69A',
+    borderRadius: 25,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  breathStartBtnActive: {
+    backgroundColor: '#BDBDBD',
+  },
+  breathStartText: {
+    fontSize: 15,
     fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  breathMethod: {
+    marginBottom: 20,
+  },
+  breathMethodTitle: {
+    fontSize: 16,
+    fontWeight: '700',
     color: '#1a1a2e',
-    marginBottom: 4,
-  },
-  mindfulnessDesc: {
-    fontSize: 10,
-    color: '#9CA3AF',
+    marginBottom: 16,
     textAlign: 'center',
-    paddingHorizontal: 4,
   },
-  tutorialScroll: {
-    paddingRight: 20,
-    gap: 12,
-  },
-  tutorialCard: {
-    width: 180,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  tutorialImage: {
-    width: '100%',
-    height: 110,
-  },
-  tutorialOverlay: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    right: 8,
+  breathSteps: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    justifyContent: 'space-around',
   },
-  playIcon: {
+  breathStep: {
+    alignItems: 'center',
+  },
+  breathStepDot: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 8,
   },
-  categoryBadge: {
-    backgroundColor: '#FF9800',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  categoryText: {
-    fontSize: 10,
-    fontWeight: '500',
+  breathStepNum: {
+    fontSize: 14,
+    fontWeight: '700',
     color: '#FFFFFF',
   },
-  tutorialInfo: {
-    padding: 12,
+  breathStepText: {
+    fontSize: 13,
+    color: '#6B7280',
   },
-  tutorialTitle: {
-    fontSize: 14,
-    fontWeight: '600',
+  breathTips: {
+    backgroundColor: '#E0F2F1',
+    borderRadius: 12,
+    padding: 16,
+  },
+  breathTip: {
+    fontSize: 13,
+    color: '#1a1a2e',
+    lineHeight: 24,
+  },
+  // 心理健康活动
+  activityCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  activityIconWrap: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  activityContent: {
+    flex: 1,
+  },
+  activityTitle: {
+    fontSize: 16,
+    fontWeight: '700',
     color: '#1a1a2e',
     marginBottom: 6,
   },
-  tutorialMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
+  activityDesc: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginBottom: 4,
   },
-  tutorialDuration: {
-    fontSize: 11,
+  activityDuration: {
+    fontSize: 12,
     color: '#9CA3AF',
+    marginBottom: 10,
   },
-  tipsCard: {
-    backgroundColor: '#FFF3E0',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 20,
+  activityTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  tipsHeader: {
+  activityTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    gap: 6,
+  },
+  activityTagText: {
+    fontSize: 11,
+    color: '#6B7280',
+  },
+  activityTagBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  activityTagBadgeText: {
+    fontSize: 10,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  // 今日情绪提升建议
+  tipsCard: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
   },
   tipsTitle: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '700',
-    color: '#FF9800',
+    color: '#FFFFFF',
+    marginBottom: 10,
   },
-  tipsContent: {
+  tipsDesc: {
     fontSize: 14,
-    color: '#1a1a2e',
+    color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 22,
+    marginBottom: 16,
   },
-  recordButton: {
+  tipsActions: {
+    flexDirection: 'row',
+  },
+  tipsActionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#FF9800',
-    borderRadius: 25,
-    paddingVertical: 14,
-    marginBottom: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    gap: 6,
   },
-  recordButtonText: {
-    fontSize: 16,
+  tipsActionText: {
+    fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#E91E63',
   },
 });
