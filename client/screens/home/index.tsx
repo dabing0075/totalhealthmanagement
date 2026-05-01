@@ -242,12 +242,12 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* 运动二环 */}
+        {/* 运动三环 */}
         <View style={styles.exerciseCard}>
           <View style={styles.cardHeader}>
             <View style={styles.cardTitleRow}>
               <FontAwesome6 name="person-running" size={14} color="#26A69A" />
-              <Text style={styles.cardTitle}>运动二环</Text>
+              <Text style={styles.cardTitle}>运动三环</Text>
             </View>
           </View>
           <View style={styles.exerciseContent}>
