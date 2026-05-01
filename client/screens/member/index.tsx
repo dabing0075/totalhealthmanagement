@@ -217,7 +217,7 @@ export default function MemberScreen() {
         {/* 积分卡片 */}
         <View style={styles.pointsCard}>
           <View style={styles.pointsHeader}>
-            <Text style={styles.cardTitle}>打卡积分</Text>
+            <Text style={styles.cardTitle}>积分</Text>
             <TouchableOpacity>
               <Text style={styles.pointsMore}>积分商城</Text>
             </TouchableOpacity>
