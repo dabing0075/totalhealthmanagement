@@ -8,10 +8,10 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
 // 获取屏幕宽度用于适配
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -131,17 +131,9 @@ export default function MemberScreen() {
 
   return (
     <Screen>
-      {/* 固定顶部导航栏 */}
-      <View style={styles.fixedHeader}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#374151" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>会员</Text>
-        <View style={styles.headerRight} />
-      </View>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={[styles.contentContainer, { paddingTop: 50, paddingBottom: 100 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: 20, paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* 个人信息卡片 */}
@@ -450,14 +442,6 @@ export default function MemberScreen() {
         </View>
       </ScrollView>
 
-      {/* 固定顶部导航栏 */}
-      <View style={styles.fixedHeader}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <FontAwesome6 name="chevron-left" size={20} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>会员</Text>
-        <View style={styles.headerRight} />
-      </View>
     </Screen>
   );
 }
@@ -466,37 +450,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
-  },
-  fixedHeader: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#F9FAFB',
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingHorizontal: 16,
-    zIndex: 100,
-  },
-  contentPadding: {
-    paddingTop: 48,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  headerRight: {
-    width: 40,
   },
   contentContainer: {
     paddingHorizontal: 16,
