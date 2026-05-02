@@ -611,9 +611,9 @@ export default function DietCalculatorScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9FAFB' },
   contentContainer: { paddingHorizontal: 16, paddingTop: 65, paddingBottom: 100 },
-  fixedHeader: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: '#F9FAFB', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
-  backBtn: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#1a1a2e' },
+  fixedHeader: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, backgroundColor: '#F9FAFB', paddingTop: 5, paddingBottom: 5 },
+  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { fontSize: 17, fontWeight: '600', color: '#1F2937' },
   placeholder: { width: 40 },
   formulaCard: { backgroundColor: '#FFF3E0', borderRadius: 12, padding: 14, marginBottom: 20 },
   formulaHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
