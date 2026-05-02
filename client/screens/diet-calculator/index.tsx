@@ -610,7 +610,7 @@ export default function DietCalculatorScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9FAFB' },
-  contentContainer: { paddingHorizontal: 16, paddingTop: 48, paddingBottom: 100 },
+  contentContainer: { paddingHorizontal: 16, paddingTop: 70, paddingBottom: 100 },
   fixedHeader: { position: 'absolute', top: 45, left: 0, right: 0, zIndex: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, backgroundColor: '#F9FAFB', paddingTop: 5, paddingBottom: 5 },
   backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
   headerTitle: { fontSize: 17, fontWeight: '600', color: '#1F2937' },
