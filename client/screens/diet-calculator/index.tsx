@@ -12,6 +12,7 @@ import { Screen } from '@/components/Screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome6, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useSafeRouter } from '@/hooks/useSafeRouter';
+import { useRouter } from 'expo-router';
 
 interface UserData {
   birthDate: string;
@@ -236,18 +237,19 @@ export default function DietCalculatorScreen() {
   };
 
   return (
-    <Screen>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        {/* 标题 */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={24} color="#1a1a2e" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>科学体重管理方案</Text>
-          <View style={styles.placeholder} />
-        </View>
+    <>
+      {/* 固定顶部导航栏 */}
+      <View style={styles.fixedHeader}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <Ionicons name="chevron-back" size={24} color="#1a1a2e" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>科学体重管理方案</Text>
+        <View style={styles.placeholder} />
+      </View>
 
-        {/* 公式说明 */}
+      <Screen>
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+          {/* 公式说明 */}
         <View style={styles.formulaCard}>
           <View style={styles.formulaHeader}>
             <Ionicons name="bulb" size={18} color="#FF9800" />
@@ -602,13 +604,14 @@ export default function DietCalculatorScreen() {
         </View>
       </Modal>
     </Screen>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9FAFB' },
-  contentContainer: { paddingHorizontal: 16, paddingBottom: 100 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12 },
+  contentContainer: { paddingHorizontal: 16, paddingTop: 65, paddingBottom: 100 },
+  fixedHeader: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: '#F9FAFB', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   backBtn: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#1a1a2e' },
   placeholder: { width: 40 },
