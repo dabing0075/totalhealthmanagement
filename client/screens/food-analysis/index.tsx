@@ -93,164 +93,69 @@ export default function FoodAnalysisScreen() {
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<AnalysisResult[]>([]);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
-  const [selectedPlanType, setSelectedPlanType] = useState<'breakfast' | 'lunch' | 'dinner'>('breakfast');
+  const [selectedPlanType, setSelectedPlanType] = useState<'standard' | 'strict'>('standard');
 
-  // 减脂套餐数据
-  const mealPlans: Record<'breakfast' | 'lunch' | 'dinner', MealPlan[]> = {
-    breakfast: [
+  // 一日三餐套餐数据
+  type MealPlanDay = {
+    id: string;
+    name: string;
+    suitable: string;
+    totalCalories: number;
+    items: Array<{ mealType: string; name: string; portion: string }>;
+  };
+
+  const dayMealPlans: Record<'standard' | 'strict', MealPlanDay[]> = {
+    standard: [
       {
-        id: 1,
-        name: '轻盈早餐A',
-        totalCalories: 320,
-        protein: 18,
-        carbs: 45,
-        fat: 8,
-        suitable: '适合减脂初期 · 320kcal',
-        image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400',
+        id: 'std1',
+        name: '标准减脂套餐A',
+        suitable: '适合减脂初期',
+        totalCalories: 1350,
         items: [
-          { name: '紫薯燕麦粥', portion: '1碗(200g)', calories: 180 },
-          { name: '水煮蛋', portion: '1个(50g)', calories: 72 },
-          { name: '圣女果', portion: '6颗(80g)', calories: 18 },
-          { name: '无糖豆浆', portion: '1杯(250ml)', calories: 50 },
+          { mealType: '早餐', name: '全麦面包2片+水煮蛋1个+牛奶200ml', portion: '中等份量' },
+          { mealType: '午餐', name: '糙米饭+清蒸鱼+凉拌西兰花', portion: '一拳头饭+一块鱼+半盘菜' },
+          { mealType: '晚餐', name: '红薯+鸡胸肉+番茄蛋汤', portion: '小个红薯+100g鸡胸' },
         ],
       },
       {
-        id: 2,
-        name: '高蛋白早餐',
-        totalCalories: 380,
-        protein: 28,
-        carbs: 35,
-        fat: 12,
-        suitable: '适合运动人群 · 380kcal',
-        image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400',
+        id: 'std2',
+        name: '高蛋白减脂套餐',
+        suitable: '适合力量训练人群',
+        totalCalories: 1450,
         items: [
-          { name: '全麦面包', portion: '2片(60g)', calories: 130 },
-          { name: '煎蛋', portion: '2个(100g)', calories: 180 },
-          { name: '牛油果', portion: '半个(50g)', calories: 80 },
-          { name: '黑咖啡', portion: '1杯(200ml)', calories: 5 },
-        ],
-      },
-      {
-        id: 3,
-        name: '清爽早餐',
-        totalCalories: 280,
-        protein: 15,
-        carbs: 40,
-        fat: 6,
-        suitable: '适合清淡口味 · 280kcal',
-        image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400',
-        items: [
-          { name: '牛奶燕麦片', portion: '1碗(180g)', calories: 150 },
-          { name: '蓝莓', portion: '30g', calories: 18 },
-          { name: '坚果', portion: '10g', calories: 60 },
-          { name: '香蕉', portion: '半根(50g)', calories: 45 },
+          { mealType: '早餐', name: '燕麦粥+煎蛋2个+坚果一小把', portion: '50g燕麦+2个蛋' },
+          { mealType: '午餐', name: '藜麦饭+牛肉炒青椒+紫菜汤', portion: '一拳头藜麦+150g牛肉' },
+          { mealType: '晚餐', name: '豆腐蒸鱼+凉拌黄瓜+玉米半根', portion: '一块鱼+200g豆腐' },
         ],
       },
     ],
-    lunch: [
+    strict: [
       {
-        id: 1,
-        name: '标准减脂午餐',
-        totalCalories: 480,
-        protein: 35,
-        carbs: 55,
-        fat: 12,
-        suitable: '适合大多数人群 · 480kcal',
-        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
+        id: 'strict1',
+        name: '轻断食减脂套餐',
+        suitable: '适合平台期突破',
+        totalCalories: 1100,
         items: [
-          { name: '糙米饭', portion: '1碗(150g)', calories: 180 },
-          { name: '清蒸鸡胸肉', portion: '120g', calories: 130 },
-          { name: '西兰花炒虾仁', portion: '150g', calories: 110 },
-          { name: '凉拌木耳', portion: '80g', calories: 35 },
-          { name: '紫菜蛋花汤', portion: '1碗(200ml)', calories: 25 },
+          { mealType: '早餐', name: '无糖酸奶+蓝莓+亚麻籽', portion: '150g酸奶+一小盒蓝莓' },
+          { mealType: '午餐', name: '牛油果沙拉+煮虾', portion: '半个牛油果+150g虾' },
+          { mealType: '晚餐', name: '冬瓜排骨汤(去油)', portion: '一碗汤+100g排骨' },
         ],
       },
       {
-        id: 2,
-        name: '高蛋白午餐',
-        totalCalories: 520,
-        protein: 45,
-        carbs: 45,
-        fat: 14,
-        suitable: '适合力量训练 · 520kcal',
-        image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400',
+        id: 'strict2',
+        name: '清淡易消套餐',
+        suitable: '适合肠胃较弱人群',
+        totalCalories: 1200,
         items: [
-          { name: '藜麦饭', portion: '1碗(120g)', calories: 160 },
-          { name: '煎牛排', portion: '100g', calories: 180 },
-          { name: '三文鱼刺身', portion: '80g', calories: 120 },
-          { name: '蔬菜沙拉', portion: '150g', calories: 45 },
-          { name: '味噌汤', portion: '1碗(200ml)', calories: 15 },
-        ],
-      },
-      {
-        id: 3,
-        name: '素食午餐',
-        totalCalories: 420,
-        protein: 22,
-        carbs: 65,
-        fat: 10,
-        suitable: '适合素食者 · 420kcal',
-        image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400',
-        items: [
-          { name: '杂粮饭', portion: '1碗(150g)', calories: 170 },
-          { name: '豆腐炒菠菜', portion: '150g', calories: 120 },
-          { name: '香菇炒青菜', portion: '120g', calories: 55 },
-          { name: '番茄蛋汤', portion: '1碗(200ml)', calories: 45 },
-          { name: '水果拼盘', portion: '100g', calories: 30 },
-        ],
-      },
-    ],
-    dinner: [
-      {
-        id: 1,
-        name: '轻食晚餐',
-        totalCalories: 350,
-        protein: 28,
-        carbs: 30,
-        fat: 10,
-        suitable: '适合晚间减脂 · 350kcal',
-        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
-        items: [
-          { name: '鸡胸肉沙拉', portion: '150g', calories: 160 },
-          { name: '玉米', portion: '半根(80g)', calories: 65 },
-          { name: '胡萝卜条', portion: '50g', calories: 15 },
-          { name: '柠檬水', portion: '1杯(300ml)', calories: 10 },
-        ],
-      },
-      {
-        id: 2,
-        name: '清淡晚餐',
-        totalCalories: 320,
-        protein: 25,
-        carbs: 40,
-        fat: 8,
-        suitable: '适合胃不好人群 · 320kcal',
-        image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400',
-        items: [
-          { name: '小米粥', portion: '1碗(200g)', calories: 100 },
-          { name: '清蒸鲈鱼', portion: '100g', calories: 90 },
-          { name: '蒜蓉娃娃菜', portion: '150g', calories: 55 },
-          { name: '红枣银耳羹', portion: '1碗(150ml)', calories: 75 },
-        ],
-      },
-      {
-        id: 3,
-        name: '零负担晚餐',
-        totalCalories: 280,
-        protein: 20,
-        carbs: 35,
-        fat: 6,
-        suitable: '适合严格控制 · 280kcal',
-        image: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400',
-        items: [
-          { name: '蔬菜汤', portion: '2碗(400ml)', calories: 60 },
-          { name: '水煮虾', portion: '80g', calories: 80 },
-          { name: '黄瓜拌豆腐', portion: '150g', calories: 90 },
-          { name: '猕猴桃', portion: '1个(80g)', calories: 50 },
+          { mealType: '早餐', name: '小米粥+素包子1个', portion: '一小碗粥+1个包子' },
+          { mealType: '午餐', name: '山药排骨汤+软米饭', portion: '一碗汤+半碗饭' },
+          { mealType: '晚餐', name: '蒸蛋羹+青菜豆腐汤', portion: '两个蛋+一碗汤' },
         ],
       },
     ],
   };
+
+  const currentMealPlans = dayMealPlans[selectedPlanType];
 
   // 今日营养数据
   const todayNutrition: NutritionData = {
@@ -766,62 +671,57 @@ export default function FoodAnalysisScreen() {
 
         {/* 减脂套餐选择 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>减脂套餐推荐</Text>
+          <Text style={styles.sectionTitle}>一日三餐减脂套餐</Text>
           
-          {/* 餐次切换标签 */}
+          {/* 套餐类型切换标签 */}
           <View style={styles.mealPlanTabs}>
-            {(['breakfast', 'lunch', 'dinner'] as const).map((type) => (
+            {(['standard', 'strict'] as const).map((type) => (
               <TouchableOpacity
                 key={type}
                 style={[styles.mealPlanTab, selectedPlanType === type && styles.mealPlanTabActive]}
                 onPress={() => setSelectedPlanType(type)}
               >
-                <FontAwesome6
-                  name={type === 'breakfast' ? 'sunrise' : type === 'lunch' ? 'sun' : 'moon'}
-                  size={16}
-                  color={selectedPlanType === type ? '#FFFFFF' : '#6B7280'}
-                />
                 <Text style={[styles.mealPlanTabText, selectedPlanType === type && styles.mealPlanTabTextActive]}>
-                  {type === 'breakfast' ? '早餐' : type === 'lunch' ? '午餐' : '晚餐'}
+                  {type === 'standard' ? '标准套餐' : '严格套餐'}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          {/* 套餐列表 - 图片卡片样式 */}
+          {/* 套餐列表 - 一日三餐卡片样式 */}
           <View style={styles.mealPlanList}>
-            {mealPlans[selectedPlanType].map((plan) => (
-              <TouchableOpacity key={plan.id} style={styles.mealPlanCard}>
-                <Image source={{ uri: plan.image }} style={styles.mealPlanImage} />
+            {currentMealPlans.map((plan) => (
+              <TouchableOpacity key={plan.id} style={styles.mealPlanCardDay}>
+                {/* 标题区 */}
+                <View style={styles.mealPlanTitleRowDay}>
+                  <View style={styles.mealPlanIconBoxDay}>
+                    <FontAwesome6 name="utensils" size={16} color="#16A34A" />
+                  </View>
+                  <View style={styles.mealPlanTitleInfo}>
+                    <Text style={styles.mealPlanNameDay}>{plan.name}</Text>
+                    <Text style={styles.mealPlanSuitableTextDay}>{plan.totalCalories}kcal · {plan.suitable}</Text>
+                  </View>
+                </View>
                 
-                <View style={styles.mealPlanContent}>
-                  {/* 标题区 */}
-                  <View style={styles.mealPlanTitleRow}>
-                    <View style={styles.mealPlanIconBox}>
-                      <FontAwesome6 name="utensils" size={16} color="#22C55E" />
+                {/* 三餐内容区 */}
+                <View style={styles.mealPlanItemsDay}>
+                  {plan.items.map((item, index) => (
+                    <View key={index} style={styles.mealPlanItemDay}>
+                      <Text style={styles.mealPlanItemLabel}>{item.mealType}:</Text>
+                      <Text style={styles.mealPlanItemContent}> {item.name} · {item.portion}</Text>
                     </View>
-                    <View style={styles.mealPlanTitleInfo}>
-                      <Text style={styles.mealPlanName}>{plan.name}</Text>
-                      <Text style={styles.mealPlanSuitableText}>{plan.suitable}</Text>
-                    </View>
+                  ))}
+                </View>
+                
+                {/* 底部信息 */}
+                <View style={styles.mealPlanFooterDay}>
+                  <View style={styles.mealPlanCaloriesBox}>
+                    <Text style={styles.mealPlanCaloriesValueDay}>{plan.totalCalories}</Text>
+                    <Text style={styles.mealPlanCaloriesUnit}>kcal</Text>
                   </View>
-                  
-                  {/* 餐单详情 */}
-                  <View style={styles.mealPlanItems}>
-                    {plan.items.map((item, index) => (
-                      <Text key={index} style={styles.mealPlanItem}>
-                        {item.name} · {item.portion} · {item.calories}kcal
-                      </Text>
-                    ))}
-                  </View>
-                  
-                  {/* 底部信息 */}
-                  <View style={styles.mealPlanFooter}>
-                    <Text style={styles.mealPlanCaloriesValue}>{plan.totalCalories}kcal</Text>
-                    <TouchableOpacity style={styles.mealPlanSelectBtn}>
-                      <Text style={styles.mealPlanSelectBtnText}>一键套用</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <TouchableOpacity style={styles.mealPlanSelectBtnDay}>
+                    <Text style={styles.mealPlanSelectBtnTextDay}>一键套用</Text>
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             ))}
@@ -1254,88 +1154,97 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
   },
-  // 图片卡片样式
-  mealPlanCard: {
+  // 一日三餐卡片样式
+  mealPlanCardDay: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 4,
-    marginBottom: 16,
-  },
-  mealPlanImage: {
-    width: '100%',
-    height: 140,
-    backgroundColor: '#F3F4F6',
-  },
-  mealPlanContent: {
+    borderRadius: 16,
     padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  mealPlanTitleRow: {
+  mealPlanTitleRowDay: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
   },
-  mealPlanIconBox: {
+  mealPlanIconBoxDay: {
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: '#F0FDF4',
+    backgroundColor: '#DCFCE7',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: 12,
   },
   mealPlanTitleInfo: {
     flex: 1,
   },
-  mealPlanName: {
+  mealPlanNameDay: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#1a1a2e',
+    color: '#1F2937',
     marginBottom: 2,
   },
-  mealPlanSuitableText: {
+  mealPlanSuitableTextDay: {
     fontSize: 12,
     color: '#9CA3AF',
   },
-  mealPlanCaloriesValue: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#22C55E',
-  },
-  mealPlanItems: {
-    backgroundColor: '#FAFAFA',
+  mealPlanItemsDay: {
+    backgroundColor: '#F0FDF4',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
   },
-  mealPlanList: {
-    gap: 0,
+  mealPlanItemDay: {
+    flexDirection: 'row',
+    marginBottom: 8,
   },
-  mealPlanItem: {
+  mealPlanItemLabel: {
     fontSize: 13,
-    color: '#4B5563',
-    marginBottom: 6,
-    lineHeight: 18,
+    fontWeight: '600',
+    color: '#16A34A',
   },
-  mealPlanFooter: {
+  mealPlanItemContent: {
+    fontSize: 13,
+    color: '#374151',
+    flex: 1,
+  },
+  mealPlanFooterDay: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  mealPlanSelectBtn: {
-    backgroundColor: '#22C55E',
-    borderRadius: 10,
+  mealPlanCaloriesBox: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  mealPlanCaloriesValueDay: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#16A34A',
+  },
+  mealPlanCaloriesUnit: {
+    fontSize: 12,
+    color: '#16A34A',
+    marginLeft: 2,
+  },
+  mealPlanSelectBtnDay: {
+    backgroundColor: '#16A34A',
+    borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
-  mealPlanSelectBtnText: {
+  mealPlanSelectBtnTextDay: {
     fontSize: 14,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  mealPlanList: {
+    gap: 0,
   },
   sectionTitle: {
     fontSize: 16,
