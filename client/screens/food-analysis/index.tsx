@@ -42,6 +42,21 @@ interface AnalysisResult {
   imageUri: string;
 }
 
+interface NutritionData {
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+interface RecipeItem {
+  id: number;
+  name: string;
+  calories: number;
+  time: string;
+  tags: string[];
+  image: string;
+}
+
 const createFormDataFile = (uri: string, name: string, type: string) => {
   const fileUri = uri.startsWith('file://') ? uri : `file://${uri}`;
   return {
@@ -59,6 +74,36 @@ export default function FoodAnalysisScreen() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<AnalysisResult[]>([]);
+  const [showRecipeModal, setShowRecipeModal] = useState(false);
+
+  // 今日营养数据
+  const todayNutrition: NutritionData = {
+    protein: 68,
+    carbs: 185,
+    fat: 52,
+  };
+  const todayCalories = todayNutrition.protein * 4 + todayNutrition.carbs * 4 + todayNutrition.fat * 9;
+  const calorieGoal = 1800;
+  const caloriePercent = Math.round((todayCalories / calorieGoal) * 100);
+
+  // 营养素比例
+  const proteinCal = todayNutrition.protein * 4;
+  const carbsCal = todayNutrition.carbs * 4;
+  const fatCal = todayNutrition.fat * 9;
+  const totalNutritionCal = proteinCal + carbsCal + fatCal;
+  const proteinPercent = Math.round((proteinCal / totalNutritionCal) * 100);
+  const carbsPercent = Math.round((carbsCal / totalNutritionCal) * 100);
+  const fatPercent = 100 - proteinPercent - carbsPercent;
+
+  // 减脂食谱库
+  const recipeList: RecipeItem[] = [
+    { id: 1, name: '鸡胸肉沙拉', calories: 320, time: '15分钟', tags: ['高蛋白', '低脂'], image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400' },
+    { id: 2, name: '清蒸鲈鱼', calories: 280, time: '20分钟', tags: ['高蛋白', '清淡'], image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400' },
+    { id: 3, name: '西兰花炒虾仁', calories: 260, time: '12分钟', tags: ['高蛋白', '低卡'], image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400' },
+    { id: 4, name: '番茄牛肉汤', calories: 350, time: '40分钟', tags: ['高蛋白', '暖身'], image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400' },
+    { id: 5, name: '凉拌黄瓜鸡丝', calories: 290, time: '10分钟', tags: ['低脂', '清爽'], image: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400' },
+    { id: 6, name: '紫薯燕麦粥', calories: 240, time: '25分钟', tags: ['粗粮', '饱腹'], image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400' },
+  ];
 
   // 请求相机权限
   const requestCameraPermission = async () => {
@@ -207,6 +252,74 @@ export default function FoodAnalysisScreen() {
         contentContainerStyle={[styles.contentContainer, styles.contentPadding]}
         showsVerticalScrollIndicator={false}
       >
+        {/* 今日摄入总热量卡片 */}
+        <View style={styles.section}>
+          <View style={styles.calorieSummaryCard}>
+            <LinearGradient
+              colors={['#26A69A', '#00897B']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.calorieSummaryGradient}
+            >
+              <View style={styles.calorieHeader}>
+                <Text style={styles.calorieHeaderTitle}>今日摄入</Text>
+                <Text style={styles.calorieHeaderSub}>已记录 {caloriePercent}%</Text>
+              </View>
+              <View style={styles.calorieMain}>
+                <View style={styles.calorieValueContainer}>
+                  <Text style={styles.calorieValue}>{todayCalories}</Text>
+                  <Text style={styles.calorieUnit}>kcal</Text>
+                </View>
+                <Text style={styles.calorieGoal}>/ {calorieGoal} kcal</Text>
+              </View>
+              <View style={styles.calorieProgressBar}>
+                <View style={[styles.calorieProgressFill, { width: `${caloriePercent}%` }]} />
+              </View>
+            </LinearGradient>
+
+            {/* 三大营养素饼图 */}
+            <View style={styles.nutritionSection}>
+              <Text style={styles.nutritionTitle}>三大营养素构成</Text>
+              <View style={styles.nutritionContent}>
+                {/* 饼图 */}
+                <View style={styles.pieChartContainer}>
+                  <View style={styles.pieChart}>
+                    <View style={[styles.pieProtein, { transform: [{ rotate: '0deg' }] }]} />
+                    <View style={[styles.pieCarbs, { transform: [{ rotate: `${proteinPercent * 3.6}deg` }] }]} />
+                    <View style={[styles.pieFat, { transform: [{ rotate: `${(proteinPercent + carbsPercent) * 3.6}deg` }] }]} />
+                    <View style={styles.pieCenter}>
+                      <Text style={styles.pieCenterText}>{totalNutritionCal}</Text>
+                      <Text style={styles.pieCenterLabel}>千卡</Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* 营养素详情 */}
+                <View style={styles.nutritionList}>
+                  <View style={styles.nutritionItem}>
+                    <View style={[styles.nutritionDot, { backgroundColor: '#26A69A' }]} />
+                    <Text style={styles.nutritionLabel}>蛋白质</Text>
+                    <Text style={styles.nutritionValue}>{todayNutrition.protein}g</Text>
+                    <Text style={styles.nutritionPercent}>{proteinPercent}%</Text>
+                  </View>
+                  <View style={styles.nutritionItem}>
+                    <View style={[styles.nutritionDot, { backgroundColor: '#FF9800' }]} />
+                    <Text style={styles.nutritionLabel}>碳水</Text>
+                    <Text style={styles.nutritionValue}>{todayNutrition.carbs}g</Text>
+                    <Text style={styles.nutritionPercent}>{carbsPercent}%</Text>
+                  </View>
+                  <View style={styles.nutritionItem}>
+                    <View style={[styles.nutritionDot, { backgroundColor: '#2196F3' }]} />
+                    <Text style={styles.nutritionLabel}>脂肪</Text>
+                    <Text style={styles.nutritionValue}>{todayNutrition.fat}g</Text>
+                    <Text style={styles.nutritionPercent}>{fatPercent}%</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
         {/* 餐次选择 */}
         <View style={styles.mealTypeSection}>
           <Text style={styles.sectionTitle}>选择餐次</Text>
@@ -392,6 +505,89 @@ export default function FoodAnalysisScreen() {
           </TouchableOpacity>
         )}
 
+        {/* 减脂食谱库 */}
+        <View style={styles.section}>
+          <View style={styles.recipeHeader}>
+            <Text style={styles.sectionTitle}>减脂食谱库</Text>
+            <TouchableOpacity onPress={() => setShowRecipeModal(true)}>
+              <Text style={styles.recipeMore}>查看全部</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.recipeScrollView}>
+            {recipeList.map((recipe) => (
+              <TouchableOpacity
+                key={recipe.id}
+                style={styles.recipeCard}
+                onPress={() => setShowRecipeModal(true)}
+              >
+                <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
+                <View style={styles.recipeOverlay}>
+                  <View style={styles.recipeTags}>
+                    {recipe.tags.map((tag, index) => (
+                      <View key={index} style={styles.recipeTag}>
+                        <Text style={styles.recipeTagText}>{tag}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+                <View style={styles.recipeInfo}>
+                  <Text style={styles.recipeName} numberOfLines={1}>{recipe.name}</Text>
+                  <View style={styles.recipeMeta}>
+                    <View style={styles.recipeMetaItem}>
+                      <Ionicons name="flame-outline" size={14} color="#FF9800" />
+                      <Text style={styles.recipeMetaText}>{recipe.calories}kcal</Text>
+                    </View>
+                    <View style={styles.recipeMetaItem}>
+                      <Ionicons name="time-outline" size={14} color="#6B7280" />
+                      <Text style={styles.recipeMetaText}>{recipe.time}</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+            </ScrollView>
+          </View>
+        </View>
+
+        {/* 食谱详情弹窗 */}
+        <Modal
+          visible={showRecipeModal}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setShowRecipeModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={[styles.modalContent, { maxHeight: '85%' }]}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>减脂食谱库</Text>
+                <TouchableOpacity onPress={() => setShowRecipeModal(false)}>
+                  <Ionicons name="close" size={24} color="#6B7280" />
+                </TouchableOpacity>
+              </View>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {recipeList.map((recipe) => (
+                  <TouchableOpacity key={recipe.id} style={styles.recipeListItem}>
+                    <Image source={{ uri: recipe.image }} style={styles.recipeListImage} />
+                    <View style={styles.recipeListInfo}>
+                      <Text style={styles.recipeListName}>{recipe.name}</Text>
+                      <View style={styles.recipeListTags}>
+                        {recipe.tags.map((tag, index) => (
+                          <Text key={index} style={styles.recipeListTag}>{tag}</Text>
+                        ))}
+                      </View>
+                      <View style={styles.recipeListMeta}>
+                        <Text style={styles.recipeListCal}>{recipe.calories} kcal</Text>
+                        <Text style={styles.recipeListTime}>{recipe.time}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
+
         {/* 历史记录弹窗 */}
         <Modal
           visible={showHistory}
@@ -482,6 +678,307 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 100,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  // 今日摄入热量卡片样式
+  calorieSummaryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  calorieSummaryGradient: {
+    padding: 20,
+  },
+  calorieHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  calorieHeaderTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.9)',
+  },
+  calorieHeaderSub: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.75)',
+  },
+  calorieMain: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 12,
+  },
+  calorieValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  calorieValue: {
+    fontSize: 42,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  calorieUnit: {
+    fontSize: 16,
+    color: 'rgba(255,255,255,0.8)',
+    marginLeft: 6,
+  },
+  calorieGoal: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.7)',
+    marginLeft: 8,
+  },
+  calorieProgressBar: {
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  calorieProgressFill: {
+    height: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 3,
+  },
+  // 营养素部分样式
+  nutritionSection: {
+    padding: 16,
+  },
+  nutritionTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    marginBottom: 16,
+  },
+  nutritionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  // 饼图样式
+  pieChartContainer: {
+    width: 100,
+    height: 100,
+    marginRight: 20,
+  },
+  pieChart: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#E5E7EB',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  pieProtein: {
+    position: 'absolute',
+    width: 50,
+    height: 100,
+    backgroundColor: '#26A69A',
+    left: 0,
+    top: 0,
+  },
+  pieCarbs: {
+    position: 'absolute',
+    width: 50,
+    height: 100,
+    backgroundColor: '#FF9800',
+    right: 0,
+    top: 0,
+  },
+  pieFat: {
+    position: 'absolute',
+    width: 50,
+    height: 100,
+    backgroundColor: '#2196F3',
+    left: 50,
+    top: 0,
+  },
+  pieCenter: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FFFFFF',
+    top: 20,
+    left: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pieCenterText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1a1a2e',
+  },
+  pieCenterLabel: {
+    fontSize: 10,
+    color: '#6B7280',
+  },
+  // 营养素列表
+  nutritionList: {
+    flex: 1,
+  },
+  nutritionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  nutritionDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  nutritionLabel: {
+    fontSize: 13,
+    color: '#6B7280',
+    width: 44,
+  },
+  nutritionValue: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    flex: 1,
+  },
+  nutritionPercent: {
+    fontSize: 13,
+    color: '#9CA3AF',
+    width: 36,
+    textAlign: 'right',
+  },
+  // 减脂食谱库样式
+  recipeHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  recipeMore: {
+    fontSize: 13,
+    color: '#26A69A',
+  },
+  recipeScrollView: {
+    marginHorizontal: -20,
+    paddingHorizontal: 20,
+  },
+  recipeCard: {
+    width: 160,
+    marginRight: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  recipeImage: {
+    width: '100%',
+    height: 100,
+    backgroundColor: '#F3F4F6',
+  },
+  recipeOverlay: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+  },
+  recipeTags: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  recipeTag: {
+    backgroundColor: 'rgba(38,166,154,0.85)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  recipeTagText: {
+    fontSize: 10,
+    color: '#FFFFFF',
+    fontWeight: '500',
+  },
+  recipeInfo: {
+    padding: 12,
+  },
+  recipeName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    marginBottom: 6,
+  },
+  recipeMeta: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  recipeMetaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  recipeMetaText: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  // 食谱列表弹窗样式
+  recipeListItem: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  recipeListImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    backgroundColor: '#F3F4F6',
+  },
+  recipeListInfo: {
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: 'center',
+  },
+  recipeListName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    marginBottom: 6,
+  },
+  recipeListTags: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  recipeListTag: {
+    fontSize: 11,
+    color: '#26A69A',
+    backgroundColor: '#E0F2F1',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  recipeListMeta: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  recipeListCal: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FF9800',
+  },
+  recipeListTime: {
+    fontSize: 12,
+    color: '#6B7280',
   },
   sectionTitle: {
     fontSize: 16,
