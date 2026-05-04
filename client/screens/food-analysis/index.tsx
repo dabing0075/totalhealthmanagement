@@ -72,6 +72,7 @@ interface MealPlan {
   fat: number;
   items: MealPlanItem[];
   suitable: string;
+  image: string;
 }
 
 const createFormDataFile = (uri: string, name: string, type: string) => {
@@ -104,7 +105,8 @@ export default function FoodAnalysisScreen() {
         protein: 18,
         carbs: 45,
         fat: 8,
-        suitable: '适合减脂初期',
+        suitable: '适合减脂初期 · 320kcal',
+        image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400',
         items: [
           { name: '紫薯燕麦粥', portion: '1碗(200g)', calories: 180 },
           { name: '水煮蛋', portion: '1个(50g)', calories: 72 },
@@ -119,7 +121,8 @@ export default function FoodAnalysisScreen() {
         protein: 28,
         carbs: 35,
         fat: 12,
-        suitable: '适合运动人群',
+        suitable: '适合运动人群 · 380kcal',
+        image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400',
         items: [
           { name: '全麦面包', portion: '2片(60g)', calories: 130 },
           { name: '煎蛋', portion: '2个(100g)', calories: 180 },
@@ -134,7 +137,8 @@ export default function FoodAnalysisScreen() {
         protein: 15,
         carbs: 40,
         fat: 6,
-        suitable: '适合清淡口味',
+        suitable: '适合清淡口味 · 280kcal',
+        image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400',
         items: [
           { name: '牛奶燕麦片', portion: '1碗(180g)', calories: 150 },
           { name: '蓝莓', portion: '30g', calories: 18 },
@@ -151,7 +155,8 @@ export default function FoodAnalysisScreen() {
         protein: 35,
         carbs: 55,
         fat: 12,
-        suitable: '适合大多数人群',
+        suitable: '适合大多数人群 · 480kcal',
+        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
         items: [
           { name: '糙米饭', portion: '1碗(150g)', calories: 180 },
           { name: '清蒸鸡胸肉', portion: '120g', calories: 130 },
@@ -167,7 +172,8 @@ export default function FoodAnalysisScreen() {
         protein: 45,
         carbs: 45,
         fat: 14,
-        suitable: '适合力量训练',
+        suitable: '适合力量训练 · 520kcal',
+        image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400',
         items: [
           { name: '藜麦饭', portion: '1碗(120g)', calories: 160 },
           { name: '煎牛排', portion: '100g', calories: 180 },
@@ -183,7 +189,8 @@ export default function FoodAnalysisScreen() {
         protein: 22,
         carbs: 65,
         fat: 10,
-        suitable: '适合素食者',
+        suitable: '适合素食者 · 420kcal',
+        image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400',
         items: [
           { name: '杂粮饭', portion: '1碗(150g)', calories: 170 },
           { name: '豆腐炒菠菜', portion: '150g', calories: 120 },
@@ -201,7 +208,8 @@ export default function FoodAnalysisScreen() {
         protein: 28,
         carbs: 30,
         fat: 10,
-        suitable: '适合晚间减脂',
+        suitable: '适合晚间减脂 · 350kcal',
+        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
         items: [
           { name: '鸡胸肉沙拉', portion: '150g', calories: 160 },
           { name: '玉米', portion: '半根(80g)', calories: 65 },
@@ -216,7 +224,8 @@ export default function FoodAnalysisScreen() {
         protein: 25,
         carbs: 40,
         fat: 8,
-        suitable: '适合胃不好人群',
+        suitable: '适合胃不好人群 · 320kcal',
+        image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400',
         items: [
           { name: '小米粥', portion: '1碗(200g)', calories: 100 },
           { name: '清蒸鲈鱼', portion: '100g', calories: 90 },
@@ -231,7 +240,8 @@ export default function FoodAnalysisScreen() {
         protein: 20,
         carbs: 35,
         fat: 6,
-        suitable: '适合严格控制',
+        suitable: '适合严格控制 · 280kcal',
+        image: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400',
         items: [
           { name: '蔬菜汤', portion: '2碗(400ml)', calories: 60 },
           { name: '水煮虾', portion: '80g', calories: 80 },
@@ -778,55 +788,41 @@ export default function FoodAnalysisScreen() {
             ))}
           </View>
 
-          {/* 套餐列表 */}
+          {/* 套餐列表 - 图片卡片样式 */}
           <View style={styles.mealPlanList}>
             {mealPlans[selectedPlanType].map((plan) => (
               <TouchableOpacity key={plan.id} style={styles.mealPlanCard}>
-                <View style={styles.mealPlanHeader}>
-                  <View>
-                    <Text style={styles.mealPlanName}>{plan.name}</Text>
-                    <View style={styles.mealPlanSuitable}>
-                      <Ionicons name="checkmark-circle" size={12} color="#10B981" />
+                <Image source={{ uri: plan.image }} style={styles.mealPlanImage} />
+                
+                <View style={styles.mealPlanContent}>
+                  {/* 标题区 */}
+                  <View style={styles.mealPlanTitleRow}>
+                    <View style={styles.mealPlanIconBox}>
+                      <FontAwesome6 name="utensils" size={16} color="#22C55E" />
+                    </View>
+                    <View style={styles.mealPlanTitleInfo}>
+                      <Text style={styles.mealPlanName}>{plan.name}</Text>
                       <Text style={styles.mealPlanSuitableText}>{plan.suitable}</Text>
                     </View>
                   </View>
-                  <View style={styles.mealPlanCalories}>
-                    <Text style={styles.mealPlanCaloriesValue}>{plan.totalCalories}</Text>
-                    <Text style={styles.mealPlanCaloriesUnit}>kcal</Text>
+                  
+                  {/* 餐单详情 */}
+                  <View style={styles.mealPlanItems}>
+                    {plan.items.map((item, index) => (
+                      <Text key={index} style={styles.mealPlanItem}>
+                        {item.name} · {item.portion} · {item.calories}kcal
+                      </Text>
+                    ))}
+                  </View>
+                  
+                  {/* 底部信息 */}
+                  <View style={styles.mealPlanFooter}>
+                    <Text style={styles.mealPlanCaloriesValue}>{plan.totalCalories}kcal</Text>
+                    <TouchableOpacity style={styles.mealPlanSelectBtn}>
+                      <Text style={styles.mealPlanSelectBtnText}>一键套用</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-                
-                {/* 营养素比例 */}
-                <View style={styles.mealPlanNutrition}>
-                  <View style={[styles.mealPlanNutrient, { backgroundColor: '#26A69A' }]}>
-                    <Text style={styles.mealPlanNutrientLabel}>蛋白</Text>
-                    <Text style={styles.mealPlanNutrientValue}>{plan.protein}g</Text>
-                  </View>
-                  <View style={[styles.mealPlanNutrient, { backgroundColor: '#FF9800' }]}>
-                    <Text style={styles.mealPlanNutrientLabel}>碳水</Text>
-                    <Text style={styles.mealPlanNutrientValue}>{plan.carbs}g</Text>
-                  </View>
-                  <View style={[styles.mealPlanNutrient, { backgroundColor: '#2196F3' }]}>
-                    <Text style={styles.mealPlanNutrientLabel}>脂肪</Text>
-                    <Text style={styles.mealPlanNutrientValue}>{plan.fat}g</Text>
-                  </View>
-                </View>
-
-                {/* 菜品列表 */}
-                <View style={styles.mealPlanItems}>
-                  {plan.items.map((item, index) => (
-                    <View key={index} style={styles.mealPlanItem}>
-                      <View style={styles.mealPlanItemDot} />
-                      <Text style={styles.mealPlanItemName}>{item.name}</Text>
-                      <Text style={styles.mealPlanItemPortion}>{item.portion}</Text>
-                      <Text style={styles.mealPlanItemCal}>{item.calories}kcal</Text>
-                    </View>
-                  ))}
-                </View>
-
-                <TouchableOpacity style={styles.mealPlanSelectBtn}>
-                  <Text style={styles.mealPlanSelectBtnText}>选择此套餐</Text>
-                </TouchableOpacity>
               </TouchableOpacity>
             ))}
           </View>
@@ -1258,117 +1254,88 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
   },
-  mealPlanList: {
-    gap: 12,
-  },
+  // 图片卡片样式
   mealPlanCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 20,
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+    marginBottom: 16,
   },
-  mealPlanHeader: {
+  mealPlanImage: {
+    width: '100%',
+    height: 140,
+    backgroundColor: '#F3F4F6',
+  },
+  mealPlanContent: {
+    padding: 16,
+  },
+  mealPlanTitleRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 12,
+  },
+  mealPlanIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: '#F0FDF4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  mealPlanTitleInfo: {
+    flex: 1,
   },
   mealPlanName: {
     fontSize: 16,
     fontWeight: '700',
     color: '#1a1a2e',
-    marginBottom: 4,
-  },
-  mealPlanSuitable: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
+    marginBottom: 2,
   },
   mealPlanSuitableText: {
     fontSize: 12,
-    color: '#10B981',
-  },
-  mealPlanCalories: {
-    alignItems: 'flex-end',
+    color: '#9CA3AF',
   },
   mealPlanCaloriesValue: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#FF9800',
-  },
-  mealPlanCaloriesUnit: {
-    fontSize: 12,
-    color: '#6B7280',
-  },
-  mealPlanNutrition: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
-  },
-  mealPlanNutrient: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  mealPlanNutrientLabel: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.85)',
-    marginBottom: 2,
-  },
-  mealPlanNutrientValue: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#22C55E',
   },
   mealPlanItems: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#FAFAFA',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
   },
+  mealPlanList: {
+    gap: 0,
+  },
   mealPlanItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 6,
-  },
-  mealPlanItemDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#26A69A',
-    marginRight: 8,
-  },
-  mealPlanItemName: {
-    flex: 1,
     fontSize: 13,
-    color: '#374151',
+    color: '#4B5563',
+    marginBottom: 6,
+    lineHeight: 18,
   },
-  mealPlanItemPortion: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginRight: 12,
-  },
-  mealPlanItemCal: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
+  mealPlanFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   mealPlanSelectBtn: {
-    backgroundColor: '#E0F2F1',
+    backgroundColor: '#22C55E',
     borderRadius: 10,
     paddingVertical: 10,
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   mealPlanSelectBtnText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#26A69A',
+    color: '#FFFFFF',
   },
   sectionTitle: {
     fontSize: 16,
