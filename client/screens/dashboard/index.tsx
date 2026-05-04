@@ -287,6 +287,157 @@ export default function DashboardScreen() {
           </View>
         </View>
 
+        {/* 当前体重卡片 */}
+        <View style={styles.section}>
+          <View style={styles.weightCard}>
+            <View style={styles.weightCardHeader}>
+              <View style={styles.weightCardLeft}>
+                <Text style={styles.weightLabel}>当前体重</Text>
+                <View style={styles.weightValueRow}>
+                  <Text style={styles.weightValue}>68.5</Text>
+                  <Text style={styles.weightUnit}>kg</Text>
+                </View>
+                <Text style={styles.weightTarget}>目标体重 65kg，差距 -3.5kg</Text>
+              </View>
+              <TouchableOpacity style={styles.recordBtn}>
+                <FontAwesome6 name="plus" size={14} color="#26A69A" />
+                <Text style={styles.recordBtnText}>体重记录</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.weightMetrics}>
+              <View style={styles.weightMetricItem}>
+                <Text style={styles.weightMetricLabel}>BMI</Text>
+                <Text style={[styles.weightMetricValue, { color: '#10B981' }]}>23.2</Text>
+                <Text style={styles.weightMetricStatus}>正常</Text>
+              </View>
+              <View style={styles.weightMetricDivider} />
+              <View style={styles.weightMetricItem}>
+                <Text style={styles.weightMetricLabel}>体脂率</Text>
+                <Text style={[styles.weightMetricValue, { color: '#10B981' }]}>21.5%</Text>
+                <Text style={styles.weightMetricStatus}>正常</Text>
+              </View>
+              <View style={styles.weightMetricDivider} />
+              <View style={styles.weightMetricItem}>
+                <Text style={styles.weightMetricLabel}>体型</Text>
+                <Text style={[styles.weightMetricValue, { color: '#10B981' }]}>标准</Text>
+                <Text style={styles.weightMetricStatus}>良好</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* BMI指标标准区间 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>BMI指标评价</Text>
+          <View style={styles.indicatorCard}>
+            <View style={styles.indicatorBar}>
+              <View style={styles.indicatorTrack}>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#60A5FA', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>过低</Text>
+                  <Text style={styles.indicatorSegRange}>{"<18.5"}</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#10B981', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>正常</Text>
+                  <Text style={styles.indicatorSegRange}>18.5-23.9</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#FBBF24', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>超重</Text>
+                  <Text style={styles.indicatorSegRange}>24-27.9</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#EF4444', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>肥胖</Text>
+                  <Text style={styles.indicatorSegRange}>{">=28"}</Text>
+                </View>
+              </View>
+              <View style={[styles.indicatorPointer, { left: '52%' }]}>
+                <View style={styles.indicatorPointerTop} />
+                <View style={styles.indicatorPointerLine} />
+              </View>
+            </View>
+            <View style={styles.indicatorResult}>
+              <Text style={styles.indicatorResultText}>当前值: 23.2</Text>
+              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* 腰围指标评价 */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>腰围指标评价</Text>
+            <TouchableOpacity style={styles.recordBtnSmall}>
+              <FontAwesome6 name="plus" size={12} color="#26A69A" />
+              <Text style={styles.recordBtnSmallText}>腰围记录</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.indicatorCard}>
+            <View style={styles.indicatorBar}>
+              <View style={styles.indicatorTrack}>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#E5E7EB', flex: 1 }]}>
+                  <Text style={styles.indicatorSegTextDark}>偏瘦</Text>
+                  <Text style={styles.indicatorSegRangeDark}>{"<85/80"}</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#10B981', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>正常</Text>
+                  <Text style={styles.indicatorSegRange}>85-90/80-85</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#FBBF24', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>前期</Text>
+                  <Text style={styles.indicatorSegRange}>偏高</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#EF4444', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>肥胖</Text>
+                  <Text style={styles.indicatorSegRange}>{">=90/85"}</Text>
+                </View>
+              </View>
+              <View style={[styles.indicatorPointer, { left: '65%' }]}>
+                <View style={styles.indicatorPointerTop} />
+                <View style={styles.indicatorPointerLine} />
+              </View>
+            </View>
+            <View style={styles.indicatorResult}>
+              <Text style={styles.indicatorResultText}>当前值: 82cm</Text>
+              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* 体脂率指标评价 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>体脂率指标评价</Text>
+          <View style={styles.indicatorCard}>
+            <View style={styles.indicatorBar}>
+              <View style={styles.indicatorTrack}>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#E5E7EB', flex: 1 }]}>
+                  <Text style={styles.indicatorSegTextDark}>偏低</Text>
+                  <Text style={styles.indicatorSegRangeDark}>{"<10%/15%"}</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#10B981', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>正常</Text>
+                  <Text style={styles.indicatorSegRange}>10-20%/15-25%</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#FBBF24', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>偏高</Text>
+                  <Text style={styles.indicatorSegRange}>20-25%/25-30%</Text>
+                </View>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#EF4444', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>肥胖</Text>
+                  <Text style={styles.indicatorSegRange}>{">25%/30%"}</Text>
+                </View>
+              </View>
+              <View style={[styles.indicatorPointer, { left: '48%' }]}>
+                <View style={styles.indicatorPointerTop} />
+                <View style={styles.indicatorPointerLine} />
+              </View>
+            </View>
+            <View style={styles.indicatorResult}>
+              <Text style={styles.indicatorResultText}>当前值: 21.5%</Text>
+              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围</Text>
+            </View>
+            <Text style={styles.indicatorNote}>* 男/女标准略有差异，以上为综合参考</Text>
+          </View>
+        </View>
+
         {/* 核心指标 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>生命体征</Text>
@@ -618,6 +769,192 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 20,
+  },
+  // 当前体重卡片样式
+  weightCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 18,
+    shadowColor: '#26A69A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  weightCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  weightCardLeft: {
+    flex: 1,
+  },
+  weightLabel: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  weightValueRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 4,
+  },
+  weightValue: {
+    fontSize: 36,
+    fontWeight: '800',
+    color: '#1a1a2e',
+  },
+  weightUnit: {
+    fontSize: 16,
+    color: '#6B7280',
+    marginLeft: 4,
+  },
+  weightTarget: {
+    fontSize: 13,
+    color: '#10B981',
+  },
+  recordBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E0F2F1',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 4,
+  },
+  recordBtnText: {
+    fontSize: 13,
+    color: '#26A69A',
+    fontWeight: '600',
+  },
+  weightMetrics: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
+  weightMetricItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  weightMetricDivider: {
+    width: 1,
+    backgroundColor: '#F3F4F6',
+  },
+  weightMetricLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  weightMetricValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  weightMetricStatus: {
+    fontSize: 11,
+    color: '#6B7280',
+  },
+  // 指标区间卡片样式
+  indicatorCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  indicatorBar: {
+    marginBottom: 12,
+  },
+  indicatorTrack: {
+    flexDirection: 'row',
+    height: 48,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  indicatorSegment: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  indicatorSegText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 2,
+  },
+  indicatorSegRange: {
+    fontSize: 9,
+    color: 'rgba(255,255,255,0.8)',
+  },
+  indicatorSegTextDark: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 2,
+  },
+  indicatorSegRangeDark: {
+    fontSize: 9,
+    color: '#6B7280',
+  },
+  indicatorPointer: {
+    position: 'absolute',
+    top: -8,
+    alignItems: 'center',
+  },
+  indicatorPointerTop: {
+    width: 12,
+    height: 12,
+    backgroundColor: '#1a1a2e',
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  indicatorPointerLine: {
+    width: 2,
+    height: 56,
+    backgroundColor: '#1a1a2e',
+  },
+  indicatorResult: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
+  indicatorResultText: {
+    fontSize: 14,
+    color: '#374151',
+  },
+  indicatorResultStatus: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  indicatorNote: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  recordBtnSmall: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E0F2F1',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 4,
+  },
+  recordBtnSmallText: {
+    fontSize: 12,
+    color: '#26A69A',
+    fontWeight: '500',
   },
   sectionHeader: {
     flexDirection: 'row',
