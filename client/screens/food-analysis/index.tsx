@@ -57,6 +57,23 @@ interface RecipeItem {
   image: string;
 }
 
+interface MealPlanItem {
+  name: string;
+  portion: string;
+  calories: number;
+}
+
+interface MealPlan {
+  id: number;
+  name: string;
+  totalCalories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  items: MealPlanItem[];
+  suitable: string;
+}
+
 const createFormDataFile = (uri: string, name: string, type: string) => {
   const fileUri = uri.startsWith('file://') ? uri : `file://${uri}`;
   return {
@@ -75,6 +92,155 @@ export default function FoodAnalysisScreen() {
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<AnalysisResult[]>([]);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
+  const [selectedPlanType, setSelectedPlanType] = useState<'breakfast' | 'lunch' | 'dinner'>('breakfast');
+
+  // 减脂套餐数据
+  const mealPlans: Record<'breakfast' | 'lunch' | 'dinner', MealPlan[]> = {
+    breakfast: [
+      {
+        id: 1,
+        name: '轻盈早餐A',
+        totalCalories: 320,
+        protein: 18,
+        carbs: 45,
+        fat: 8,
+        suitable: '适合减脂初期',
+        items: [
+          { name: '紫薯燕麦粥', portion: '1碗(200g)', calories: 180 },
+          { name: '水煮蛋', portion: '1个(50g)', calories: 72 },
+          { name: '圣女果', portion: '6颗(80g)', calories: 18 },
+          { name: '无糖豆浆', portion: '1杯(250ml)', calories: 50 },
+        ],
+      },
+      {
+        id: 2,
+        name: '高蛋白早餐',
+        totalCalories: 380,
+        protein: 28,
+        carbs: 35,
+        fat: 12,
+        suitable: '适合运动人群',
+        items: [
+          { name: '全麦面包', portion: '2片(60g)', calories: 130 },
+          { name: '煎蛋', portion: '2个(100g)', calories: 180 },
+          { name: '牛油果', portion: '半个(50g)', calories: 80 },
+          { name: '黑咖啡', portion: '1杯(200ml)', calories: 5 },
+        ],
+      },
+      {
+        id: 3,
+        name: '清爽早餐',
+        totalCalories: 280,
+        protein: 15,
+        carbs: 40,
+        fat: 6,
+        suitable: '适合清淡口味',
+        items: [
+          { name: '牛奶燕麦片', portion: '1碗(180g)', calories: 150 },
+          { name: '蓝莓', portion: '30g', calories: 18 },
+          { name: '坚果', portion: '10g', calories: 60 },
+          { name: '香蕉', portion: '半根(50g)', calories: 45 },
+        ],
+      },
+    ],
+    lunch: [
+      {
+        id: 1,
+        name: '标准减脂午餐',
+        totalCalories: 480,
+        protein: 35,
+        carbs: 55,
+        fat: 12,
+        suitable: '适合大多数人群',
+        items: [
+          { name: '糙米饭', portion: '1碗(150g)', calories: 180 },
+          { name: '清蒸鸡胸肉', portion: '120g', calories: 130 },
+          { name: '西兰花炒虾仁', portion: '150g', calories: 110 },
+          { name: '凉拌木耳', portion: '80g', calories: 35 },
+          { name: '紫菜蛋花汤', portion: '1碗(200ml)', calories: 25 },
+        ],
+      },
+      {
+        id: 2,
+        name: '高蛋白午餐',
+        totalCalories: 520,
+        protein: 45,
+        carbs: 45,
+        fat: 14,
+        suitable: '适合力量训练',
+        items: [
+          { name: '藜麦饭', portion: '1碗(120g)', calories: 160 },
+          { name: '煎牛排', portion: '100g', calories: 180 },
+          { name: '三文鱼刺身', portion: '80g', calories: 120 },
+          { name: '蔬菜沙拉', portion: '150g', calories: 45 },
+          { name: '味噌汤', portion: '1碗(200ml)', calories: 15 },
+        ],
+      },
+      {
+        id: 3,
+        name: '素食午餐',
+        totalCalories: 420,
+        protein: 22,
+        carbs: 65,
+        fat: 10,
+        suitable: '适合素食者',
+        items: [
+          { name: '杂粮饭', portion: '1碗(150g)', calories: 170 },
+          { name: '豆腐炒菠菜', portion: '150g', calories: 120 },
+          { name: '香菇炒青菜', portion: '120g', calories: 55 },
+          { name: '番茄蛋汤', portion: '1碗(200ml)', calories: 45 },
+          { name: '水果拼盘', portion: '100g', calories: 30 },
+        ],
+      },
+    ],
+    dinner: [
+      {
+        id: 1,
+        name: '轻食晚餐',
+        totalCalories: 350,
+        protein: 28,
+        carbs: 30,
+        fat: 10,
+        suitable: '适合晚间减脂',
+        items: [
+          { name: '鸡胸肉沙拉', portion: '150g', calories: 160 },
+          { name: '玉米', portion: '半根(80g)', calories: 65 },
+          { name: '胡萝卜条', portion: '50g', calories: 15 },
+          { name: '柠檬水', portion: '1杯(300ml)', calories: 10 },
+        ],
+      },
+      {
+        id: 2,
+        name: '清淡晚餐',
+        totalCalories: 320,
+        protein: 25,
+        carbs: 40,
+        fat: 8,
+        suitable: '适合胃不好人群',
+        items: [
+          { name: '小米粥', portion: '1碗(200g)', calories: 100 },
+          { name: '清蒸鲈鱼', portion: '100g', calories: 90 },
+          { name: '蒜蓉娃娃菜', portion: '150g', calories: 55 },
+          { name: '红枣银耳羹', portion: '1碗(150ml)', calories: 75 },
+        ],
+      },
+      {
+        id: 3,
+        name: '零负担晚餐',
+        totalCalories: 280,
+        protein: 20,
+        carbs: 35,
+        fat: 6,
+        suitable: '适合严格控制',
+        items: [
+          { name: '蔬菜汤', portion: '2碗(400ml)', calories: 60 },
+          { name: '水煮虾', portion: '80g', calories: 80 },
+          { name: '黄瓜拌豆腐', portion: '150g', calories: 90 },
+          { name: '猕猴桃', portion: '1个(80g)', calories: 50 },
+        ],
+      },
+    ],
+  };
 
   // 今日营养数据
   const todayNutrition: NutritionData = {
@@ -588,6 +754,84 @@ export default function FoodAnalysisScreen() {
           </View>
         </Modal>
 
+        {/* 减脂套餐选择 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>减脂套餐推荐</Text>
+          
+          {/* 餐次切换标签 */}
+          <View style={styles.mealPlanTabs}>
+            {(['breakfast', 'lunch', 'dinner'] as const).map((type) => (
+              <TouchableOpacity
+                key={type}
+                style={[styles.mealPlanTab, selectedPlanType === type && styles.mealPlanTabActive]}
+                onPress={() => setSelectedPlanType(type)}
+              >
+                <FontAwesome6
+                  name={type === 'breakfast' ? 'sunrise' : type === 'lunch' ? 'sun' : 'moon'}
+                  size={16}
+                  color={selectedPlanType === type ? '#FFFFFF' : '#6B7280'}
+                />
+                <Text style={[styles.mealPlanTabText, selectedPlanType === type && styles.mealPlanTabTextActive]}>
+                  {type === 'breakfast' ? '早餐' : type === 'lunch' ? '午餐' : '晚餐'}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* 套餐列表 */}
+          <View style={styles.mealPlanList}>
+            {mealPlans[selectedPlanType].map((plan) => (
+              <TouchableOpacity key={plan.id} style={styles.mealPlanCard}>
+                <View style={styles.mealPlanHeader}>
+                  <View>
+                    <Text style={styles.mealPlanName}>{plan.name}</Text>
+                    <View style={styles.mealPlanSuitable}>
+                      <Ionicons name="checkmark-circle" size={12} color="#10B981" />
+                      <Text style={styles.mealPlanSuitableText}>{plan.suitable}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.mealPlanCalories}>
+                    <Text style={styles.mealPlanCaloriesValue}>{plan.totalCalories}</Text>
+                    <Text style={styles.mealPlanCaloriesUnit}>kcal</Text>
+                  </View>
+                </View>
+                
+                {/* 营养素比例 */}
+                <View style={styles.mealPlanNutrition}>
+                  <View style={[styles.mealPlanNutrient, { backgroundColor: '#26A69A' }]}>
+                    <Text style={styles.mealPlanNutrientLabel}>蛋白</Text>
+                    <Text style={styles.mealPlanNutrientValue}>{plan.protein}g</Text>
+                  </View>
+                  <View style={[styles.mealPlanNutrient, { backgroundColor: '#FF9800' }]}>
+                    <Text style={styles.mealPlanNutrientLabel}>碳水</Text>
+                    <Text style={styles.mealPlanNutrientValue}>{plan.carbs}g</Text>
+                  </View>
+                  <View style={[styles.mealPlanNutrient, { backgroundColor: '#2196F3' }]}>
+                    <Text style={styles.mealPlanNutrientLabel}>脂肪</Text>
+                    <Text style={styles.mealPlanNutrientValue}>{plan.fat}g</Text>
+                  </View>
+                </View>
+
+                {/* 菜品列表 */}
+                <View style={styles.mealPlanItems}>
+                  {plan.items.map((item, index) => (
+                    <View key={index} style={styles.mealPlanItem}>
+                      <View style={styles.mealPlanItemDot} />
+                      <Text style={styles.mealPlanItemName}>{item.name}</Text>
+                      <Text style={styles.mealPlanItemPortion}>{item.portion}</Text>
+                      <Text style={styles.mealPlanItemCal}>{item.calories}kcal</Text>
+                    </View>
+                  ))}
+                </View>
+
+                <TouchableOpacity style={styles.mealPlanSelectBtn}>
+                  <Text style={styles.mealPlanSelectBtnText}>选择此套餐</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
         {/* 历史记录弹窗 */}
         <Modal
           visible={showHistory}
@@ -979,6 +1223,152 @@ const styles = StyleSheet.create({
   recipeListTime: {
     fontSize: 12,
     color: '#6B7280',
+  },
+  // 减脂套餐选择样式
+  mealPlanTabs: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 4,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  mealPlanTab: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  mealPlanTabActive: {
+    backgroundColor: '#26A69A',
+  },
+  mealPlanTabText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6B7280',
+  },
+  mealPlanTabTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  mealPlanList: {
+    gap: 12,
+  },
+  mealPlanCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  mealPlanHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  mealPlanName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1a1a2e',
+    marginBottom: 4,
+  },
+  mealPlanSuitable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  mealPlanSuitableText: {
+    fontSize: 12,
+    color: '#10B981',
+  },
+  mealPlanCalories: {
+    alignItems: 'flex-end',
+  },
+  mealPlanCaloriesValue: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#FF9800',
+  },
+  mealPlanCaloriesUnit: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  mealPlanNutrition: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  mealPlanNutrient: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  mealPlanNutrientLabel: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.85)',
+    marginBottom: 2,
+  },
+  mealPlanNutrientValue: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  mealPlanItems: {
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+  },
+  mealPlanItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  mealPlanItemDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#26A69A',
+    marginRight: 8,
+  },
+  mealPlanItemName: {
+    flex: 1,
+    fontSize: 13,
+    color: '#374151',
+  },
+  mealPlanItemPortion: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginRight: 12,
+  },
+  mealPlanItemCal: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  mealPlanSelectBtn: {
+    backgroundColor: '#E0F2F1',
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  mealPlanSelectBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#26A69A',
   },
   sectionTitle: {
     fontSize: 16,
