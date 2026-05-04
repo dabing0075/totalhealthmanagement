@@ -193,23 +193,6 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* AI健康管家小轻 */}
-        <TouchableOpacity style={styles.aiAssistantCard} onPress={() => setAiModalVisible(true)}>
-          <View style={styles.aiHeader}>
-            <View style={styles.aiAvatar}>
-              <FontAwesome6 name="robot" size={24} color="#FFFFFF" />
-            </View>
-            <View style={styles.aiInfo}>
-              <Text style={styles.aiTitle}>AI健康管家</Text>
-              <Text style={styles.aiSubtitle}>小轻·在线</Text>
-            </View>
-            <View style={styles.aiArrow}>
-              <Ionicons name="chevron-forward" size={20} color="#26A69A" />
-            </View>
-          </View>
-          <Text style={styles.aiDescription}>减脂饮食、运动计划，问我吧！</Text>
-        </TouchableOpacity>
-
         {/* AI健康管家弹窗 */}
         <Modal visible={aiModalVisible} animationType="slide" onRequestClose={() => setAiModalVisible(false)}>
           <View style={styles.aiModalContainer}>
@@ -279,6 +262,39 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Modal>
+
+        {/* 科学体重管理方案 */}
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.weightPlanCard}>
+            <View style={styles.weightPlanLeft}>
+              <View style={styles.weightPlanIcon}>
+                <FontAwesome6 name="utensils" size={22} color="#FFFFFF" />
+              </View>
+              <View style={styles.weightPlanInfo}>
+                <Text style={styles.weightPlanTitle}>科学体重管理方案</Text>
+                <Text style={styles.weightPlanDesc}>个性化饮食+运动指导</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#26A69A" />
+          </TouchableOpacity>
+        </View>
+
+        {/* AI健康管家小轻 */}
+        <TouchableOpacity style={styles.aiAssistantCard} onPress={() => setAiModalVisible(true)}>
+          <View style={styles.aiHeader}>
+            <View style={styles.aiAvatar}>
+              <FontAwesome6 name="robot" size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.aiInfo}>
+              <Text style={styles.aiTitle}>AI健康管家</Text>
+              <Text style={styles.aiSubtitle}>小轻·在线</Text>
+            </View>
+            <View style={styles.aiArrow}>
+              <Ionicons name="chevron-forward" size={20} color="#26A69A" />
+            </View>
+          </View>
+          <Text style={styles.aiDescription}>减脂饮食、运动计划，问我吧！</Text>
+        </TouchableOpacity>
 
         {/* 个人信息 */}
         <View style={styles.section}>
@@ -391,6 +407,43 @@ export default function ProfileScreen() {
               </View>
               <Ionicons name="chevron-forward" size={16} color="#D1D5DB" />
             </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* 我的徽章 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>我的徽章</Text>
+          <View style={styles.badgeGrid}>
+            <View style={styles.badgeItem}>
+              <View style={[styles.badgeIcon, { backgroundColor: '#FEF3C7' }]}>
+                <FontAwesome6 name="dumbbell" size={20} color="#F59E0B" />
+              </View>
+              <Text style={styles.badgeName}>运动达人</Text>
+            </View>
+            <View style={styles.badgeItem}>
+              <View style={[styles.badgeIcon, { backgroundColor: '#DCFCE7' }]}>
+                <FontAwesome6 name="apple-whole" size={20} color="#22C55E" />
+              </View>
+              <Text style={styles.badgeName}>健康饮食</Text>
+            </View>
+            <View style={styles.badgeItem}>
+              <View style={[styles.badgeIcon, { backgroundColor: '#DBEAFE' }]}>
+                <FontAwesome6 name="moon" size={20} color="#3B82F6" />
+              </View>
+              <Text style={styles.badgeName}>早睡早起</Text>
+            </View>
+            <View style={styles.badgeItem}>
+              <View style={[styles.badgeIcon, { backgroundColor: '#FEE2E2' }]}>
+                <FontAwesome6 name="heart" size={20} color="#EF4444" />
+              </View>
+              <Text style={styles.badgeName}>坚持打卡</Text>
+            </View>
+            <View style={styles.badgeItem}>
+              <View style={[styles.badgeIcon, { backgroundColor: '#F3E8FF', borderWidth: 1, borderColor: '#D946EF', borderStyle: 'dashed' }]}>
+                <FontAwesome6 name="lock" size={20} color="#D946EF" />
+              </View>
+              <Text style={[styles.badgeName, { color: '#9CA3AF' }]}>更多待解锁</Text>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -633,6 +686,73 @@ const styles = StyleSheet.create({
   },
   logoutItem: {
     marginTop: 8,
+  },
+  // 科学体重管理方案样式
+  weightPlanCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  weightPlanLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  weightPlanIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#26A69A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  weightPlanInfo: {
+    justifyContent: 'center',
+  },
+  weightPlanTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  weightPlanDesc: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
+  // 我的徽章样式
+  badgeGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+  },
+  badgeItem: {
+    width: '20%',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  badgeIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  badgeName: {
+    fontSize: 11,
+    color: '#6B7280',
+    textAlign: 'center',
   },
   // AI健康管家样式
   aiAssistantCard: {
