@@ -371,23 +371,24 @@ export default function DashboardScreen() {
             </TouchableOpacity>
           </View>
           <View style={styles.indicatorCard}>
+            <Text style={styles.genderNote}>* 男性标准 | 女性标准</Text>
             <View style={styles.indicatorBar}>
               <View style={styles.indicatorTrack}>
-                <View style={[styles.indicatorSegment, { backgroundColor: '#E5E7EB', flex: 1 }]}>
-                  <Text style={styles.indicatorSegTextDark}>偏瘦</Text>
-                  <Text style={styles.indicatorSegRangeDark}>{"<85/80"}</Text>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#60A5FA', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>偏瘦</Text>
+                  <Text style={styles.indicatorSegRange}>男&lt;85 女&lt;80</Text>
                 </View>
                 <View style={[styles.indicatorSegment, { backgroundColor: '#10B981', flex: 1 }]}>
                   <Text style={styles.indicatorSegText}>正常</Text>
-                  <Text style={styles.indicatorSegRange}>85-90/80-85</Text>
+                  <Text style={styles.indicatorSegRange}>男85-90 女80-85</Text>
                 </View>
                 <View style={[styles.indicatorSegment, { backgroundColor: '#FBBF24', flex: 1 }]}>
                   <Text style={styles.indicatorSegText}>前期</Text>
-                  <Text style={styles.indicatorSegRange}>偏高</Text>
+                  <Text style={styles.indicatorSegRange}>男85-90 女80-85</Text>
                 </View>
                 <View style={[styles.indicatorSegment, { backgroundColor: '#EF4444', flex: 1 }]}>
                   <Text style={styles.indicatorSegText}>肥胖</Text>
-                  <Text style={styles.indicatorSegRange}>{">=90/85"}</Text>
+                  <Text style={styles.indicatorSegRange}>男≥90 女≥85</Text>
                 </View>
               </View>
               <View style={[styles.indicatorPointer, { left: '65%' }]}>
@@ -397,7 +398,7 @@ export default function DashboardScreen() {
             </View>
             <View style={styles.indicatorResult}>
               <Text style={styles.indicatorResultText}>当前值: 82cm</Text>
-              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围</Text>
+              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围(女)</Text>
             </View>
           </View>
         </View>
@@ -406,23 +407,24 @@ export default function DashboardScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>体脂率指标评价</Text>
           <View style={styles.indicatorCard}>
+            <Text style={styles.genderNote}>* 男性标准 | 女性标准</Text>
             <View style={styles.indicatorBar}>
               <View style={styles.indicatorTrack}>
-                <View style={[styles.indicatorSegment, { backgroundColor: '#E5E7EB', flex: 1 }]}>
-                  <Text style={styles.indicatorSegTextDark}>偏低</Text>
-                  <Text style={styles.indicatorSegRangeDark}>{"<10%/15%"}</Text>
+                <View style={[styles.indicatorSegment, { backgroundColor: '#60A5FA', flex: 1 }]}>
+                  <Text style={styles.indicatorSegText}>偏低</Text>
+                  <Text style={styles.indicatorSegRange}>男&lt;10% 女&lt;15%</Text>
                 </View>
                 <View style={[styles.indicatorSegment, { backgroundColor: '#10B981', flex: 1 }]}>
                   <Text style={styles.indicatorSegText}>正常</Text>
-                  <Text style={styles.indicatorSegRange}>10-20%/15-25%</Text>
+                  <Text style={styles.indicatorSegRange}>男10-20% 女15-25%</Text>
                 </View>
                 <View style={[styles.indicatorSegment, { backgroundColor: '#FBBF24', flex: 1 }]}>
                   <Text style={styles.indicatorSegText}>偏高</Text>
-                  <Text style={styles.indicatorSegRange}>20-25%/25-30%</Text>
+                  <Text style={styles.indicatorSegRange}>男20-25% 女25-30%</Text>
                 </View>
                 <View style={[styles.indicatorSegment, { backgroundColor: '#EF4444', flex: 1 }]}>
                   <Text style={styles.indicatorSegText}>肥胖</Text>
-                  <Text style={styles.indicatorSegRange}>{">25%/30%"}</Text>
+                  <Text style={styles.indicatorSegRange}>男&gt;25% 女&gt;30%</Text>
                 </View>
               </View>
               <View style={[styles.indicatorPointer, { left: '48%' }]}>
@@ -432,9 +434,8 @@ export default function DashboardScreen() {
             </View>
             <View style={styles.indicatorResult}>
               <Text style={styles.indicatorResultText}>当前值: 21.5%</Text>
-              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围</Text>
+              <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围(女)</Text>
             </View>
-            <Text style={styles.indicatorNote}>* 男/女标准略有差异，以上为综合参考</Text>
           </View>
         </View>
 
@@ -448,9 +449,9 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* 身体成分 */}
+        {/* 身体成分及趋势 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>身体成分</Text>
+          <Text style={styles.sectionTitle}>身体成分及趋势</Text>
           <View style={styles.bodyCompositionCard}>
             {bodyComposition.map((item, index) => (
               <View key={index} style={styles.bodyCompItem}>
@@ -935,6 +936,12 @@ const styles = StyleSheet.create({
   indicatorResultStatus: {
     fontSize: 14,
     fontWeight: '600',
+  },
+  genderNote: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginBottom: 10,
+    textAlign: 'center',
   },
   indicatorNote: {
     fontSize: 11,
