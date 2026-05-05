@@ -263,22 +263,6 @@ export default function ProfileScreen() {
           </View>
         </Modal>
 
-        {/* 科学体重管理方案 */}
-        <View style={styles.section}>
-          <TouchableOpacity style={styles.weightPlanCard}>
-            <View style={styles.weightPlanLeft}>
-              <View style={styles.weightPlanIcon}>
-                <FontAwesome6 name="utensils" size={22} color="#FFFFFF" />
-              </View>
-              <View style={styles.weightPlanInfo}>
-                <Text style={styles.weightPlanTitle}>科学体重管理方案</Text>
-                <Text style={styles.weightPlanDesc}>个性化饮食+运动指导</Text>
-              </View>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#26A69A" />
-          </TouchableOpacity>
-        </View>
-
         {/* AI健康管家小轻 */}
         <TouchableOpacity style={styles.aiAssistantCard} onPress={() => setAiModalVisible(true)}>
           <View style={styles.aiHeader}>
