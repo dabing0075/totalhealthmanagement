@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
@@ -12,12 +13,103 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Animated,
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useSafeRouter } from '@/hooks/useSafeRouter';
 import { useAuth } from '@/contexts/AuthContext';
+
+// 动画数字组件
+const AnimatedNumber = ({ value, style, suffix = '' }: { value: string | number; style: any; suffix?: string }) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const [displayValue, setDisplayValue] = useState('0');
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animatedValue, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValue, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const scale = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.08],
+  });
+
+  return (
+    <Animated.Text style={[style, { transform: [{ scale }] }]}>
+      {value}{suffix}
+    </Animated.Text>
+  );
+};
+
+// 浮动图标组件
+const FloatingIcon = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(translateY, {
+          toValue: -4,
+          duration: 1500 + delay,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 1500 + delay,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  return (
+    <Animated.View style={{ transform: [{ translateY }] }}>
+      {children}
+    </Animated.View>
+  );
+};
+
+// 脉冲图标组件
+const PulseIcon = ({ children }: { children: React.ReactNode }) => {
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.15,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  return (
+    <Animated.View style={{ transform: [{ scale }] }}>
+      {children}
+    </Animated.View>
+  );
+};
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -153,14 +245,16 @@ export default function HomeScreen() {
 
         {/* 功能导航 */}
         <View style={styles.navGrid}>
-          {healthModules.map((module) => (
+          {healthModules.map((module, index) => (
             <TouchableOpacity
               key={module.id}
               style={styles.navItem}
               onPress={() => handleModulePress(module.id)}
             >
-              <View style={[styles.navIcon, { backgroundColor: module.bgColor }]}>
-                <FontAwesome6 name={module.icon as any} size={18} color={module.iconColor} />
+              <View style={[styles.navIconWrap, { backgroundColor: module.bgColor }]}>
+                <FloatingIcon delay={index * 200}>
+                  <FontAwesome6 name={module.icon as any} size={18} color={module.iconColor} />
+                </FloatingIcon>
               </View>
               <Text style={styles.navText}>{module.name}</Text>
             </TouchableOpacity>
@@ -169,9 +263,9 @@ export default function HomeScreen() {
 
         {/* 今日热量缺口 */}
         <View style={styles.calorieCard}>
-          <View style={styles.calorieHeader}>
+          <View style={styles.cardHeader}>
             <View style={styles.calorieTitleRow}>
-              <FontAwesome6 name="fire" size={16} color="#FF9800" />
+              <FloatingIcon><FontAwesome6 name="fire" size={16} color="#FF9800" /></FloatingIcon>
               <Text style={styles.calorieTitle}>今日热量缺口</Text>
             </View>
             <View style={styles.timeTabs}>
@@ -187,21 +281,24 @@ export default function HomeScreen() {
                 <View style={styles.gaugeGradient} />
               </View>
               <View style={styles.gaugeOverlay}>
-                <Text style={styles.gaugeValue}>870</Text>
+                <PulseIcon><AnimatedNumber value={870} style={styles.gaugeValue} suffix=""/></PulseIcon>
                 <Text style={styles.gaugeLabel}>千卡缺口</Text>
               </View>
             </View>
             <View style={styles.calorieStats}>
               <View style={styles.calorieStat}>
-                <Text style={[styles.calorieStatValue, { color: '#FF9800' }]}>1450</Text>
+                <Text style={[styles.calorieStatValue, { color: '#FF9800' }]}>
+                  <AnimatedNumber value={1450} style={styles.calorieStatValue} suffix=""/></Text>
                 <Text style={styles.calorieStatLabel}>总摄入</Text>
               </View>
               <View style={styles.calorieStat}>
-                <Text style={[styles.calorieStatValue, { color: '#26A69A' }]}>2320</Text>
+                <Text style={[styles.calorieStatValue, { color: '#26A69A' }]}>
+                  <AnimatedNumber value={2320} style={styles.calorieStatValue} suffix=""/></Text>
                 <Text style={styles.calorieStatLabel}>总消耗</Text>
               </View>
               <View style={styles.calorieStat}>
-                <Text style={[styles.calorieStatValue, { color: '#666' }]}>2000</Text>
+                <Text style={[styles.calorieStatValue, { color: '#666' }]}>
+                  <AnimatedNumber value={2000} style={styles.calorieStatValue} suffix=""/></Text>
                 <Text style={styles.calorieStatLabel}>目标</Text>
               </View>
             </View>
@@ -212,7 +309,7 @@ export default function HomeScreen() {
         <View style={styles.mealCard}>
           <View style={styles.mealHeader}>
             <View style={styles.mealTitleRow}>
-              <FontAwesome6 name="utensils" size={16} color="#26A69A" />
+              <FloatingIcon><FontAwesome6 name="utensils" size={16} color="#26A69A" /></FloatingIcon>
               <Text style={styles.mealTitle}>三餐记录</Text>
             </View>
             <Text style={styles.mealSubtitle}>录入三餐，获取热量和营养分析</Text>
@@ -222,17 +319,17 @@ export default function HomeScreen() {
           </View>
           <View style={styles.mealGrid}>
             <TouchableOpacity style={[styles.mealItem, { backgroundColor: '#FFF3E0' }]}>
-              <FontAwesome6 name="sun" size={24} color="#FF9800" />
+              <FloatingIcon delay={100}><FontAwesome6 name="sun" size={24} color="#FF9800" /></FloatingIcon>
               <Text style={styles.mealName}>早餐</Text>
               <Text style={styles.mealAdd}>+</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.mealItem, { backgroundColor: '#E0F2F1' }]}>
-              <FontAwesome6 name="cloud-sun" size={24} color="#26A69A" />
+              <FloatingIcon delay={200}><FontAwesome6 name="cloud-sun" size={24} color="#26A69A" /></FloatingIcon>
               <Text style={styles.mealName}>午餐</Text>
               <Text style={styles.mealAdd}>+</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.mealItem, { backgroundColor: '#F3E5F5' }]}>
-              <FontAwesome6 name="moon" size={24} color="#9C27B0" />
+              <FloatingIcon delay={400}><FontAwesome6 name="moon" size={24} color="#9C27B0" /></FloatingIcon>
               <Text style={styles.mealName}>晚餐</Text>
               <Text style={styles.mealAdd}>+</Text>
             </TouchableOpacity>
@@ -696,14 +793,14 @@ const styles = StyleSheet.create({
   notifBadge: { position: 'absolute', top: 4, right: 4, backgroundColor: '#EF4444', borderRadius: 8, minWidth: 14, height: 14, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 3 },
   notifBadgeText: { color: '#FFFFFF', fontSize: 10, fontWeight: '700' },
   navGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: 12 },
-  navItem: { width: '23%', alignItems: 'center', marginBottom: 12, backgroundColor: '#FFFFFF', borderRadius: 12, paddingVertical: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 1 },
-  navIcon: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 6 },
-  navText: { fontSize: 11, color: '#374151', fontWeight: '500' },
+  navItem: { width: '23%', alignItems: 'center', marginBottom: 12, backgroundColor: '#FFFFFF', borderRadius: 16, paddingVertical: 14, paddingHorizontal: 4, shadowColor: '#10B981', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 3, overflow: 'hidden' },
+  navIconWrap: { width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center', marginBottom: 8, shadowColor: '#10B981', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.25, shadowRadius: 6, elevation: 4 },
+  navText: { fontSize: 11, color: '#374151', fontWeight: '600', marginTop: 2 },
   welcomeBanner: { borderRadius: 16, padding: 16, marginBottom: 12 },
   welcomeTitle: { fontSize: 18, fontWeight: '700', color: '#FFFFFF', marginBottom: 4 },
   welcomeSubtitle: { fontSize: 12, color: 'rgba(255,255,255,0.9)' },
-  calorieCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 14, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 },
-  calorieHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+  calorieCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 14, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 3 },
+  foodCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 16, marginBottom: 12, shadowColor: '#26A69A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4 },
   calorieTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   calorieTitle: { fontSize: 15, fontWeight: '700', color: '#1a1a2e' },
   timeTabs: { flexDirection: 'row', gap: 4 },
@@ -716,7 +813,7 @@ const styles = StyleSheet.create({
   gaugeBackground: { width: 120, height: 60, borderTopLeftRadius: 60, borderTopRightRadius: 60, backgroundColor: '#F3F4F6', overflow: 'hidden', justifyContent: 'flex-end' },
   gaugeGradient: { height: '50%', backgroundColor: '#26A69A' },
   gaugeOverlay: { position: 'absolute', alignItems: 'center' },
-  gaugeValue: { fontSize: 28, fontWeight: '800', color: '#1a1a2e' },
+  gaugeValue: { fontSize: 32, fontWeight: '800', color: '#1a1a2e' },
   gaugeLabel: { fontSize: 11, color: '#666' },
   calorieStats: { flex: 1 },
   calorieStat: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 },
