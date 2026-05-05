@@ -162,23 +162,6 @@ export default function VipScreen() {
           </View>
         </LinearGradient>
 
-        {/* AI健康管家小轻 */}
-        <TouchableOpacity style={styles.aiAssistantCard} onPress={() => setAiModalVisible(true)}>
-          <View style={styles.aiHeader}>
-            <View style={styles.aiAvatar}>
-              <FontAwesome6 name="robot" size={24} color="#FFFFFF" />
-            </View>
-            <View style={styles.aiInfo}>
-              <Text style={styles.aiTitle}>AI健康管家</Text>
-              <Text style={styles.aiSubtitle}>小轻·在线</Text>
-            </View>
-            <View style={styles.aiArrow}>
-              <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-            </View>
-          </View>
-          <Text style={styles.aiDesc}>减脂饮食、运动计划，问我吧！</Text>
-        </TouchableOpacity>
-
         {/* VIP基础会员 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>VIP基础会员</Text>
