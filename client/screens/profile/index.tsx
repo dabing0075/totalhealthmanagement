@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 60,
   },
   // 未登录样式
   loginContainer: {
