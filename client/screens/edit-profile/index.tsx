@@ -79,7 +79,7 @@ export default function EditProfileScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>基本信息</Text>
             <View style={styles.card}>
-              <View style={[styles.formItem, styles.formItemBorder]}>
+              <View style={styles.formItem}>
                 <Text style={styles.formLabel}>昵称</Text>
                 <TextInput
                   style={styles.formInput}
@@ -88,30 +88,6 @@ export default function EditProfileScreen() {
                   placeholder="请输入昵称"
                   placeholderTextColor="#9CA3AF"
                 />
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>性别</Text>
-                <View style={styles.genderSelector}>
-                  {['男', '女'].map((gender) => (
-                    <TouchableOpacity
-                      key={gender}
-                      style={[
-                        styles.genderOption,
-                        formData.gender === gender && styles.genderOptionActive,
-                      ]}
-                      onPress={() => updateField('gender', gender)}
-                    >
-                      <Text
-                        style={[
-                          styles.genderText,
-                          formData.gender === gender && styles.genderTextActive,
-                        ]}
-                      >
-                        {gender}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
               </View>
             </View>
           </View>
@@ -230,10 +206,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
-  },
-  formItemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
   },
   formLabel: {
     fontSize: 15,
