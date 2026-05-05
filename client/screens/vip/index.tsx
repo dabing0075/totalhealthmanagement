@@ -5,6 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -101,6 +103,12 @@ export default function VipScreen() {
   const router = useRouter();
   const [selectedBasicPlan, setSelectedBasicPlan] = useState<string>('year');
   const [selectedAdvancedPlan, setSelectedAdvancedPlan] = useState<string>('advanced-year');
+  const [aiModalVisible, setAiModalVisible] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Array<{id: string; text: string; isUser: boolean; time: Date}>>([
+    { id: '1', text: '您好！我是您的AI健康管家小轻，有什么关于减脂饮食、运动计划的问题都可以问我哦！', isUser: false, time: new Date() }
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [msgCounter, setMsgCounter] = useState(1);
 
   // 用户会员数据
   const userData = {
@@ -153,6 +161,23 @@ export default function VipScreen() {
             </TouchableOpacity>
           </View>
         </LinearGradient>
+
+        {/* AI健康管家小轻 */}
+        <TouchableOpacity style={styles.aiAssistantCard} onPress={() => setAiModalVisible(true)}>
+          <View style={styles.aiHeader}>
+            <View style={styles.aiAvatar}>
+              <FontAwesome6 name="robot" size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.aiInfo}>
+              <Text style={styles.aiTitle}>AI健康管家</Text>
+              <Text style={styles.aiSubtitle}>小轻·在线</Text>
+            </View>
+            <View style={styles.aiArrow}>
+              <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+            </View>
+          </View>
+          <Text style={styles.aiDesc}>减脂饮食、运动计划，问我吧！</Text>
+        </TouchableOpacity>
 
         {/* VIP基础会员 */}
         <View style={styles.section}>
@@ -341,6 +366,89 @@ export default function VipScreen() {
 
 
       </ScrollView>
+
+      {/* AI健康管家弹窗 */}
+      <Modal visible={aiModalVisible} animationType="slide" onRequestClose={() => setAiModalVisible(false)}>
+        <View style={styles.aiModalContainer}>
+          {/* 顶部导航 */}
+          <View style={styles.aiModalHeader}>
+            <View style={styles.aiModalHeaderAvatar}>
+              <FontAwesome6 name="robot" size={18} color="#FFFFFF" />
+            </View>
+            <View style={styles.aiModalHeaderInfo}>
+              <Text style={styles.aiModalHeaderTitle}>AI健康管家</Text>
+              <Text style={styles.aiModalHeaderSubtitle}>小轻·在线</Text>
+            </View>
+            <TouchableOpacity style={styles.aiModalClose} onPress={() => setAiModalVisible(false)}>
+              <Ionicons name="close" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+
+          {/* 快捷问题 */}
+          <View style={styles.aiQuickQuestions}>
+            <Text style={styles.aiQuickQuestionsTitle}>快捷问题</Text>
+            <View style={styles.aiQuickQuestionsRow}>
+              {['今日三餐怎么搭配？', '做什么运动最燃脂？', '如何突破减肥平台期？'].map((q, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  style={styles.aiQuickQuestion}
+                  onPress={() => {
+                    const newMsg = { id: String(msgCounter + 1), text: q, isUser: true, time: new Date() };
+                    setChatMessages([...chatMessages, newMsg]);
+                    setMsgCounter(msgCounter + 1);
+                    setTimeout(() => {
+                      const reply = { id: String(msgCounter + 2), text: '正在为您分析，请稍候...', isUser: false, time: new Date() };
+                      setChatMessages(prev => [...prev, reply]);
+                      setMsgCounter(msgCounter + 2);
+                    }, 800);
+                  }}
+                >
+                  <Text style={styles.aiQuickQuestionText}>{q}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* 对话区域 */}
+          <ScrollView style={styles.aiMessagesContainer} contentContainerStyle={{ paddingVertical: 12 }}>
+            {chatMessages.map((msg) => (
+              <View key={msg.id} style={styles.aiMessageBubble}>
+                <Text style={styles.aiMessageText}>{msg.text}</Text>
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* 输入区 */}
+          <View style={styles.aiInputContainer}>
+            <TextInput
+              style={styles.aiInput}
+              placeholder="输入您的问题..."
+              placeholderTextColor="#9CA3AF"
+              value={inputText}
+              onChangeText={setInputText}
+              multiline
+            />
+            <TouchableOpacity
+              style={styles.aiSendBtn}
+              onPress={() => {
+                if (inputText.trim()) {
+                  const newMsg = { id: String(msgCounter + 1), text: inputText, isUser: true, time: new Date() };
+                  setChatMessages([...chatMessages, newMsg]);
+                  setMsgCounter(msgCounter + 1);
+                  setInputText('');
+                  setTimeout(() => {
+                    const reply = { id: String(msgCounter + 2), text: '正在为您分析，请稍候...', isUser: false, time: new Date() };
+                    setChatMessages(prev => [...prev, reply]);
+                    setMsgCounter(msgCounter + 2);
+                  }, 800);
+                }
+              }}
+            >
+              <Ionicons name="send" size={18} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </Screen>
   );
 }
@@ -861,5 +969,162 @@ const styles = StyleSheet.create({
   challengeWarningText: {
     fontSize: 12,
     color: '#9CA3AF',
+  },
+  // AI健康管家样式
+  aiAssistantCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  aiHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  aiAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#26A69A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aiInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  aiTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1a1a2e',
+  },
+  aiSubtitle: {
+    fontSize: 13,
+    color: '#26A69A',
+    marginTop: 2,
+  },
+  aiArrow: {
+    marginLeft: 8,
+  },
+  aiDesc: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 10,
+  },
+  // AI Modal样式
+  aiModalContainer: {
+    flex: 1,
+    backgroundColor: '#F8FAFA',
+  },
+  aiModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#26A69A',
+    paddingTop: 60,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+  },
+  aiModalHeaderAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aiModalHeaderInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  aiModalHeaderTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  aiModalHeaderSubtitle: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.8)',
+  },
+  aiModalClose: {
+    padding: 8,
+  },
+  aiQuickQuestions: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  aiQuickQuestionsTitle: {
+    fontSize: 13,
+    color: '#9CA3AF',
+    marginBottom: 10,
+  },
+  aiQuickQuestionsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  aiQuickQuestion: {
+    backgroundColor: '#E8F5F3',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
+  },
+  aiQuickQuestionText: {
+    fontSize: 13,
+    color: '#26A69A',
+  },
+  aiMessagesContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  aiMessageBubble: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 14,
+    marginVertical: 6,
+    maxWidth: '80%',
+    alignSelf: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  aiMessageText: {
+    fontSize: 15,
+    color: '#1a1a2e',
+    lineHeight: 22,
+  },
+  aiInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    paddingBottom: 34,
+  },
+  aiInput: {
+    flex: 1,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    fontSize: 15,
+    maxHeight: 100,
+  },
+  aiSendBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#26A69A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
   },
 });
