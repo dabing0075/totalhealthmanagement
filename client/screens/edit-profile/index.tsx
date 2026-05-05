@@ -278,18 +278,14 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     position: 'absolute',
-    top: 50,
-    left: 0,
     right: 0,
     zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    paddingTop: 50,
+    backgroundColor: '#F9FAFB',
   },
   backBtn: {
     padding: 4,
@@ -362,7 +358,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   formItemBorder: {
-    borderBottomWidth: 1,
+    
     borderBottomColor: '#F9FAFB',
   },
   formLabel: {
@@ -476,9 +472,7 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 16,
     paddingBottom: 34,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
+    backgroundColor: '#F9FAFB',
   },
   saveButton: {
     backgroundColor: '#26A69A',
