@@ -115,7 +115,6 @@ export default function OnboardingScreen() {
           birthday,
           height: parseFloat(height),
           weight: parseFloat(currentWeight),
-          targetWeight: parseFloat(targetWeight),
         }),
       });
 
@@ -126,7 +125,6 @@ export default function OnboardingScreen() {
           birthday,
           height: parseFloat(height),
           weight: parseFloat(currentWeight),
-          targetWeight: parseFloat(targetWeight),
         });
         
         // 标记已完成引导

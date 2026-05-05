@@ -16,7 +16,6 @@ interface User {
   birthday: string;
   height: number;
   weight: number;
-  targetWeight: number;
   signature: string;
   vipLevel: number;
   vipExpireDate: string | null;
@@ -38,7 +37,6 @@ users.set('13800138000', {
   birthday: '1995-06-15',
   height: 165,
   weight: 55,
-  targetWeight: 50,
   signature: '追求健康生活，享受美好人生',
   vipLevel: 1,
   vipExpireDate: '2025-12-31',
@@ -124,7 +122,6 @@ router.post('/login', (req: Request, res: Response) => {
         birthday: '',
         height: 0,
         weight: 0,
-        targetWeight: 0,
         signature: '',
         vipLevel: 0,
         vipExpireDate: null,
@@ -152,7 +149,6 @@ router.post('/login', (req: Request, res: Response) => {
         birthday: user.birthday,
         height: user.height,
         weight: user.weight,
-        targetWeight: user.targetWeight,
         signature: user.signature,
         vipLevel: user.vipLevel,
         vipExpireDate: user.vipExpireDate,
@@ -191,7 +187,6 @@ router.get('/me', (req: Request, res: Response) => {
       birthday: user.birthday,
       height: user.height,
       weight: user.weight,
-      targetWeight: user.targetWeight,
       signature: user.signature,
       vipLevel: user.vipLevel,
       vipExpireDate: user.vipExpireDate,
@@ -217,7 +212,7 @@ router.put('/profile', (req: Request, res: Response) => {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number; phone: string };
 
-    const { nickname, avatar, gender, birthday, height, weight, targetWeight, signature } = req.body;
+    const { nickname, avatar, gender, birthday, height, weight, signature } = req.body;
 
     const user = users.get(decoded.phone);
     
@@ -232,7 +227,6 @@ router.put('/profile', (req: Request, res: Response) => {
     if (birthday !== undefined) user.birthday = birthday;
     if (height !== undefined) user.height = height;
     if (weight !== undefined) user.weight = weight;
-    if (targetWeight !== undefined) user.targetWeight = targetWeight;
     if (signature !== undefined) user.signature = signature;
 
     res.json({
@@ -246,7 +240,6 @@ router.put('/profile', (req: Request, res: Response) => {
         birthday: user.birthday,
         height: user.height,
         weight: user.weight,
-        targetWeight: user.targetWeight,
         signature: user.signature,
         vipLevel: user.vipLevel,
         vipExpireDate: user.vipExpireDate,
