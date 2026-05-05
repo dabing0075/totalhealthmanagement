@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   Alert,
+  TextInput,
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
@@ -17,6 +18,15 @@ export default function ProfileScreen() {
   const router = useSafeRouter();
   const { user, isAuthenticated, logout } = useAuth();
 
+  // 健康目标状态
+  const [goals, setGoals] = useState({
+    targetWeight: 65,
+    targetSteps: 10000,
+    targetSleep: 8,
+  });
+  const [editingGoal, setEditingGoal] = useState<string | null>(null);
+  const [goalInput, setGoalInput] = useState("");
+  const [showGoalPicker, setShowGoalPicker] = useState(false);
   // 如果未登录，显示登录入口
   if (!isAuthenticated) {
     return (
@@ -61,6 +71,28 @@ export default function ProfileScreen() {
     { label: '体重', value: user.weight ? `${user.weight}kg` : '未设置' },
   ] : [];
 
+
+  // 编辑健康目标
+  const handleEditGoal = (type: string) => {
+    let current = "";
+    if (type === "weight") current = goals.targetWeight.toString();
+    else if (type === "steps") current = goals.targetSteps.toString();
+    else if (type === "sleep") current = goals.targetSleep.toString();
+    setEditingGoal(type);
+    setGoalInput(current);
+    setShowGoalPicker(true);
+  };
+
+  const handleSaveGoal = () => {
+    const val = parseFloat(goalInput);
+    if (isNaN(val) || val <= 0) {
+      Alert.alert("错误", "请输入有效的数值");
+      return;
+    }
+    setGoals(prev => ({ ...prev, [editingGoal === "weight" ? "targetWeight" : editingGoal === "steps" ? "targetSteps" : "targetSleep"]: val }));
+    setShowGoalPicker(false);
+    setEditingGoal(null);
+  };
   const handleLogout = () => {
     Alert.alert(
       '提示',
@@ -173,30 +205,41 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>健康目标</Text>
           <View style={styles.goalsContainer}>
-            <View style={styles.goalCard}>
+          <View style={styles.goalsContainer}>
+            <TouchableOpacity style={styles.goalCard} onPress={() => handleEditGoal("weight")}>
               <View style={[styles.goalIcon, { backgroundColor: '#FF980020' }]}>
                 <FontAwesome6 name="weight-scale" size={20} color="#FF9800" />
               </View>
               <Text style={styles.goalLabel}>体重目标</Text>
-              <Text style={styles.goalValue}>65 kg</Text>
+              <Text style={styles.goalValue}>{goals.targetWeight} kg</Text>
               <Text style={styles.goalDesc}>当前 68.5kg</Text>
-            </View>
-            <View style={styles.goalCard}>
+              <TouchableOpacity style={styles.editBtn} onPress={() => handleEditGoal("weight")}>
+                <FontAwesome6 name="pencil" size={12} color="#9CA3AF" />
+              </TouchableOpacity>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.goalCard} onPress={() => handleEditGoal("steps")}>
               <View style={[styles.goalIcon, { backgroundColor: '#26A69A20' }]}>
                 <FontAwesome6 name="shoe-prints" size={20} color="#26A69A" />
               </View>
               <Text style={styles.goalLabel}>步数目标</Text>
-              <Text style={styles.goalValue}>10,000</Text>
+              <Text style={styles.goalValue}>{goals.targetSteps.toLocaleString()}</Text>
               <Text style={styles.goalDesc}>今日已走 6,832</Text>
-            </View>
-            <View style={styles.goalCard}>
+              <TouchableOpacity style={styles.editBtn} onPress={() => handleEditGoal("steps")}>
+                <FontAwesome6 name="pencil" size={12} color="#9CA3AF" />
+              </TouchableOpacity>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.goalCard} onPress={() => handleEditGoal("sleep")}>
               <View style={[styles.goalIcon, { backgroundColor: '#7C4DFF20' }]}>
                 <FontAwesome6 name="moon" size={20} color="#7C4DFF" />
               </View>
               <Text style={styles.goalLabel}>睡眠时长</Text>
-              <Text style={styles.goalValue}>8 小时</Text>
+              <Text style={styles.goalValue}>{goals.targetSleep} 小时</Text>
               <Text style={styles.goalDesc}>昨晚睡了 6.5h</Text>
-            </View>
+              <TouchableOpacity style={styles.editBtn} onPress={() => handleEditGoal("sleep")}>
+                <FontAwesome6 name="pencil" size={12} color="#9CA3AF" />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
           </View>
         </View>
 
@@ -332,6 +375,32 @@ export default function ProfileScreen() {
           </View>
         </View>
       </ScrollView>
+
+        {showGoalPicker && (
+          <View style={styles.goalModalOverlay}>
+            <View style={styles.goalModalContent}>
+              <Text style={styles.goalModalTitle}>设置{editingGoal === "weight" ? "体重目标" : editingGoal === "steps" ? "步数目标" : "睡眠时长"}</Text>
+              <View style={styles.goalInputRow}>
+                <TextInput
+                  style={styles.goalInput}
+                  value={goalInput}
+                  onChangeText={setGoalInput}
+                  keyboardType="numeric"
+                  placeholder="请输入"
+                />
+                <Text style={styles.goalUnit}>{editingGoal === "weight" ? "kg" : editingGoal === "steps" ? "步" : "小时"}</Text>
+              </View>
+              <View style={styles.goalModalBtns}>
+                <TouchableOpacity style={styles.goalCancelBtn} onPress={() => { setShowGoalPicker(false); setEditingGoal(null); }}>
+                  <Text style={{ color: '#6B7280' }}>取消</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.goalSaveBtn} onPress={handleSaveGoal}>
+                  <Text style={{ color: '#FFF', fontWeight: 600 }}>保存</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
     </Screen>
   );
 }
@@ -566,6 +635,71 @@ const styles = StyleSheet.create({
   goalDesc: {
     fontSize: 10,
     color: '#9CA3AF',
+  },
+  editBtn: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    padding: 4,
+  },
+  goalModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  goalModalContent: {
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    padding: 20,
+    width: '80%',
+    maxWidth: 300,
+  },
+  goalModalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  goalInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  goalInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: '#1F2937',
+  },
+  goalUnit: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#6B7280',
+  },
+  goalModalBtns: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  goalCancelBtn: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+    marginRight: 8,
+    alignItems: 'center',
+  },
+  goalSaveBtn: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: '#10B981',
+    marginLeft: 8,
+    alignItems: 'center',
   },
   card: {
     backgroundColor: '#FFFFFF',
