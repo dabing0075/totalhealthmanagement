@@ -79,6 +79,15 @@ export default function ProfileScreen() {
 
   return (
     <Screen>
+      {/* 返回键行 */}
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => router.back()} style={{ padding: 4 }}>
+          <Ionicons name="chevron-back" size={24} color="#374151" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 17, fontWeight: '600', color: '#1F2937' }}>我的</Text>
+        <View style={{ width: 40 }} />
+      </View>
+
       <ScrollView
         style={styles.container}
         contentContainerStyle={[styles.contentContainer, { paddingBottom: 100 }]}
@@ -465,6 +474,20 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 20,
+  },
+  headerRow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 50,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    zIndex: 10,
+    backgroundColor: '#F9FAFB',
   },
   sectionTitle: {
     fontSize: 16,
