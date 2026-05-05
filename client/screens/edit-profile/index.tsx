@@ -44,6 +44,14 @@ export default function EditProfileScreen() {
 
   return (
     <Screen>
+      {/* 返回键行 */}
+      <View style={styles.headerRow}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="#1F2937" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>编辑资料</Text>
+        <View style={styles.headerRight} />
+      </View>
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -267,6 +275,27 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 16,
     paddingTop: 16,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  backBtn: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  headerRight: {
+    width: 32,
   },
   avatarSection: {
     alignItems: 'center',
