@@ -55,34 +55,6 @@ const AnimatedNumber = ({ value, style, suffix = '' }: { value: string | number;
   );
 };
 
-// 浮动图标组件
-const FloatingIcon = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
-  const translateY = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(translateY, {
-          toValue: -4,
-          duration: 1500 + delay,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY, {
-          toValue: 0,
-          duration: 1500 + delay,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, []);
-
-  return (
-    <Animated.View style={{ transform: [{ translateY }] }}>
-      {children}
-    </Animated.View>
-  );
-};
-
 // 脉冲图标组件
 const PulseIcon = ({ children }: { children: React.ReactNode }) => {
   const scale = useRef(new Animated.Value(1)).current;
@@ -252,10 +224,8 @@ export default function HomeScreen() {
               onPress={() => handleModulePress(module.id)}
             >
               <View style={[styles.navIconWrap, { backgroundColor: module.bgColor }]}>
-                <FloatingIcon delay={index * 200}>
                   <FontAwesome6 name={module.icon as any} size={18} color={module.iconColor} />
-                </FloatingIcon>
-              </View>
+                </View>
               <Text style={styles.navText}>{module.name}</Text>
             </TouchableOpacity>
           ))}
@@ -265,7 +235,7 @@ export default function HomeScreen() {
         <View style={styles.calorieCard}>
           <View style={styles.cardHeader}>
             <View style={styles.calorieTitleRow}>
-              <FloatingIcon><FontAwesome6 name="fire" size={16} color="#FF9800" /></FloatingIcon>
+              <FontAwesome6 name="fire" size={16} color="#FF9800" />
               <Text style={styles.calorieTitle}>今日热量缺口</Text>
             </View>
             <View style={styles.timeTabs}>
@@ -309,7 +279,7 @@ export default function HomeScreen() {
         <View style={styles.mealCard}>
           <View style={styles.mealHeader}>
             <View style={styles.mealTitleRow}>
-              <FloatingIcon><FontAwesome6 name="utensils" size={16} color="#26A69A" /></FloatingIcon>
+              <FontAwesome6 name="utensils" size={16} color="#26A69A" />
               <Text style={styles.mealTitle}>三餐记录</Text>
             </View>
             <Text style={styles.mealSubtitle}>录入三餐，获取热量和营养分析</Text>
@@ -319,17 +289,17 @@ export default function HomeScreen() {
           </View>
           <View style={styles.mealGrid}>
             <TouchableOpacity style={[styles.mealItem, { backgroundColor: '#FFF3E0' }]}>
-              <FloatingIcon delay={100}><FontAwesome6 name="sun" size={24} color="#FF9800" /></FloatingIcon>
+              <FontAwesome6 name="sun" size={24} color="#FF9800" />
               <Text style={styles.mealName}>早餐</Text>
               <Text style={styles.mealAdd}>+</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.mealItem, { backgroundColor: '#E0F2F1' }]}>
-              <FloatingIcon delay={200}><FontAwesome6 name="cloud-sun" size={24} color="#26A69A" /></FloatingIcon>
+              <FontAwesome6 name="cloud-sun" size={24} color="#26A69A" />
               <Text style={styles.mealName}>午餐</Text>
               <Text style={styles.mealAdd}>+</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.mealItem, { backgroundColor: '#F3E5F5' }]}>
-              <FloatingIcon delay={400}><FontAwesome6 name="moon" size={24} color="#9C27B0" /></FloatingIcon>
+              <FontAwesome6 name="moon" size={24} color="#9C27B0" />
               <Text style={styles.mealName}>晚餐</Text>
               <Text style={styles.mealAdd}>+</Text>
             </TouchableOpacity>
