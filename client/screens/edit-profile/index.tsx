@@ -134,137 +134,38 @@ export default function EditProfileScreen() {
               </View>
             </View>
           </View>
-
-          {/* 详细信息 */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>详细信息</Text>
-            <View style={styles.card}>
-              <View style={[styles.formItem, styles.formItemBorder]}>
-                <Text style={styles.formLabel}>年龄</Text>
-                <TextInput
-                  style={styles.formInput}
-                  value={formData.age}
-                  onChangeText={(value) => updateField('age', value)}
-                  placeholder="请输入年龄"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="numeric"
-                />
-              </View>
-              <View style={[styles.formItem, styles.formItemBorder]}>
-                <Text style={styles.formLabel}>身高</Text>
-                <View style={styles.unitInput}>
-                  <TextInput
-                    style={styles.formInput}
-                    value={formData.height}
-                    onChangeText={(value) => updateField('height', value)}
-                    placeholder="请输入身高"
-                    placeholderTextColor="#9CA3AF"
-                    keyboardType="numeric"
-                  />
-                  <Text style={styles.unit}>cm</Text>
-                </View>
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>地区</Text>
-                <TouchableOpacity style={styles.pickerButton}>
-                  <Text style={styles.pickerText}>{formData.region}</Text>
-                  <Ionicons name="chevron-down" size={18} color="#9CA3AF" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-
-          {/* 联系方式 */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>联系方式</Text>
-            <View style={styles.card}>
-              <View style={[styles.formItem, styles.formItemBorder]}>
-                <Text style={styles.formLabel}>邮箱</Text>
-                <TextInput
-                  style={styles.formInput}
-                  value={formData.email}
-                  onChangeText={(value) => updateField('email', value)}
-                  placeholder="请输入邮箱"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>手机号</Text>
-                <View style={styles.phoneRow}>
-                  <Text style={styles.phoneText}>{formData.phone}</Text>
-                  <TouchableOpacity>
-                    <Text style={styles.changeText}>更换</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* 健康目标 */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>健康目标</Text>
-            <View style={styles.card}>
-              <View style={[styles.formItem, styles.formItemBorder]}>
-                <View style={styles.formLabelRow}>
-                  <Text style={styles.formLabel}>当前体重</Text>
-                  <View style={styles.currentBadge}>
-                    <Text style={styles.currentBadgeText}>当前</Text>
-                  </View>
-                </View>
-                <View style={styles.unitInput}>
-                  <TextInput
-                    style={styles.formInput}
-                    value="68.5"
-                    placeholder="kg"
-                    placeholderTextColor="#9CA3AF"
-                    keyboardType="decimal-pad"
-                  />
-                  <Text style={styles.unit}>kg</Text>
-                </View>
-              </View>
-              <View style={[styles.formItem, styles.formItemBorder]}>
-                <View style={styles.formLabelRow}>
-                  <Text style={styles.formLabel}>目标体重</Text>
-                  <View style={styles.targetBadge}>
-                    <Text style={styles.targetBadgeText}>目标</Text>
-                  </View>
-                </View>
-                <View style={styles.unitInput}>
-                  <TextInput
-                    style={styles.formInput}
-                    value="65"
-                    placeholder="kg"
-                    placeholderTextColor="#9CA3AF"
-                    keyboardType="decimal-pad"
-                  />
-                  <Text style={styles.unit}>kg</Text>
-                </View>
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>目标描述</Text>
-                <TouchableOpacity style={styles.pickerButton}>
-                  <Text style={styles.pickerText}>减脂增肌</Text>
-                  <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
         </ScrollView>
-
-        {/* 底部保存按钮 */}
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>保存修改</Text>
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </Screen>
   );
-}
+};
 
 const styles = StyleSheet.create({
+  headerRow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingHorizontal: 16,
+    backgroundColor: '#F9FAFB',
+    height: 50,
+    zIndex: 10,
+  },
+  backBtn: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  headerRight: {
+    width: 32,
+  },
   keyboardView: {
     flex: 1,
   },
@@ -273,38 +174,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   contentContainer: {
+    paddingTop: 60,
     paddingHorizontal: 16,
-    paddingTop: 80,
-  },
-  headerRow: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: '#F9FAFB',
-  },
-  backBtn: {
-    padding: 4,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  headerRight: {
-    width: 32,
   },
   avatarSection: {
     alignItems: 'center',
+    marginTop: 20,
     marginBottom: 24,
   },
   avatarContainer: {
@@ -315,7 +190,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: '#26A69A',
+    borderColor: '#FFFFFF',
   },
   cameraButton: {
     position: 'absolute',
@@ -324,76 +199,66 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#26A69A',
+    backgroundColor: '#10B981',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
     borderColor: '#FFFFFF',
   },
   avatarTip: {
-    fontSize: 13,
-    color: '#9CA3AF',
-    marginTop: 8,
+    marginTop: 12,
+    fontSize: 14,
+    color: '#6B7280',
   },
   section: {
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    color: '#6B7280',
-    marginBottom: 10,
-    paddingLeft: 4,
+    color: '#374151',
+    marginBottom: 12,
+    marginLeft: 4,
   },
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    paddingVertical: 4,
   },
   formItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
     paddingHorizontal: 16,
+    paddingVertical: 14,
   },
   formItemBorder: {
-    
-    borderBottomColor: '#F9FAFB',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   formLabel: {
     fontSize: 15,
-    color: '#1a1a2e',
-    minWidth: 70,
-  },
-  formLabelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    color: '#374151',
+    width: 50,
   },
   formInput: {
     flex: 1,
     fontSize: 15,
-    color: '#1a1a2e',
+    color: '#1F2937',
     textAlign: 'right',
   },
   genderSelector: {
     flexDirection: 'row',
-    gap: 12,
+    marginLeft: 'auto',
   },
   genderOption: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: '#F3F4F6',
+    marginLeft: 8,
   },
   genderOptionActive: {
-    backgroundColor: '#26A69A',
+    backgroundColor: '#10B981',
   },
   genderText: {
     fontSize: 14,
@@ -401,93 +266,20 @@ const styles = StyleSheet.create({
   },
   genderTextActive: {
     color: '#FFFFFF',
-    fontWeight: '600',
   },
   signatureContainer: {
     padding: 16,
   },
   signatureInput: {
     fontSize: 15,
-    color: '#1a1a2e',
-    minHeight: 80,
+    color: '#1F2937',
+    minHeight: 100,
     textAlignVertical: 'top',
   },
   wordCount: {
+    textAlign: 'right',
     fontSize: 12,
     color: '#9CA3AF',
-    textAlign: 'right',
     marginTop: 8,
-  },
-  unitInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  unit: {
-    fontSize: 14,
-    color: '#9CA3AF',
-  },
-  pickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  pickerText: {
-    fontSize: 15,
-    color: '#1a1a2e',
-  },
-  phoneRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  phoneText: {
-    fontSize: 15,
-    color: '#6B7280',
-  },
-  changeText: {
-    fontSize: 14,
-    color: '#26A69A',
-    fontWeight: '600',
-  },
-  currentBadge: {
-    backgroundColor: '#FF980020',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  currentBadgeText: {
-    fontSize: 10,
-    color: '#FF9800',
-  },
-  targetBadge: {
-    backgroundColor: '#26A69A20',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  targetBadgeText: {
-    fontSize: 10,
-    color: '#26A69A',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-    paddingBottom: 34,
-    backgroundColor: '#F9FAFB',
-  },
-  saveButton: {
-    backgroundColor: '#26A69A',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
   },
 });
