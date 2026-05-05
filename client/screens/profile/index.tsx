@@ -205,9 +205,8 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>健康目标</Text>
           <View style={styles.goalsContainer}>
-          <View style={styles.goalsContainer}>
             <TouchableOpacity style={styles.goalCard} onPress={() => handleEditGoal("weight")}>
-              <View style={[styles.goalIcon, { backgroundColor: '#FF980020' }]}>
+              <View style={[styles.goalIconWrap, { backgroundColor: '#FFF3E0' }]}>
                 <FontAwesome6 name="weight-scale" size={20} color="#FF9800" />
               </View>
               <Text style={styles.goalLabel}>体重目标</Text>
@@ -218,8 +217,8 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             </TouchableOpacity>
             <TouchableOpacity style={styles.goalCard} onPress={() => handleEditGoal("steps")}>
-              <View style={[styles.goalIcon, { backgroundColor: '#26A69A20' }]}>
-                <FontAwesome6 name="shoe-prints" size={20} color="#26A69A" />
+              <View style={[styles.goalIconWrap, { backgroundColor: '#E0F2F1' }]}>
+                <FontAwesome6 name="shoe-prints" size={20} color="#00BFA5" />
               </View>
               <Text style={styles.goalLabel}>步数目标</Text>
               <Text style={styles.goalValue}>{goals.targetSteps.toLocaleString()}</Text>
@@ -229,7 +228,7 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             </TouchableOpacity>
             <TouchableOpacity style={styles.goalCard} onPress={() => handleEditGoal("sleep")}>
-              <View style={[styles.goalIcon, { backgroundColor: '#7C4DFF20' }]}>
+              <View style={[styles.goalIconWrap, { backgroundColor: '#EDE7F6' }]}>
                 <FontAwesome6 name="moon" size={20} color="#7C4DFF" />
               </View>
               <Text style={styles.goalLabel}>睡眠时长</Text>
@@ -239,7 +238,6 @@ export default function ProfileScreen() {
                 <FontAwesome6 name="pencil" size={12} color="#9CA3AF" />
               </TouchableOpacity>
             </TouchableOpacity>
-          </View>
           </View>
         </View>
 
@@ -603,34 +601,37 @@ const styles = StyleSheet.create({
   goalCard: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 12,
+    borderRadius: 20,
+    padding: 16,
     marginHorizontal: 4,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
-  goalIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  goalIconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   goalLabel: {
     fontSize: 11,
     color: '#6B7280',
-    marginBottom: 4,
+    marginBottom: 6,
+    fontWeight: '500',
   },
   goalValue: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     color: '#1F2937',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   goalDesc: {
     fontSize: 10,
