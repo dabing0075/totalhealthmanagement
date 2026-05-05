@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
@@ -80,6 +82,7 @@ const BADGES = [
 export default function MemberScreen() {
   const router = useRouter();
 
+
   // 用户数据
   const user = {
     name: '健康达人',
@@ -129,6 +132,7 @@ export default function MemberScreen() {
     { id: '3', name: '我的赞赏', icon: 'heart', count: user.likes, color: '#FF6B6B' },
   ];
 
+
   return (
     <Screen>
       <ScrollView
@@ -172,6 +176,7 @@ export default function MemberScreen() {
           </View>
           <Ionicons name="chevron-forward" size={getAdaptiveIconSize(20)} color="#9CA3AF" />
         </TouchableOpacity>
+
 
         {/* 身体数据卡片 */}
         <View style={styles.section}>
@@ -1018,4 +1023,49 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
   },
+  // AI管家样式
+  aiCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  aiHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  aiAvatarContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#E8F5E9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  aiInfo: {
+    flex: 1,
+  },
+  aiTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1a1a2e',
+  },
+  aiSubtitle: {
+    fontSize: 12,
+    color: '#4CAF50',
+    marginTop: 2,
+  },
+  aiDescription: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginLeft: 52,
+  },
 });
+
