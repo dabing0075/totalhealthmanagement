@@ -169,6 +169,37 @@ export default function ProfileScreen() {
           </View>
         </View>
 
+        {/* 健康目标 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>健康目标</Text>
+          <View style={styles.goalsContainer}>
+            <View style={styles.goalCard}>
+              <View style={[styles.goalIcon, { backgroundColor: '#FF980020' }]}>
+                <FontAwesome6 name="weight-scale" size={20} color="#FF9800" />
+              </View>
+              <Text style={styles.goalLabel}>体重目标</Text>
+              <Text style={styles.goalValue}>65 kg</Text>
+              <Text style={styles.goalDesc}>当前 68.5kg</Text>
+            </View>
+            <View style={styles.goalCard}>
+              <View style={[styles.goalIcon, { backgroundColor: '#26A69A20' }]}>
+                <FontAwesome6 name="shoe-prints" size={20} color="#26A69A" />
+              </View>
+              <Text style={styles.goalLabel}>步数目标</Text>
+              <Text style={styles.goalValue}>10,000</Text>
+              <Text style={styles.goalDesc}>今日已走 6,832</Text>
+            </View>
+            <View style={styles.goalCard}>
+              <View style={[styles.goalIcon, { backgroundColor: '#7C4DFF20' }]}>
+                <FontAwesome6 name="moon" size={20} color="#7C4DFF" />
+              </View>
+              <Text style={styles.goalLabel}>睡眠时长</Text>
+              <Text style={styles.goalValue}>8 小时</Text>
+              <Text style={styles.goalDesc}>昨晚睡了 6.5h</Text>
+            </View>
+          </View>
+        </View>
+
         {/* 健康数据 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>健康数据</Text>
@@ -495,6 +526,46 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginBottom: 12,
     marginLeft: 4,
+  },
+  goalsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  goalCard: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 12,
+    marginHorizontal: 4,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  goalIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  goalLabel: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  goalValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 2,
+  },
+  goalDesc: {
+    fontSize: 10,
+    color: '#9CA3AF',
   },
   card: {
     backgroundColor: '#FFFFFF',
