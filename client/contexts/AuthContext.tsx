@@ -16,6 +16,7 @@ interface User {
   birthday: string;
   height: number;
   weight: number;
+  targetWeight: number;
   signature: string;
   vipLevel: number;
   vipExpireDate: string;

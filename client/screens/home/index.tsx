@@ -96,6 +96,25 @@ export default function HomeScreen() {
     return null;
   };
 
+  // 计算体重目标进度
+  const getWeightProgress = () => {
+    if (user?.weight && user?.targetWeight && user.weight > 0 && user.targetWeight > 0) {
+      const totalLoss = user.weight - user.targetWeight;
+      // 假设初始体重为目标体重+10kg，计算进度
+      const initialToTarget = user.weight - user.targetWeight + 10;
+      if (initialToTarget <= 0) return 100;
+      const progress = Math.min(100, Math.max(0, (10 - (user.weight - user.targetWeight - totalLoss)) / 10 * 100));
+      // 简化：如果有目标体重且当前体重<=目标体重，进度100%
+      if (user.weight <= user.targetWeight) return 100;
+      // 假设总需减重为初始-目标，计算已完成的百分比
+      const initialWeight = user.targetWeight + 10; // 假设初始比目标重10kg
+      const totalToLose = initialWeight - user.targetWeight;
+      const lost = initialWeight - user.weight;
+      return Math.min(100, Math.max(0, Math.round((lost / totalToLose) * 100)));
+    }
+    return 88; // 默认进度
+  };
+
   const healthModules = [
     { id: 'dashboard', name: '数据看板', icon: 'chart-bar', iconColor: '#2196F3', bgColor: '#E3F2FD' },
     { id: 'food', name: '食物分析', icon: 'camera', iconColor: '#FF9800', bgColor: '#FFF3E0' },
@@ -256,7 +275,7 @@ export default function HomeScreen() {
               <View style={styles.ringBackground}>
                 <View style={[styles.ringProgress, { borderColor: '#26A69A' }]} />
               </View>
-              <Text style={styles.ringValue}>88%</Text>
+              <Text style={styles.ringValue}>{getWeightProgress()}%</Text>
             </View>
             <View style={styles.weightStats}>
               <View style={styles.weightStat}>
@@ -265,16 +284,22 @@ export default function HomeScreen() {
               </View>
               <View style={styles.weightStat}>
                 <Text style={styles.weightStatLabel}>目标体重</Text>
-                <Text style={styles.weightStatValue}>{user?.weight ? `${user.weight - 3.5}kg` : '--kg'}</Text>
+                <Text style={styles.weightStatValue}>{user?.targetWeight ? `${user.targetWeight}kg` : '--kg'}</Text>
               </View>
               <View style={styles.weightStat}>
                 <Text style={styles.weightStatLabel}>还差</Text>
-                <Text style={[styles.weightStatValue, { color: '#26A69A' }]}>{user?.weight ? '3.5kg' : '--kg'}</Text>
+                <Text style={[styles.weightStatValue, { color: '#26A69A' }]}>
+                  {user?.weight && user?.targetWeight ? `${(user.weight - user.targetWeight).toFixed(1)}kg` : '--kg'}
+                </Text>
               </View>
             </View>
           </View>
           <View style={styles.tipBox}>
-            <Text style={styles.tipText}>您已完成了88%的减重目标，继续加油！</Text>
+            <Text style={styles.tipText}>
+              {user?.weight && user?.targetWeight && user.weight <= user.targetWeight
+                ? '恭喜！您已达成目标体重！'
+                : `您已完成了${getWeightProgress()}%的减重目标，继续加油！`}
+            </Text>
           </View>
         </View>
 

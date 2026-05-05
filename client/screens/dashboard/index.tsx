@@ -13,6 +13,7 @@ import { Screen } from '@/components/Screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome6, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -134,7 +135,22 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
 
 export default function DashboardScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const [selectedPeriod, setSelectedPeriod] = useState('week');
+
+  // 从用户数据计算BMI和标准体重
+  const height = user?.height || 165;
+  const currentWeight = user?.weight || 65;
+  const targetWeight = user?.targetWeight || 60;
+  const weightDiff = (currentWeight - targetWeight).toFixed(1);
+  
+  // 计算BMI
+  const bmi = height > 0 ? (currentWeight / Math.pow(height / 100, 2)).toFixed(1) : '23.2';
+  
+  // 计算标准体重范围 (BMI 18.5-23.9)
+  const minNormalWeight = parseFloat((18.5 * Math.pow(height / 100, 2)).toFixed(1));
+  const maxNormalWeight = parseFloat((23.9 * Math.pow(height / 100, 2)).toFixed(1));
+  const standardWeight = ((minNormalWeight + maxNormalWeight) / 2).toFixed(1);
 
   const overallScore = 87;
   const maxScore = 100;
@@ -186,8 +202,8 @@ export default function DashboardScreen() {
   ];
 
   const bodyComposition = [
-    { label: '体重', value: '68.5', unit: 'kg', trend: 'down' as const, trendValue: '-0.3kg' },
-    { label: 'BMI', value: '23.2', unit: '', trend: 'stable' as const, trendValue: '正常' },
+    { label: '体重', value: currentWeight.toString(), unit: 'kg', trend: 'down' as const, trendValue: '-0.3kg' },
+    { label: 'BMI', value: bmi, unit: '', trend: 'stable' as const, trendValue: '正常' },
     { label: '体脂率', value: '21.5', unit: '%', trend: 'down' as const, trendValue: '-0.8%' },
     { label: '肌肉量', value: '42.8', unit: 'kg', trend: 'up' as const, trendValue: '+0.2kg' },
     { label: '内脏脂肪', value: '8', unit: '', trend: 'down' as const, trendValue: '-1' },
@@ -294,10 +310,10 @@ export default function DashboardScreen() {
               <View style={styles.weightCardLeft}>
                 <Text style={styles.weightLabel}>当前体重</Text>
                 <View style={styles.weightValueRow}>
-                  <Text style={styles.weightValue}>68.5</Text>
+                  <Text style={styles.weightValue}>{currentWeight}</Text>
                   <Text style={styles.weightUnit}>kg</Text>
                 </View>
-                <Text style={styles.weightTarget}>目标体重 65kg，差距 -3.5kg</Text>
+                <Text style={styles.weightTarget}>目标体重 {targetWeight}kg，差距 -{weightDiff}kg</Text>
               </View>
               <TouchableOpacity style={styles.recordBtn}>
                 <FontAwesome6 name="plus" size={14} color="#26A69A" />
@@ -307,7 +323,7 @@ export default function DashboardScreen() {
             <View style={styles.weightMetrics}>
               <View style={styles.weightMetricItem}>
                 <Text style={styles.weightMetricLabel}>BMI</Text>
-                <Text style={[styles.weightMetricValue, { color: '#10B981' }]}>23.2</Text>
+                <Text style={[styles.weightMetricValue, { color: '#10B981' }]}>{bmi}</Text>
                 <Text style={styles.weightMetricStatus}>正常</Text>
               </View>
               <View style={styles.weightMetricDivider} />
@@ -355,7 +371,7 @@ export default function DashboardScreen() {
               </View>
             </View>
             <View style={styles.indicatorResult}>
-              <Text style={styles.indicatorResultText}>当前值: 23.2</Text>
+              <Text style={styles.indicatorResultText}>当前值: {bmi}</Text>
               <Text style={[styles.indicatorResultStatus, { color: '#10B981' }]}>正常范围</Text>
             </View>
           </View>

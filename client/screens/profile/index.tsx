@@ -143,12 +143,18 @@ export default function ProfileScreen() {
     {
       icon: 'cog',
       title: '设置',
-      action: () => {},
+      action: () => {
+        // 跳转到设置页面
+        console.log('设置');
+      },
     },
     {
       icon: 'question-circle',
       title: '帮助与反馈',
-      action: () => {},
+      action: () => {
+        // 跳转到帮助页面
+        console.log('帮助与反馈');
+      },
     },
   ];
 
@@ -456,17 +462,19 @@ export default function ProfileScreen() {
 
           <View style={aiModalStyles.quickSection}>
             <Text style={aiModalStyles.quickTitle}>快捷问题</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {quickQuestions.map((q, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={aiModalStyles.quickButton}
-                  onPress={() => handleSendMessage(q)}
-                >
-                  <Text style={aiModalStyles.quickText}>{q}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            <View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {quickQuestions.map((q, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    style={aiModalStyles.quickButton}
+                    onPress={() => handleSendMessage(q)}
+                  >
+                    <Text style={aiModalStyles.quickText}>{q}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
           </View>
 
           <ScrollView style={aiModalStyles.chatContainer} contentContainerStyle={aiModalStyles.chatContent}>
