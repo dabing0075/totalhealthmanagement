@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,10 @@ import {
   Image,
   TextInput,
   Dimensions,
+  Modal,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,10 +21,61 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// AI管家快捷问题
+const quickQuestions = [
+  '今日三餐怎么搭配？',
+  '做什么运动最燃脂？',
+  '如何突破减肥平台期？',
+];
+
 export default function HomeScreen() {
   const router = useSafeRouter();
   const { user } = useAuth();
   const [searchText, setSearchText] = useState('');
+  
+  // AI管家状态
+  const [aiModalVisible, setAiModalVisible] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { id: '1', text: '您好！我是您的AI健康管家小轻，有什么关于减脂饮食、运动计划的问题都可以问我哦！', isUser: false },
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [msgCounter, setMsgCounter] = useState(1);
+  const chatScrollRef = useRef<ScrollView>(null);
+
+  // AI管家发送消息
+  const handleSendMessage = useCallback(() => {
+    if (!inputText.trim()) return;
+    const newMsg = { id: String(msgCounter + 1), text: inputText.trim(), isUser: true };
+    setChatMessages(prev => [...prev, newMsg]);
+    setInputText('');
+    setMsgCounter(prev => prev + 1);
+    
+    // 模拟AI回复
+    setTimeout(() => {
+      const replies = [
+        '建议您今日摄入约1500千卡，早餐400千卡、午餐500千卡、晚餐400千卡、零食200千卡。',
+        'HIIT燃脂效果最好，每次20分钟，每周3-4次即可。',
+        '平台期可以尝试调整饮食结构或增加运动强度，建议记录详细数据。',
+        '根据您的目标，建议每天保持500千卡的热量缺口比较健康。',
+      ];
+      const aiReply = { id: String(msgCounter + 2), text: replies[Math.floor(Math.random() * replies.length)], isUser: false };
+      setChatMessages(prev => [...prev, aiReply]);
+      setMsgCounter(prev => prev + 2);
+      setTimeout(() => chatScrollRef.current?.scrollToEnd({ animated: true }), 100);
+    }, 1000);
+  }, [inputText, msgCounter]);
+
+  // AI管家快捷问题
+  const handleQuickQuestion = useCallback((question: string) => {
+    setInputText(question);
+    setTimeout(() => handleSendMessage(), 300);
+  }, [handleSendMessage]);
+
+  useEffect(() => {
+    if (chatMessages.length > 1) {
+      setTimeout(() => chatScrollRef.current?.scrollToEnd({ animated: true }), 100);
+    }
+  }, [chatMessages]);
 
   // 计算BMI
   const calculateBMI = () => {
@@ -554,6 +609,79 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* AI管家悬浮按钮 */}
+      <TouchableOpacity style={styles.floatingAiBtn} onPress={() => setAiModalVisible(true)} activeOpacity={0.8}>
+        <LinearGradient colors={['#26A69A', '#00897B']} style={styles.floatingAiGradient}>
+          <FontAwesome6 name="robot" size={24} color="#FFFFFF" />
+        </LinearGradient>
+      </TouchableOpacity>
+
+      {/* AI管家Modal */}
+      <Modal visible={aiModalVisible} animationType="slide" transparent={true} onRequestClose={() => setAiModalVisible(false)}>
+        <KeyboardAvoidingView style={styles.aiModalContainer} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={styles.aiModalContent}>
+            {/* Modal头部 */}
+            <View style={styles.aiModalHeader}>
+              <View style={styles.aiHeaderLeft}>
+                <View style={styles.aiAvatarSmall}>
+                  <FontAwesome6 name="robot" size={18} color="#26A69A" />
+                </View>
+                <View>
+                  <Text style={styles.aiHeaderTitle}>AI健康管家</Text>
+                  <Text style={styles.aiHeaderSubtitle}>小轻·在线</Text>
+                </View>
+              </View>
+              <TouchableOpacity onPress={() => setAiModalVisible(false)}>
+                <Ionicons name="close" size={24} color="#374151" />
+              </TouchableOpacity>
+            </View>
+
+            {/* 快捷问题 */}
+            <View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickQuestionScroll}>
+                {quickQuestions.map((q, i) => (
+                  <TouchableOpacity key={i} style={styles.quickQuestionBtn} onPress={() => handleQuickQuestion(q)}>
+                    <Text style={styles.quickQuestionText}>{q}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* 对话内容 */}
+            <ScrollView ref={chatScrollRef} style={styles.chatContainer} showsVerticalScrollIndicator={false}>
+              {chatMessages.map((msg) => (
+                <View key={msg.id} style={[styles.chatBubbleWrapper, msg.isUser && styles.chatBubbleWrapperUser]}>
+                  {!msg.isUser && (
+                    <View style={styles.aiAvatarBubble}>
+                      <FontAwesome6 name="robot" size={14} color="#26A69A" />
+                    </View>
+                  )}
+                  <View style={[styles.chatBubble, msg.isUser ? styles.userBubble : styles.aiBubble]}>
+                    <Text style={[styles.chatBubbleText, msg.isUser && styles.userBubbleText]}>{msg.text}</Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+
+            {/* 输入区域 */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="输入您的问题..."
+                placeholderTextColor="#9CA3AF"
+                value={inputText}
+                onChangeText={setInputText}
+                onSubmitEditing={handleSendMessage}
+                returnKeyType="send"
+              />
+              <TouchableOpacity style={styles.sendBtn} onPress={handleSendMessage}>
+                <FontAwesome6 name="paper-plane" size={18} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </Screen>
   );
 }
@@ -695,4 +823,30 @@ const styles = StyleSheet.create({
   footerText: { fontSize: 11, color: '#9CA3AF', marginBottom: 4 },
   footerLinks: { flexDirection: 'row', gap: 12 },
   footerLink: { fontSize: 11, color: '#26A69A' },
+  // AI管家悬浮按钮
+  floatingAiBtn: { position: 'absolute', bottom: 100, right: 20, width: 56, height: 56, borderRadius: 28, shadowColor: '#26A69A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 },
+  floatingAiGradient: { width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center' },
+  // AI管家Modal
+  aiModalContainer: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' },
+  aiModalContent: { backgroundColor: '#FFFFFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, height: '85%' },
+  aiModalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: '#F3F4F6' },
+  aiHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  aiAvatarSmall: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#E0F2F1', justifyContent: 'center', alignItems: 'center' },
+  aiHeaderTitle: { fontSize: 17, fontWeight: '700', color: '#1a1a2e' },
+  aiHeaderSubtitle: { fontSize: 12, color: '#26A69A' },
+  quickQuestionScroll: { paddingHorizontal: 16, paddingVertical: 12, maxHeight: 50 },
+  quickQuestionBtn: { backgroundColor: '#E0F2F1', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 16, marginRight: 8 },
+  quickQuestionText: { fontSize: 12, color: '#26A69A', fontWeight: '500' },
+  chatContainer: { flex: 1, paddingHorizontal: 16, paddingVertical: 12 },
+  chatBubbleWrapper: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: 12 },
+  chatBubbleWrapperUser: { flexDirection: 'row-reverse' },
+  aiAvatarBubble: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#E0F2F1', justifyContent: 'center', alignItems: 'center', marginRight: 8 },
+  chatBubble: { maxWidth: '75%', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 16 },
+  aiBubble: { backgroundColor: '#F9FAFB', borderBottomLeftRadius: 4 },
+  userBubble: { backgroundColor: '#26A69A', borderBottomRightRadius: 4 },
+  chatBubbleText: { fontSize: 14, color: '#374151', lineHeight: 20 },
+  userBubbleText: { color: '#FFFFFF' },
+  inputContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderTopWidth: 1, borderTopColor: '#F3F4F6', gap: 10 },
+  input: { flex: 1, backgroundColor: '#F3F4F6', borderRadius: 20, paddingHorizontal: 16, paddingVertical: 10, fontSize: 14, color: '#1a1a2e' },
+  sendBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#26A69A', justifyContent: 'center', alignItems: 'center' },
 });
