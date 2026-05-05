@@ -47,6 +47,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [devCode, setDevCode] = useState<string | null>(null);
   const [showDevHint, setShowDevHint] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
@@ -119,6 +120,11 @@ export default function LoginScreen() {
 
     if (!code || code.length !== 6) {
       Alert.alert('错误', '请输入6位验证码');
+      return;
+    }
+
+    if (!agreed) {
+      Alert.alert('提示', '请先勾选同意用户协议和隐私政策');
       return;
     }
 
@@ -236,29 +242,43 @@ export default function LoginScreen() {
               </View>
             )}
 
+            {/* 协议勾选 */}
+            <TouchableOpacity
+              style={styles.agreementCheckContainer}
+              onPress={() => setAgreed(!agreed)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.checkbox, agreed && styles.checkboxChecked]}>
+                {agreed && <Ionicons name="checkmark" size={14} color="#FFFFFF" />}
+              </View>
+              <Text style={styles.agreementText}>
+                我已阅读并同意
+                <Text style={styles.agreementLink}>《用户协议》</Text>
+                和
+                <Text style={styles.agreementLink}>《隐私政策》</Text>
+              </Text>
+            </TouchableOpacity>
+
             {/* 登录按钮 */}
             <TouchableOpacity
-              style={[styles.loginBtn, loading && styles.loginBtnDisabled]}
+              style={[styles.loginBtn, (loading || !agreed) && styles.loginBtnDisabled]}
               onPress={handleLogin}
-              disabled={loading}
+              disabled={loading || !agreed}
             >
               <LinearGradient
-                colors={loading ? ['#9E9E9E', '#9E9E9E'] : ['#26A69A', '#00897B']}
+                colors={loading || !agreed ? ['#9E9E9E', '#9E9E9E'] : ['#26A69A', '#00897B']}
                 style={styles.loginBtnGradient}
               >
                 <Text style={styles.loginBtnText}>
-                  {loading ? '登录中...' : '立即登录'}
+                  {loading ? '登录中...' : '立即登录/注册'}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
 
             {/* 用户协议 */}
             <View style={styles.agreementContainer}>
-              <Text style={styles.agreementText}>
-                登录即表示同意
-                <Text style={styles.agreementLink}>《用户协议》</Text>
-                和
-                <Text style={styles.agreementLink}>《隐私政策》</Text>
+              <Text style={styles.agreementHint}>
+                未注册手机号登录时将自动创建账号
               </Text>
             </View>
           </Animated.View>
@@ -399,6 +419,39 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#FF9800',
   },
+  agreementCheckContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#D1D5DB',
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: '#26A69A',
+    borderColor: '#26A69A',
+  },
+  agreementText: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  agreementLink: {
+    color: '#26A69A',
+    fontWeight: '500',
+  },
+  agreementHint: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
   loginBtn: {
     marginTop: 8,
     borderRadius: 12,
@@ -418,15 +471,8 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   agreementContainer: {
-    marginTop: 20,
+    marginTop: 12,
     alignItems: 'center',
-  },
-  agreementText: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  agreementLink: {
-    color: '#26A69A',
   },
   otherMethods: {
     position: 'absolute',
