@@ -141,8 +141,17 @@ export default function LoginScreen() {
       if (data.success && data.token && data.user) {
         // 保存登录信息
         await saveLoginData(data.token, data.user);
-        // 跳转回上一页或首页
-        router.back();
+        
+        // 检查是否需要引导（身高、体重为空表示首次注册）
+        const needOnboarding = !data.user?.height || !data.user?.weight;
+        
+        if (needOnboarding) {
+          // 首次注册，跳转到引导页
+          router.replace('/onboarding');
+        } else {
+          // 已完成引导，跳转回上一页或首页
+          router.back();
+        }
       } else {
         Alert.alert('登录失败', data.error || '验证码错误');
       }

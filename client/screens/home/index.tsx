@@ -13,12 +13,33 @@ import { Screen } from '@/components/Screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useSafeRouter } from '@/hooks/useSafeRouter';
+import { useAuth } from '@/contexts/AuthContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const router = useSafeRouter();
+  const { user } = useAuth();
   const [searchText, setSearchText] = useState('');
+
+  // 计算BMI
+  const calculateBMI = () => {
+    if (user?.height && user?.weight && user.height > 0 && user.weight > 0) {
+      const heightInM = user.height / 100;
+      return (user.weight / (heightInM * heightInM)).toFixed(1);
+    }
+    return null;
+  };
+
+  // 计算标准体重范围
+  const getStandardWeightRange = () => {
+    if (user?.height && user.height > 0) {
+      const min = ((user.height - 100) * 0.9).toFixed(0);
+      const max = ((user.height - 100) * 1.1).toFixed(0);
+      return `${min}kg - ${max}kg`;
+    }
+    return null;
+  };
 
   const healthModules = [
     { id: 'dashboard', name: '数据看板', icon: 'chart-bar', iconColor: '#2196F3', bgColor: '#E3F2FD' },
@@ -185,15 +206,15 @@ export default function HomeScreen() {
             <View style={styles.weightStats}>
               <View style={styles.weightStat}>
                 <Text style={styles.weightStatLabel}>当前体重</Text>
-                <Text style={styles.weightStatValue}>68.5kg</Text>
+                <Text style={styles.weightStatValue}>{user?.weight ? `${user.weight}kg` : '--kg'}</Text>
               </View>
               <View style={styles.weightStat}>
                 <Text style={styles.weightStatLabel}>目标体重</Text>
-                <Text style={styles.weightStatValue}>65kg</Text>
+                <Text style={styles.weightStatValue}>{user?.weight ? `${user.weight - 3.5}kg` : '--kg'}</Text>
               </View>
               <View style={styles.weightStat}>
                 <Text style={styles.weightStatLabel}>还差</Text>
-                <Text style={[styles.weightStatValue, { color: '#26A69A' }]}>3.5kg</Text>
+                <Text style={[styles.weightStatValue, { color: '#26A69A' }]}>{user?.weight ? '3.5kg' : '--kg'}</Text>
               </View>
             </View>
           </View>

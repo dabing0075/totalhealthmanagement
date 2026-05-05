@@ -43,6 +43,7 @@ export default function RootLayout() {
           />
           <Stack.Screen name="dashboard" options={{ headerShown: false }} />
           <Stack.Screen name="food-analysis" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         </Stack>
         <Toast />
       </Provider>
